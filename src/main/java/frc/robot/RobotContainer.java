@@ -5,10 +5,21 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.commands.drive.*;
+import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ControllerConstants.*;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -17,6 +28,20 @@ import edu.wpi.first.wpilibj2.command.Command;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  // drivecontroller
+  public static final Joystick driverController = new Joystick(0);
+
+  // manipulatorcontroller
+  public static final Joystick manipulatorController = new Joystick(1);
+
+  // The robot's subsystems and commands are defined here...
+  private final DriveSubsystem driveSubSystem = new DriveSubsystem();
+
+  // Shuffleboard declarations
+  public static ShuffleboardTab driverTab;
+  private final ManualArcadeDriveCommand manualDriveCommand = new ManualArcadeDriveCommand(driveSubSystem);
+
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 

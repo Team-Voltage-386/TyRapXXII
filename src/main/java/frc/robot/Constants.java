@@ -12,4 +12,33 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+public final class Constants {
+    public static final class ControllerConstants {
+
+        public static final int kLeftVertical = 1;
+        public static final int kRightVertical = 5;
+        public static final int kLeftHorizontal = 0;
+        public static final int kRightHorizontal = 4;
+        public static final int kLeftTrigger = 2;
+        public static final int kRightTrigger = 3;
+
+        public static final int kA = 1;
+        public static final int kB = 2;
+        public static final int kX = 3;
+        public static final int kY = 4;
+        public static final int kLeftBumper = 5;
+        public static final int kRightBumper = 6;
+        public static final int kLeftOptions = 7;
+        public static final int kRightOptions = 8;
+        public static final int kLeftJoystickPressed = 9;
+        public static final int kRightJoystickPressed = 10;
+
+    }
+
+    public static final class DriveConstants {
+        public static final int kFrontLeft = 4; // CAN (Spark)
+        public static final int kFrontRight = 1; // CAN (Spark)
+        public static final int kRearLeft = 5; // CAN (Spark)
+        public static final int kRearRight = 3; // CAN (Spark)
+    }
+}
