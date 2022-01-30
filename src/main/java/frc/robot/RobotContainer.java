@@ -43,14 +43,12 @@ public class RobotContainer {
   private final ManualArcadeDriveCommand manualDriveCommand = new ManualArcadeDriveCommand(driveSubSystem);
 
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    driveSubSystem.setDefaultCommand(manualDriveCommand);
   }
 
   /**
@@ -68,6 +66,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null;
+  }
+  public Command getManCommand() {
+    return manualDriveCommand;
   }
 }

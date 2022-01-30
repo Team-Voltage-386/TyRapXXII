@@ -31,7 +31,7 @@ public class DriveSubsystem extends SubsystemBase {
                         MotorType.kBrushless);
         public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
                         MotorType.kBrushless);
-        public final DifferentialDrive driveTrain = new DifferentialDrive(rearLeftMotor, frontRightMotor);
+        public final DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
 
         // Sensor instantiations
         RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
@@ -71,39 +71,15 @@ public class DriveSubsystem extends SubsystemBase {
                 rearLeftMotor.restoreFactoryDefaults();
                 rearRightMotor.restoreFactoryDefaults();
 
-                rearLeftMotor.setInverted(true);
+                frontLeftMotor.setInverted(true);
                 frontRightMotor.setInverted(false);
-                frontLeftMotor.follow(rearLeftMotor);// front left yields faulty encoder values so that set follower
+                rearLeftMotor.follow(frontLeftMotor);// front left yields faulty encoder values so that set follower
                 rearRightMotor.follow(frontRightMotor);
 
         }
 
         @Override
         public void periodic() {
-                 //This method will be called once per scheduler run
-                
-                 // Update output widgets
-                 frontLeftOutputWidget.setDouble(frontLeftMotor.get());
-                 frontRightOutputWidget.setDouble(frontRightMotor.get());
-                 backLeftOutputWidget.setDouble(rearLeftMotor.get());
-                 backRightOutputWidget.setDouble(rearRightMotor.get());
-
-                 // Update temp widgets
-                 frontLeftTempWidget.setDouble(frontLeftMotor.getMotorTemperature());
-                 frontRightTempWidget.setDouble(frontRightMotor.getMotorTemperature());
-                 backLeftTempWidget.setDouble(rearLeftMotor.getMotorTemperature());
-                 backRightTempWidget.setDouble(rearRightMotor.getMotorTemperature());
-
-                 // Update current widgets
-                 frontLeftCurrentWidget.setDouble(frontLeftMotor.getOutputCurrent());
-                 frontRightCurrentWidget.setDouble(frontRightMotor.getOutputCurrent());
-                 backLeftCurrentWidget.setDouble(rearLeftMotor.getOutputCurrent());
-                 backRightCurrentWidget.setDouble(rearRightMotor.getOutputCurrent());
-
-                 // Update encoder widgets
-                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
-                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
-
         }
 
         // arcade drive method to be called by commands

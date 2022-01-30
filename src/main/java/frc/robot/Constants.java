@@ -36,9 +36,9 @@ public final class Constants {
     }
 
     public static final class DriveConstants {
-        public static final int kFrontLeft = 4; // CAN (Spark)
-        public static final int kFrontRight = 1; // CAN (Spark)
-        public static final int kRearLeft = 5; // CAN (Spark)
-        public static final int kRearRight = 3; // CAN (Spark)
+        public static final int kFrontLeft = 2; // CAN (Spark)
+        public static final int kFrontRight = 3; // CAN (Spark)
+        public static final int kRearLeft = 4; // CAN (Spark)
+        public static final int kRearRight = 5; // CAN (Spark)
     }
 }
