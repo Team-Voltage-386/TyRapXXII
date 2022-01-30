@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -40,5 +42,14 @@ public final class Constants {
         public static final int kFrontRight = 1; // CAN (Spark)
         public static final int kRearLeft = 5; // CAN (Spark)
         public static final int kRearRight = 3; // CAN (Spark)
+    }
+
+    public static final class PneumaticConstants {
+        public static final int kPhCanId = 2;
+        public static final int kForwardChannel = 2; // PCM
+        public static final int kReverseChannel = 3; // PCM
+        public static final DoubleSolenoid.Value kHighGear = DoubleSolenoid.Value.kForward;
+        public static final DoubleSolenoid.Value kLowGear = DoubleSolenoid.Value.kReverse;
+    
     }
 }

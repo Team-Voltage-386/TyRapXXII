@@ -10,12 +10,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.drive.*;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.ControllerConstants.*;
+import static frc.robot.Constants.ControllerConstants.*;
+import static frc.robot.Constants.PneumaticConstants.*;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
@@ -46,6 +48,8 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+
+  private final PneumaticHub ph = new PneumaticHub(kPhCanId);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

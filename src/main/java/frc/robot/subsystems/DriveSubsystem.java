@@ -5,7 +5,9 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
@@ -19,6 +21,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ExternalFollower;
 
 import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.PneumaticConstants.*;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -37,6 +40,11 @@ public class DriveSubsystem extends SubsystemBase {
         RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
         RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
 
+        private final DoubleSolenoid sol = new DoubleSolenoid(
+            PneumaticsModuleType.CTREPCM,
+            kForwardChannel,
+            kReverseChannel);
+      
         // Creates a shuffleboard tab for the drive
         private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
 
@@ -115,6 +123,14 @@ public class DriveSubsystem extends SubsystemBase {
         public void tankDrive(Double leftPower, Double rightPower) {
                 driveTrain.tankDrive(leftPower, rightPower);
         }
+
+        public void highGear() {
+            sol.set(kHighGear);
+          }
+        
+          public void lowGear() {
+            sol.set(kLowGear);
+          }
 
         @Override
         public void simulationPeriodic() {
