@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -32,7 +35,6 @@ public final class Constants {
         public static final int kRightOptions = 8;
         public static final int kLeftJoystickPressed = 9;
         public static final int kRightJoystickPressed = 10;
-
     }
 
     public static final class DriveConstants {
@@ -40,5 +42,8 @@ public final class Constants {
         public static final int kFrontRight = 3; // CAN (Spark)
         public static final int kRearLeft = 4; // CAN (Spark)
         public static final int kRearRight = 5; // CAN (Spark)
+        public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
+        public static final int shiftUp = 4;
+        public static final int shiftDown = 5;
     }
 }

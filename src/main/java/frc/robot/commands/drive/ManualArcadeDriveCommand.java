@@ -6,7 +6,6 @@ package frc.robot.commands.drive;
 
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.robot.RobotContainer;
 
 import static frc.robot.Constants.ControllerConstants.*;
@@ -15,6 +14,7 @@ import static frc.robot.Constants.ControllerConstants.*;
 public class ManualArcadeDriveCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem aSubsystem;
+  private boolean shiftUp = false;
 
   /**
    * Creates a new ExampleCommand.
@@ -42,6 +42,10 @@ public class ManualArcadeDriveCommand extends CommandBase {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
     rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal);
     aSubsystem.arcadeDrive(rootForward, rootTurn);
+    if (RobotContainer.driverController.getRawButtonPressed(kA)) {
+      shiftUp = !shiftUp;
+      aSubsystem.setHighGear(shiftUp);
+    }
   }
 
   // Called once the command ends or is interrupted.
