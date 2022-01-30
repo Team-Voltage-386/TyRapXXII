@@ -32,16 +32,30 @@ public class ManualArcadeDriveCommand extends CommandBase {
   public void initialize() {
     rootForward = 0;
     rootTurn = 0;
+    driveHighGear = false;
+    aSubsystem.lowGear();
   }
 
   private double rootForward, rootTurn;
-
+  private boolean driveHighGear;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
     rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal);
     aSubsystem.arcadeDrive(rootForward, rootTurn);
+
+    if (RobotContainer.manipulatorController.getRawButtonPressed(kA)) {
+        if (driveHighGear == true){
+            driveHighGear = false;
+            aSubsystem.lowGear();
+        }
+        else {
+            driveHighGear = true;
+            aSubsystem.highGear();
+        }
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
