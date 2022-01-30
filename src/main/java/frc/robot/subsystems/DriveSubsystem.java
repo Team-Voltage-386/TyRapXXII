@@ -36,7 +36,6 @@ public class DriveSubsystem extends SubsystemBase {
                 frontRightMotor.setInverted(false);
                 rearLeftMotor.follow(frontLeftMotor);// front left yields faulty encoder values so that set follower
                 rearRightMotor.follow(frontRightMotor);
-
         }
 
         @Override
@@ -54,8 +53,8 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         public void setHighGear(Boolean t) {
-                if (t) shifter.set(DoubleSolenoid.Value.kForward);
-                else shifter.set(DoubleSolenoid.Value.kReverse);
+                if (t) shifter.set(DoubleSolenoid.Value.kReverse);
+                else shifter.set(DoubleSolenoid.Value.kForward);
         }
 
         @Override

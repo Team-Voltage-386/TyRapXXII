@@ -30,6 +30,7 @@ public class ManualArcadeDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    aSubsystem.setHighGear(false);
     rootForward = 0;
     rootTurn = 0;
   }
