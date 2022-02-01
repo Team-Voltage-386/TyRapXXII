@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -45,5 +48,12 @@ public final class Constants {
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
         public static final int shiftUp = 4;
         public static final int shiftDown = 5;
+        public static final double kMPR = 0.4788;
+        public static final TalonSRX kGyro = new TalonSRX(9);
+
+        public static final double dP = 0.1;
+        public static final double dI = 0;
+        public static final double dD = 0.001;
+        public static final double dC = 0.4;
     }
 }
