@@ -8,13 +8,18 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
+
 import static frc.robot.Constants.ControllerConstants.*;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /** An example command that uses an example subsystem. */
 public class ManualArcadeDriveCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem aSubsystem;
   private boolean shiftUp = false;
+ 
 
   /**
    * Creates a new ExampleCommand.
@@ -40,6 +45,7 @@ public class ManualArcadeDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
     rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal);
     aSubsystem.arcadeDrive(rootForward, rootTurn);

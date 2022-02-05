@@ -40,14 +40,19 @@ public final class Constants {
         public static final int kRightJoystickPressed = 10;
     }
 
+    public static final class BallMovementConstants {
+        public static final int kIntakeID = 9;
+        public static final double kIntakePower = -0.6;
+    }
+
     public static final class DriveConstants {
         public static final int kFrontLeft = 2; // CAN (Spark)
         public static final int kFrontRight = 3; // CAN (Spark)
         public static final int kRearLeft = 4; // CAN (Spark)
         public static final int kRearRight = 5; // CAN (Spark)
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
-        public static final int shiftUp = 4;
-        public static final int shiftDown = 5;
+        public static final int shiftUp = 2;
+        public static final int shiftDown = 3;
         public static final double kMPR = 0.4788;
         public static final TalonSRX kGyro = new TalonSRX(9);
 

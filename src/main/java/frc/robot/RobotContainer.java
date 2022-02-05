@@ -29,10 +29,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  */
 public class RobotContainer {
 
-  // drivecontroller
   public static final Joystick driverController = new Joystick(0);
-
-  // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
@@ -41,6 +38,7 @@ public class RobotContainer {
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
   private final ManualArcadeDriveCommand manualDriveCommand = new ManualArcadeDriveCommand(driveSubSystem);
+  private final BallMovementSubSystem bmss = new BallMovementSubSystem();
 
   // The robot's subsystems and commands are defined here...
 
