@@ -8,22 +8,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-public class BallMovementSubSystem extends SubsystemBase {
+public class BallMovementSubsystem extends SubsystemBase {
     private final TalonSRX intakeMotor = new TalonSRX(kIntakeID);
 
 
-    public DriveSubsystem() {
+    public BallMovementSubsystem() {
                 
     }
 
     @Override
     public void periodic() {
-        if (b) intakeMotor.set(ControlMode.PercentOutput, kIntakePower);
-        else intakeMotor.set(ControlMode.PercentOutput, 0);
+        
     }
 
     public void runIntake(Boolean b) {
-        
+        if (b) intakeMotor.set(ControlMode.PercentOutput, kIntakePower);
+        else intakeMotor.set(ControlMode.PercentOutput, 0);
     }
 
     @Override

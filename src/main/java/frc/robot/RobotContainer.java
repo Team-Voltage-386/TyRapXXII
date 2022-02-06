@@ -13,6 +13,7 @@ import frc.robot.commands.drive.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,8 +38,9 @@ public class RobotContainer {
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
-  private final ManualArcadeDriveCommand manualDriveCommand = new ManualArcadeDriveCommand(driveSubSystem);
-  private final BallMovementSubSystem bmss = new BallMovementSubSystem();
+  private final BallMovementSubsystem bmss = new BallMovementSubsystem();
+  private final ManualArcadeDriveCommand manualDriveCommand = new ManualArcadeDriveCommand(driveSubSystem,bmss);
+  
 
   // The robot's subsystems and commands are defined here...
 

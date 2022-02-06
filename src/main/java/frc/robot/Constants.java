@@ -42,7 +42,7 @@ public final class Constants {
 
     public static final class BallMovementConstants {
         public static final int kIntakeID = 9;
-        public static final double kIntakePower = -0.6;
+        public static final double kIntakePower = -0.9;
     }
 
     public static final class DriveConstants {

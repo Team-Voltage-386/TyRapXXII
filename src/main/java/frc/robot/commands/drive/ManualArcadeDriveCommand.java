@@ -4,6 +4,7 @@
 
 package frc.robot.commands.drive;
 
+import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -18,6 +19,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class ManualArcadeDriveCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem aSubsystem;
+  private final BallMovementSubsystem _bmss;
   private boolean shiftUp = false;
  
 
@@ -26,10 +28,12 @@ public class ManualArcadeDriveCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ManualArcadeDriveCommand(DriveSubsystem subsystem) {
+  public ManualArcadeDriveCommand(DriveSubsystem subsystem, BallMovementSubsystem bmss) {
     aSubsystem = subsystem;
+    _bmss = bmss;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+    addRequirements(bmss);
   }
 
   // Called when the command is initially scheduled.
@@ -45,7 +49,7 @@ public class ManualArcadeDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    _bmss.runIntake(RobotContainer.driverController.getRawButton(kLeftBumper));
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
     rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal);
     aSubsystem.arcadeDrive(rootForward, rootTurn);
