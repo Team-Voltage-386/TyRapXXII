@@ -40,6 +40,7 @@ public class BigIronSubsystem extends SubsystemBase {
     public double drumCurrentSpeed = 0;
     public double drumSP = 0;
     public boolean ejectBall = false;
+    public boolean runBeltMan = false;
 
     //Misc.
     private final Timer ejectTimer = new Timer();
@@ -52,6 +53,7 @@ public class BigIronSubsystem extends SubsystemBase {
     private boolean hoodLowLimit = false;
     private boolean ballOnTheWay = false;
 
+    /**Creates a BigIronSubsystem*/
     public BigIronSubsystem() {
         pidD.reset();
         pidH.reset();
