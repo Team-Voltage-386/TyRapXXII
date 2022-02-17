@@ -119,10 +119,6 @@ public class DriveSubsystem extends SubsystemBase {
                 }
         }
 
-        public void linearDriveMeters(double m) {
-                
-        }
-
         public void resetEncoders() {
                 rightEncoder.setPosition(0.0);
                 leftEncoder.setPosition(0.0);
@@ -141,10 +137,5 @@ public class DriveSubsystem extends SubsystemBase {
         public void setHighGear(Boolean t) {
                 if (t) shifter.set(DoubleSolenoid.Value.kReverse);
                 else shifter.set(DoubleSolenoid.Value.kForward);
-        }
-
-        @Override
-        public void simulationPeriodic() {
-                // This method will be called once per scheduler run during simulation
         }
 }
