@@ -35,10 +35,6 @@ public class DriveSubsystem extends SubsystemBase {
         PigeonIMU _pigeon;
         PigeonIMU.GeneralStatus genStatus = new PigeonIMU.GeneralStatus();
         double[] ypr = new double[3];
-        public Boolean imuActive = false;
-        public Boolean autoDriving = false;
-        private final DifferentialDriveOdometry odometry;
-        private final PIDController pid = new PIDController(dP, dI, dD);
 
 
         private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
@@ -82,7 +78,6 @@ public class DriveSubsystem extends SubsystemBase {
                 frontRightMotor.setInverted(false);
                 rearLeftMotor.follow(frontLeftMotor);// front left yields faulty encoder values so that set follower
                 rearRightMotor.follow(frontRightMotor);
-                odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(ypr[0]));
                 leftEncoder.setPositionConversionFactor(kMPR);
                 rightEncoder.setPositionConversionFactor(kMPR);
                 _pigeon = new PigeonIMU(kGyro);
@@ -111,12 +106,6 @@ public class DriveSubsystem extends SubsystemBase {
                 // Update encoder widgets
                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
-
-
-                if (imuActive) {
-                        _pigeon.getGeneralStatus(genStatus);
-                        _pigeon.getYawPitchRoll(ypr);
-                }
         }
 
         public void resetEncoders() {
