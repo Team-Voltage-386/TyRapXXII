@@ -40,9 +40,21 @@ public final class Constants {
         public static final int kRightJoystickPressed = 10;
     }
 
-    public static final class BallMovementConstants {
+    public static final class BigIronConstants {
+        public static final int kDrumLeadID = 0;
+        public static final int kDrumFollowID = 0;
+        public static final int kDrumIdleSpeed = 2800;
+        public static final int kDrumSpeedTolerance = 75;
+        public static final double kHoodPositionTolerance = 0.05;
         public static final int kIntakeID = 9;
         public static final double kIntakePower = -0.9;
+        public static final double HP = 0;
+        public static final double HI = 0;
+        public static final double HD = 0;
+        public static final double HC = 1;
+        public static final double DP = 0;
+        public static final double DI = 0;
+        public static final double DD = 0;
     }
 
     public static final class DriveConstants {
@@ -60,5 +72,9 @@ public final class Constants {
         public static final double dI = 0;
         public static final double dD = 0.001;
         public static final double dC = 0.4;
+    }
+
+    public static final class ShooterData {
+
     }
 }
