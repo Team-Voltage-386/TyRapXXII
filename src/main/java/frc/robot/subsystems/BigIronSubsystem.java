@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
 import frc.robot.Robot;
 import static frc.robot.Constants.ShooterData.*;
 
@@ -10,36 +11,40 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.BigIronConstants.*;
+import static frc.robot.Constants.BigIronConstants.BigIronConstants$Value;
 
-/**Subsystem of the BIG IRON*/
+/** Subsystem of the BIG IRON */
 public class BigIronSubsystem extends SubsystemBase {
-
-    //motors
+    // motors
     private final TalonSRX intakeMotor = new TalonSRX(kIntakeID);
     private final CANSparkMax drumLeadMotor = new CANSparkMax(kDrumLeadID, MotorType.kBrushless);
     private final CANSparkMax drumFollowMotor = new CANSparkMax(kDrumFollowID, MotorType.kBrushless);
-    private final TalonSRX hoodMotor = new TalonSRX(kHoodID);
-    private final DutyCycleEncoder hoodEncoder = new DutyCycleEncoder(kHoodEncoder);
-    private final TalonSRX beltMotor = new TalonSRX(kBeltID);
 
-    
-    //solenoids
-    //private final DoubleSolenoid intakeSol1 = new DoubleSolenoid
+    // solenoids
+    private final DoubleSolenoid intakeForward = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+            kChannelIntakeForwardGo, kChannelIntakeForwardVent);
+    private final DoubleSolenoid intakeBackward = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+            kChannelIntakeBackwardGo, kChannelIntakeBackwardVent);
+    private final static Value kGo = Value.kForward;
+    private final static Value kVent = Value.kReverse;
 
-    //PID Controllers
-    private final PIDController pidH = new PIDController(HP,HI,HD);
-    private final PIDController pidD = new PIDController(DP,DI,DD);
+    // PID Controllers
+    private final PIDController pidH = new PIDController(0, 0, 0);
+    private final PIDController pidD = new PIDController(0, 0, 0);
 
-    //Sensors
+    // Sensors
     public boolean breachSensor = false;
     public boolean intakeSensor = false;
 
-    //Public values
+    // Public values
     public boolean fireTheBigIron = false;
     public boolean drumControllerOn = false;
     public boolean drumIdle = false;
@@ -50,10 +55,10 @@ public class BigIronSubsystem extends SubsystemBase {
     public boolean runHoodMan = false;
     public double hoodManPower = 0;
 
-    //Misc.
+    // Misc.
     private final Timer ejectTimer = new Timer();
 
-    //Private process variables
+    // Private process variables
     private boolean calibrated = false;
     private double hoodSet = 0;
     private boolean drumPIDRunning = false;
@@ -61,7 +66,7 @@ public class BigIronSubsystem extends SubsystemBase {
     private boolean hoodLowLimit = false;
     private boolean ballOnTheWay = false;
 
-    /**Creates a BigIronSubsystem*/
+    /** Creates a BigIronSubsystem */
     public BigIronSubsystem() {
         pidD.reset();
         pidH.reset();
@@ -81,7 +86,27 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
     public boolean readyToFire() {
-        return Math.abs(drumSP - drumCurrentSpeed) < kDrumSpeedTolerance && Math.abs(hoodSet - hoodCurrentPosition) < kHoodPositionTolerance;
+        return Math.abs(drumSP - drumCurrentSpeed) < kDrumSpeedTolerance
+                && Math.abs(hoodSet - hoodCurrentPosition) < kHoodPositionTolerance;
+    }
+
+    /**
+     * Do the intake
+     * 
+     * @param intakeState 0=vent both, 1=intake out, 2= intake retract
+     */
+    public void intakeDo(int intakeState) {
+        if (intakeState == 0) {
+            intakeForward.set(kVent);
+            intakeBackward.set(kVent);
+        } else if (intakeState == 1) {
+            intakeForward.set(kGo);
+            intakeBackward.set(kVent);
+        } else if (intakeState == 2) {
+            intakeForward.set(kVent);
+            intakeBackward.set(kGo);
+        }
+
     }
 
     @Override
@@ -98,8 +123,10 @@ public class BigIronSubsystem extends SubsystemBase {
 
     private void logic() {
         if (ejectBall) {
-            if (breachSensor) ejectTimer.reset();
-            else ejectTimer.start();
+            if (breachSensor)
+                ejectTimer.reset();
+            else
+                ejectTimer.start();
             if (ejectTimer.hasElapsed(1)) {
                 ejectTimer.stop();
                 ejectTimer.reset();
