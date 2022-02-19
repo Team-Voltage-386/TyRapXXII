@@ -31,6 +31,8 @@ public class BigIronSubsystem extends SubsystemBase {
             kChannelIntakeForwardGo, kChannelIntakeForwardVent);
     private final DoubleSolenoid intakeBackward = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
             kChannelIntakeBackwardGo, kChannelIntakeBackwardVent);
+    private final static Value kGo = Value.kForward;
+    private final static Value kVent = Value.kReverse;
 
     // PID Controllers
     private final PIDController pidH = new PIDController(0, 0, 0);
@@ -86,12 +88,14 @@ public class BigIronSubsystem extends SubsystemBase {
      */
     public void intakeDo(int intakeState) {
         if (intakeState == 0) {
-            intakeForward.set(Value.kForward);
-            intakeBackward.set(Value.kReverse);
+            intakeForward.set(kVent);
+            intakeBackward.set(kVent);
         } else if (intakeState == 1) {
-
-        } else if (intakeState == 3) {
-
+            intakeForward.set(kGo);
+            intakeBackward.set(kVent);
+        } else if (intakeState == 2) {
+            intakeForward.set(kVent);
+            intakeBackward.set(kGo);
         }
 
     }
