@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.Constants.DriveConstants.*;
@@ -12,7 +11,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import static frc.robot.Constants.ControllerConstants.*;
 
-/**Driver TeleOp Command*/
+/** Driver TeleOp Command */
 public class D_TeleOp extends CommandBase {
   private final DriveSubsystem _dss;
   private final BigIronSubsystem _bss;
@@ -21,11 +20,12 @@ public class D_TeleOp extends CommandBase {
   private double rootForward, rootTurn;
   public Boolean ballFound = false;
   private boolean highGear = false;
-  
 
-  /**Driver TeleOp Command
-   * @param DSS The drive subsystem used by this command.
-   * @param LLS the hoop LL subsystem used by this command.
+  /**
+   * Driver TeleOp Command
+   * 
+   * @param DSS  The drive subsystem used by this command.
+   * @param LLS  the hoop LL subsystem used by this command.
    * @param LLSB the ball LL subsystem used by this command.
    */
   public D_TeleOp(DriveSubsystem DSS, BigIronSubsystem BSS) {
@@ -36,16 +36,16 @@ public class D_TeleOp extends CommandBase {
     addRequirements(_dss);
   }
 
-  /**Called when the command is initially scheduled.*/
+  /** Called when the command is initially scheduled. */
   @Override
   public void initialize() {
     rootForward = 0;
     rootTurn = 0;
-    pid.setTolerance(1,1);
+    pid.setTolerance(1, 1);
     _bss.runHoodMan = true;
   }
 
-  /**Called every time the scheduler runs while the command is scheduled.*/
+  /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
     rootForward = _controller.getRawAxis(kLeftVertical);
@@ -60,8 +60,17 @@ public class D_TeleOp extends CommandBase {
     _bss.runBeltMan = _controller.getRawButton(kX);
     _bss.runIntake(_controller.getRawButton(kLeftBumper));
     _dss.arcadeDrive(rootForward, rootTurn);
+
+    if (_controller.getRawButtonPressed(kY)) {
+      intakeState++;
+    }
+    if (intakeState >= 4) {
+      intakeState = 0;
+    }
+    _bss.intakeDo(intakeState);
   }
 
+  protected int intakeState = 0;
 
   // Called once the command ends or is interrupted.
   @Override

@@ -28,7 +28,7 @@ public class DriveSubsystem extends SubsystemBase {
         public final CANSparkMax rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft,MotorType.kBrushless);
         public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,MotorType.kBrushless);
         public final DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
-       private final DoubleSolenoid shifter = new DoubleSolenoid(2, solenoidType,shiftUp,shiftDown);
+        private final DoubleSolenoid shifter = new DoubleSolenoid(2, solenoidType,shiftUp,shiftDown);
         // Sensor instantiations
         RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
         RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
