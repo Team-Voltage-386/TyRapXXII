@@ -45,13 +45,18 @@ public final class Constants {
     }
 
     public static final class BigIronConstants {
-        public static final int kDrumLeadID = 0;
-        public static final int kDrumFollowID = 0;
+        public static final int kDrumLeadID = 11;
+        public static final int kDrumFollowID = 12;
+        public static final int kDrumDirection = -1;
         public static final int kDrumIdleSpeed = 2800;
         public static final int kDrumSpeedTolerance = 75;
         public static final double kHoodPositionTolerance = 0.05;
-        public static final int kIntakeID = 9;
+        public static final int kIntakeID = 30;
+        public static final int kHoodID = 31;
+        public static final int kBeltID = 32;
+        public static final int kHoodEncoder = 0;
         public static final double kIntakePower = -0.9;
+        public static final double kBeltPower = 0.5;
         public static final double HP = 0;
         public static final double HI = 0;
         public static final double HD = 0;
@@ -79,6 +84,10 @@ public final class Constants {
         public static final double kMPR = 0.4788;
         public static final TalonSRX kGyro = new TalonSRX(9);
 
+        public static final double tP = 0;
+        public static final double tI = 0;
+        public static final double tD = 0;
+        public static final double tC = 0.8;
         public static final double dP = 0.1;
         public static final double dI = 0;
         public static final double dD = 0.001;
