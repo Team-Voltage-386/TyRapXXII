@@ -19,6 +19,7 @@ public class D_TeleOp extends CommandBase {
   private final PIDController pid = new PIDController(tP, tI, tD);
   private double rootForward, rootTurn;
   public Boolean ballFound = false;
+  private boolean highGear = false;
 
   /**
    * Driver TeleOp Command
@@ -48,10 +49,16 @@ public class D_TeleOp extends CommandBase {
   @Override
   public void execute() {
     rootForward = _controller.getRawAxis(kLeftVertical);
-    rootTurn = _controller.getRawAxis(kRightHorizontal);
+    rootTurn = -_controller.getRawAxis(kRightHorizontal);
 
     _bss.hoodManPower = _controller.getRawAxis(kRightVertical);
+    if (_controller.getRawButtonPressed(kB)) _bss.drumIdle = !_bss.drumIdle;
+    if (_controller.getRawButtonPressed(kA)) {
+        highGear = !highGear;
+        _dss.setHighGear(highGear);
+    }
     _bss.runBeltMan = _controller.getRawButton(kX);
+    _bss.runIntake(_controller.getRawButton(kLeftBumper));
     _dss.arcadeDrive(rootForward, rootTurn);
 
     if (_controller.getRawButtonPressed(kY)) {
