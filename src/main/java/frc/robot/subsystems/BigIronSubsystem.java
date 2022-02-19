@@ -6,12 +6,18 @@ import static frc.robot.Constants.ShooterData.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.BigIronConstants.*;
@@ -24,7 +30,7 @@ public class BigIronSubsystem extends SubsystemBase {
     private final CANSparkMax drumLeadMotor = new CANSparkMax(kDrumLeadID, MotorType.kBrushless);
     private final CANSparkMax drumFollowMotor = new CANSparkMax(kDrumFollowID, MotorType.kBrushless);
     private final TalonSRX hoodMotor = new TalonSRX(kHoodID);
-    private final DutyCycleEncoder hoodEncoder = new DutyCycleEncoder(kHoodEncoder);
+    private final DutyCycleEncoder hoodEncoder = new DutyCycleEncoder(kHoodEncoderPin);
     private final TalonSRX beltMotor = new TalonSRX(kBeltID);
 
     
@@ -36,8 +42,8 @@ public class BigIronSubsystem extends SubsystemBase {
     private final PIDController pidD = new PIDController(DP,DI,DD);
 
     //Sensors
-    public boolean breachSensor = false;
-    public boolean intakeSensor = false;
+    private final DigitalInput breachSensor = new DigitalInput(1);
+    private ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
     //Public values
     public boolean fireTheBigIron = false;
@@ -60,6 +66,8 @@ public class BigIronSubsystem extends SubsystemBase {
     private double hoodCurrentPosition = 0;
     private boolean hoodLowLimit = false;
     private boolean ballOnTheWay = false;
+    private boolean breachSensorFlag = false;
+    private boolean intakeSensorFlag = false;
 
     /**Creates a BigIronSubsystem*/
     public BigIronSubsystem() {
@@ -98,7 +106,7 @@ public class BigIronSubsystem extends SubsystemBase {
 
     private void logic() {
         if (ejectBall) {
-            if (breachSensor) ejectTimer.reset();
+            if (breachSensorFlag) ejectTimer.reset();
             else ejectTimer.start();
             if (ejectTimer.hasElapsed(1)) {
                 ejectTimer.stop();
@@ -109,7 +117,7 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
     private void readSensors() {
-
+        hoodCurrentPosition = hoodEncoder.get();
     }
 
     private void runHood() {
@@ -139,12 +147,25 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
     private void runFeedBelt() {
-        if ((fireTheBigIron && breachSensor && readyToFire()) || ballOnTheWay || ejectBall || runBeltMan) {
-            if (breachSensor) ballOnTheWay = false;
+        if ((fireTheBigIron && breachSensorFlag && readyToFire()) || ballOnTheWay || ejectBall || runBeltMan) {
+            if (breachSensorFlag) ballOnTheWay = false;
             beltMotor.set(ControlMode.PercentOutput, kBeltPower);// run belt
-        } else if (!breachSensor && intakeSensor) {
+        } else if (!breachSensorFlag && intakeSensorFlag) {
             ballOnTheWay = true;
             beltMotor.set(ControlMode.PercentOutput, kBeltPower);// run belt
         } else beltMotor.set(ControlMode.PercentOutput, 0); //don't run belt
+    }
+
+    private final ShuffleboardTab tab = Shuffleboard.getTab("BigIron");
+    private final NetworkTableEntry brWidget = tab.add("Breach",false).withPosition(0, 0).getEntry();
+    private final NetworkTableEntry inWidget = tab.add("intake",false).withPosition(0, 1).getEntry();
+    private final NetworkTableEntry encWidget = tab.add("HEncoder",0).withPosition(0, 2).getEntry();
+    private final NetworkTableEntry botwWidget = tab.add("botw",false).withPosition(1, 0).getEntry();
+
+    private void updateWidgets() {
+        brWidget.setBoolean(breachSensorFlag);
+        inWidget.setBoolean(intakeSensorFlag);
+        encWidget.setDouble(hoodCurrentPosition);
+        botwWidget.setBoolean(ballOnTheWay);
     }
 }
