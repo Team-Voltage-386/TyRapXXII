@@ -65,12 +65,10 @@ public final class Constants {
         public static final double DI = 0;
         public static final double DD = 0;
 
-        public static final int kChannelIntakeForwardGo = 0;
-        public static final int kChannelIntakeForwardVent = 0;
-        public static final int kChannelIntakeBackwardGo = 0;
-        public static final int kChannelIntakeBackwardVent = 0;
-
-        public enum 
+        public static final int kChannelIntakeForwardGo = 7;
+        public static final int kChannelIntakeForwardVent = 5;
+        public static final int kChannelIntakeBackwardGo = 6;
+        public static final int kChannelIntakeBackwardVent = 4;
     }
 
     public static final class DriveConstants {
