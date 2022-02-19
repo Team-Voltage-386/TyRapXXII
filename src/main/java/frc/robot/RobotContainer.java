@@ -9,13 +9,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.commands.drive.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
+import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.BallMovementSubsystem;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.D_TeleOp;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -33,13 +31,15 @@ public class RobotContainer {
   public static final Joystick driverController = new Joystick(0);
   public static final Joystick manipulatorController = new Joystick(1);
 
+
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  private final BigIronSubsystem bigIron = new BigIronSubsystem();
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
-  private final BallMovementSubsystem bmss = new BallMovementSubsystem();
-  private final ManualArcadeDriveCommand manualDriveCommand = new ManualArcadeDriveCommand(driveSubSystem,bmss);
+
+  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem, bigIron);
   
 
   // The robot's subsystems and commands are defined here...
