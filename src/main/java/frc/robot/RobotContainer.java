@@ -13,6 +13,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.KenobiSubsystem;
 import frc.robot.commands.D_TeleOp;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -35,11 +36,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BigIronSubsystem bigIron = new BigIronSubsystem();
+  private final KenobiSubsystem kenobi = new KenobiSubsystem();
+
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
-  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem, bigIron);
+  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem, bigIron, kenobi);
   
 
   // The robot's subsystems and commands are defined here...

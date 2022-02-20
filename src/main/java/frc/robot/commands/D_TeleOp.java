@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.KenobiSubsystem;
+
 import static frc.robot.Constants.DriveConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -15,7 +17,9 @@ import static frc.robot.Constants.ControllerConstants.*;
 public class D_TeleOp extends CommandBase {
   private final DriveSubsystem _dss;
   private final BigIronSubsystem _bss;
-  private final Joystick _controller;
+  private final KenobiSubsystem _kss;
+  private final Joystick _driverController;
+  private final Joystick _manipulatorController;
   private final PIDController pid = new PIDController(tP, tI, tD);
   private double rootForward, rootTurn;
   public Boolean ballFound = false;
@@ -27,13 +31,16 @@ public class D_TeleOp extends CommandBase {
    * @param DSS  The drive subsystem used by this command.
    * @param LLS  the hoop LL subsystem used by this command.
    * @param LLSB the ball LL subsystem used by this command.
+   * @param kss the elevator subsytem
    */
-  public D_TeleOp(DriveSubsystem DSS, BigIronSubsystem BSS) {
+  public D_TeleOp(DriveSubsystem DSS, BigIronSubsystem BSS, KenobiSubsystem KSS) {
     _dss = DSS;
     _bss = BSS;
-    _controller = RobotContainer.driverController;
+    _kss = KSS;
+    _driverController = RobotContainer.driverController;
+    _manipulatorController = RobotContainer.manipulatorController;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(_dss);
+    addRequirements(_dss,_bss,_kss);
   }
 
   /** Called when the command is initially scheduled. */
@@ -47,19 +54,22 @@ public class D_TeleOp extends CommandBase {
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
-    rootForward = _controller.getRawAxis(kLeftVertical);
-    rootTurn = -_controller.getRawAxis(kRightHorizontal);
+    rootForward = _driverController.getRawAxis(kLeftVertical);
+    rootTurn = -_driverController.getRawAxis(kRightHorizontal);
 
-    if (_controller.getRawButtonPressed(kB)) _bss.drumIdle = !_bss.drumIdle;
-    if (_controller.getRawButtonPressed(kA)) {
+    if (_driverController.getRawButtonPressed(kB)) _bss.drumIdle = !_bss.drumIdle;
+    if (_driverController.getRawButtonPressed(kA)) {
         highGear = !highGear;
         _dss.setHighGear(highGear);
     }
-    _bss.runBeltMan = _controller.getRawButton(kX);
-    _bss.runIntake(_controller.getRawButton(kLeftBumper));
+    _bss.runBeltMan = _driverController.getRawButton(kX);
+    _bss.runIntake(_driverController.getRawButton(kLeftBumper));
     _dss.arcadeDrive(rootForward, rootTurn);
-    _bss.intakeDo(_controller.getRawButtonPressed(kY));
-    if (_controller.getRawButtonPressed(kRightBumper)) _bss.ballOnTheWay = false;
+    _bss.intakeDo(_driverController.getRawButtonPressed(kY));
+    if (_driverController.getRawButtonPressed(kRightBumper)) _bss.ballOnTheWay = false;
+
+    if(_manipulatorController.getRawButtonPressed(kX)) _kss.elevatorsDo();
+
     // runIntake(_controller.getRawButtonPressed(kY));
   }
 /*

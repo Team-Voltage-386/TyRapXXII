@@ -77,6 +77,11 @@ public final class Constants {
         public static final int kChannelIntakeBackwardVent = 4;
     }
 
+    public static final class KenobiConstants {
+        public static final int kChannelClimbIn = 0;
+        public static final int kChannelClimbOUt = 1;
+    }
+
     public static final class DriveConstants {
         public static final int kFrontLeft = 2; // CAN (Spark)
         public static final int kFrontRight = 3; // CAN (Spark)
