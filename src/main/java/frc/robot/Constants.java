@@ -85,13 +85,13 @@ public final class Constants {
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
         public static final int shiftUp = 2;
         public static final int shiftDown = 3;
-        public static final double kMPR = 0.4788;
+        public static final double kMPR = 0.4788;//meters per revolution
         public static final TalonSRX kGyro = new TalonSRX(9);
 
-        public static final double tP = 0;
-        public static final double tI = 0;
-        public static final double tD = 0;
-        public static final double tC = 0.8;
+        public static final double tP = 0;//P
+        public static final double tI = 0;//I
+        public static final double tD = 0;//D
+        public static final double tC = 0.8;//Clamp //t and d are two different PID controllers
         public static final double dP = 0.1;
         public static final double dI = 0;
         public static final double dD = 0.001;

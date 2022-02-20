@@ -23,20 +23,27 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 public class DriveSubsystem extends SubsystemBase {
 
         // initialize motors and drivetrain
-        public final CANSparkMax frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,MotorType.kBrushless);
-        public final CANSparkMax frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight,MotorType.kBrushless);
-        public final CANSparkMax rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft,MotorType.kBrushless);
-        public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,MotorType.kBrushless);
+        public final CANSparkMax frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,
+                        MotorType.kBrushless);
+        public final CANSparkMax frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight,
+                        MotorType.kBrushless);
+        public final CANSparkMax rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft,
+                        MotorType.kBrushless);
+        public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
+                        MotorType.kBrushless);
         public final DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
-        private final DoubleSolenoid shifter = new DoubleSolenoid(2, solenoidType,shiftUp,shiftDown);
+        private final DoubleSolenoid shifter = new DoubleSolenoid(2, solenoidType, shiftUp, shiftDown);
         // Sensor instantiations
         RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
         RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
         PigeonIMU _pigeon;
         PigeonIMU.GeneralStatus genStatus = new PigeonIMU.GeneralStatus();
+        // odometry
         double[] ypr = new double[3];
+        Pose2d pos = new Pose2d();
+        DifferentialDriveOdometry odometry;
 
-
+        // shuffleboard
         private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
 
         // Create output widgets
@@ -63,9 +70,13 @@ public class DriveSubsystem extends SubsystemBase {
         private NetworkTableEntry rightEncoderWidget = tab.add("Right Encoder", 0).withSize(2, 1).withPosition(4, 2)
                         .getEntry();
 
-
-                        
-
+        // odometry widgets
+        private NetworkTableEntry xWidget = tab.add("Position X", 0.0).withPosition(0, 2).withSize(1, 1).getEntry();
+        private NetworkTableEntry yWidget = tab.add("Position Y", 0.0).withPosition(1, 2).withSize(1, 1).getEntry();
+        private final NetworkTableEntry rhWidget = tab.add("Raw_Heading", 0).withPosition(0, 1).withSize(1, 1)
+                        .getEntry();
+        private final NetworkTableEntry ohWidget = tab.add("Odom_Heading", 0).withPosition(1, 1).withSize(1, 1)
+                        .getEntry();
 
         public DriveSubsystem() {
                 // drivetrain
@@ -85,6 +96,12 @@ public class DriveSubsystem extends SubsystemBase {
 
         @Override
         public void periodic() {
+                updateIMU();
+                updateOdometry();
+                updateWidgets();
+        }
+
+        public void updateWidgets() {
                 // Update output widgets
                 frontLeftOutputWidget.setDouble(frontLeftMotor.get());
                 frontRightOutputWidget.setDouble(frontRightMotor.get());
@@ -106,6 +123,12 @@ public class DriveSubsystem extends SubsystemBase {
                 // Update encoder widgets
                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
+
+                // update odometry widgets
+                xWidget.setDouble(getPose().getX());
+                yWidget.setDouble(getPose().getY());
+                rhWidget.setDouble(getRawHeading());
+                ohWidget.setDouble(getPose().getRotation().getDegrees());
         }
 
         public void resetEncoders() {
@@ -118,13 +141,52 @@ public class DriveSubsystem extends SubsystemBase {
                 driveTrain.arcadeDrive(forwardPower, turnPower);
         }
 
-        //tank drive method to be called by commands
+        // tank drive method to be called by commands
         public void tankDrive(Double leftPower, Double rightPower) {
                 driveTrain.tankDrive(leftPower, rightPower);
         }
 
         public void setHighGear(Boolean t) {
-                if (t) shifter.set(DoubleSolenoid.Value.kReverse);
-                else shifter.set(DoubleSolenoid.Value.kForward);
+                if (t)
+                        shifter.set(DoubleSolenoid.Value.kReverse);
+                else
+                        shifter.set(DoubleSolenoid.Value.kForward);
+        }
+
+        public Pose2d getPose() {
+                return odometry.getPoseMeters();
+        }
+
+        public void resetOdometry(Pose2d pose) {
+                resetEncoders();
+                odometry.resetPosition(pose, Rotation2d.fromDegrees(getRawHeading()));
+        }
+
+        public double getRawHeading() {
+                double y = -ypr[0];
+                while (y < 0)
+                        y += 360;
+                while (y > 360)
+                        y -= 360;
+                return y;
+        }
+
+        public double getHeadingError(double sp) {
+                double v = sp - getPose().getRotation().getDegrees();
+                while (v < -180)
+                        v += 360;
+                while (v > 180)
+                        v -= 360;
+                return v;
+        }
+
+        private void updateIMU() {
+                _pigeon.getGeneralStatus(genStatus);
+                _pigeon.getYawPitchRoll(ypr);
+        }
+
+        private void updateOdometry() {
+                odometry.update(Rotation2d.fromDegrees(getRawHeading()), leftEncoder.getPosition(),
+                                rightEncoder.getPosition());
         }
 }
