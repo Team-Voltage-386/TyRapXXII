@@ -253,7 +253,7 @@ public class BigIronSubsystem extends SubsystemBase {
     private boolean ejectBelt = false;
 
     private void runFeedBelt() {
-        else if (ballCount == 0) {
+        if (ballCount == 0) {
             if (!ballOnTheWay) {
                 if (!breachSensorFlag && intakeSensorFlag) {
                     ballOnTheWay = true;
