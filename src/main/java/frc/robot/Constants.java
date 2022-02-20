@@ -5,10 +5,13 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -51,9 +54,10 @@ public final class Constants {
         public static final int kDrumIdleSpeed = 2800;
         public static final int kDrumSpeedTolerance = 75;
         public static final int kHoodDownLimitPin = 9;
-        public static final int kBreachSensorPin = 1;
-        public static final int intakeColorSensorThreshold = 100;
+        public static final int kBreachSensorPin = 0;
+        public static final int kIntakeColorSensorThreshold = 140;
         public static final double kHoodPositionTolerance = 0.05;
+        public static final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
         public static final int kIntakeID = 30;
         public static final int kHoodID = 31;
         public static final int kBeltID = 32;

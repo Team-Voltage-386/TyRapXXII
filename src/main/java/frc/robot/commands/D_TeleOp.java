@@ -42,7 +42,6 @@ public class D_TeleOp extends CommandBase {
     rootForward = 0;
     rootTurn = 0;
     pid.setTolerance(1, 1);
-    _bss.runHoodMan = true;
   }
 
   /** Called every time the scheduler runs while the command is scheduled. */
@@ -51,7 +50,6 @@ public class D_TeleOp extends CommandBase {
     rootForward = _controller.getRawAxis(kLeftVertical);
     rootTurn = -_controller.getRawAxis(kRightHorizontal);
 
-    _bss.hoodManPower = _controller.getRawAxis(kRightVertical);
     if (_controller.getRawButtonPressed(kB)) _bss.drumIdle = !_bss.drumIdle;
     if (_controller.getRawButtonPressed(kA)) {
         highGear = !highGear;
@@ -60,17 +58,16 @@ public class D_TeleOp extends CommandBase {
     _bss.runBeltMan = _controller.getRawButton(kX);
     _bss.runIntake(_controller.getRawButton(kLeftBumper));
     _dss.arcadeDrive(rootForward, rootTurn);
-
-    if (_controller.getRawButtonPressed(kY)) {
-      intakeState++;
-    }
-    if (intakeState >= 4) {
-      intakeState = 0;
-    }
-    _bss.intakeDo(intakeState);
+    _bss.intakeDo(_controller.getRawButtonPressed(kY));
+    if (_controller.getRawButtonPressed(kRightBumper)) _bss.ballOnTheWay = false;
+    // runIntake(_controller.getRawButtonPressed(kY));
   }
-
+/*
   protected int intakeState = 0;
+  private void runIntake(boolean b) {
+      if (b) intakeState++;
+      _bss.intakeDo(intakeState%4);
+  }*/
 
   // Called once the command ends or is interrupted.
   @Override

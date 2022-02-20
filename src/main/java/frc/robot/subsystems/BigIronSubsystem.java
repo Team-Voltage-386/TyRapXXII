@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -29,7 +30,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static frc.robot.Constants.BigIronConstants.*;
 
-/** Subsystem of the BIG IRON */
+/** Subsystem of the BIG IRON
+ * (Ball movement stuff)
+ */
 public class BigIronSubsystem extends SubsystemBase {
     // motors
     private final TalonSRX intakeMotor = new TalonSRX(kIntakeID);
@@ -52,12 +55,11 @@ public class BigIronSubsystem extends SubsystemBase {
     private final PIDController pidD = new PIDController(0, 0, 0);
 
     //Sensors
-    private final DigitalInput breachSensor = new DigitalInput(1);
-    private ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kOnboard);
-    AnalogInput pressureSensor = new AnalogInput(3);// airTank sensor
+    private final DigitalInput breachSensor = new DigitalInput(kBreachSensorPin);
+    private final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
+    private final AnalogInput pressureSensor = new AnalogInput(3);// airTank sensor
 
-    double sensor_current_pressure;
-    double sensor_current_voltage;
+    double tankPressure;
 
     // Public values
     public boolean fireTheBigIron = false;
@@ -79,7 +81,7 @@ public class BigIronSubsystem extends SubsystemBase {
     private boolean drumPIDRunning = false;
     private double hoodCurrentPosition = 0;
     private boolean hoodLowLimit = false;
-    private boolean ballOnTheWay = false;
+    public boolean ballOnTheWay = false;
     private boolean breachSensorFlag = false;
     private boolean intakeSensorFlag = false;
 
@@ -109,23 +111,33 @@ public class BigIronSubsystem extends SubsystemBase {
                 && Math.abs(hoodSet - hoodCurrentPosition) < kHoodPositionTolerance;
     }
 
+
+    private boolean intakeOut = false;
+    private Timer t = new Timer();
     /**
      * Do the intake
      * 
-     * @param intakeState 1 or 3=vent both, 0=intake out, 2= intake retract
+     * @param hOut - controller raw button
+     * @param trigger - controller raw button pressed
      */
-    public void intakeDo(int intakeState) {
-        if (intakeState == 1 || intakeState == 3) {
+    public void intakeDo(boolean b) {
+        if (b) {
+            if (!intakeOut) {
+                intakeOut = true;
+                t.start();
+                intakeForward.set(kGo);
+                intakeBackward.set(kVent);
+            } else {
+                intakeOut = false;
+                t.stop();
+                t.reset();
+                intakeForward.set(kVent);
+                intakeBackward.set(kGo);
+            }
+        } else if (t.hasElapsed(0.5)) {
             intakeForward.set(kVent);
             intakeBackward.set(kVent);
-        } else if (intakeState == 0) {
-            intakeForward.set(kGo);
-            intakeBackward.set(kVent);
-        } else if (intakeState == 2) {
-            intakeForward.set(kVent);
-            intakeBackward.set(kGo);
         }
-
     }
 
     @Override
@@ -139,6 +151,7 @@ public class BigIronSubsystem extends SubsystemBase {
         }
         runDrum();
         runFeedBelt();
+        updateWidgets();
     }
 
     private void logic() {
@@ -154,15 +167,14 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
     private void readSensors() {
+        double inSens = intakeSensor.getProximity();
         hoodCurrentPosition = hoodEncoder.get();
-        // display voltage from the pressure sensor (from DEMOboard)
-        sensor_current_voltage = pressureSensor.getVoltage();
-        SmartDashboard.putNumber("Voltage", sensor_current_voltage);
-
+        breachSensorFlag = !breachSensor.get();
+        
+        intakeSensorFlag = (inSens > 300 || inSens < 240) && intakeOut;
         // According to Rev documentation pressure = 250 (voltageOut/voltageSupply)-25
         // display calculated pressure
-        sensor_current_pressure = 250 * (sensor_current_voltage / 5) - 25;
-        SmartDashboard.putNumber("Pressure", sensor_current_pressure);
+        tankPressure = 250 * (pressureSensor.getVoltage() / 5) - 25;
     }
 
     private void runHood() {
@@ -171,7 +183,7 @@ public class BigIronSubsystem extends SubsystemBase {
             if (!hoodLowLimit)
                 hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
             else
-                MathUtil.clamp(control, 0, 1);// limit that hood thing
+                MathUtil.clamp(control, 0, -1);// limit that hood thing
         }
     }
 
@@ -194,8 +206,8 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
     private void runFeedBelt() {
+        if (breachSensorFlag) ballOnTheWay = false;
         if ((fireTheBigIron && breachSensorFlag && readyToFire()) || ballOnTheWay || ejectBall || runBeltMan) {
-            if (breachSensorFlag) ballOnTheWay = false;
             beltMotor.set(ControlMode.PercentOutput, kBeltPower);// run belt
         } else if (!breachSensorFlag && intakeSensorFlag) {
             ballOnTheWay = true;
@@ -209,11 +221,15 @@ public class BigIronSubsystem extends SubsystemBase {
     private final NetworkTableEntry inWidget = tab.add("intake",false).withPosition(0, 1).getEntry();
     private final NetworkTableEntry encWidget = tab.add("HEncoder",0).withPosition(0, 2).getEntry();
     private final NetworkTableEntry botwWidget = tab.add("botw",false).withPosition(1, 0).getEntry();
+    private final NetworkTableEntry presWidget = tab.add("pres",0).withPosition(1, 1).getEntry();
+    private final NetworkTableEntry colWidget = tab.add("col",0).withPosition(1, 2).getEntry();
 
     private void updateWidgets() {
         brWidget.setBoolean(breachSensorFlag);
         inWidget.setBoolean(intakeSensorFlag);
         encWidget.setDouble(hoodCurrentPosition);
         botwWidget.setBoolean(ballOnTheWay);
+        presWidget.setDouble(tankPressure);
+        colWidget.setDouble(intakeSensor.getProximity());
     }
 }
