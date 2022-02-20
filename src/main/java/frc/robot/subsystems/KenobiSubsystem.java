@@ -12,8 +12,8 @@ import frc.robot.Constants.KenobiConstants;
 
 public class KenobiSubsystem extends SubsystemBase {
   // pneumatics
-  DoubleSolenoid elevators = new DoubleSolenoid(2, PneumaticsModuleType.CTREPCM,
-      KenobiConstants.kChannelClimbIn, KenobiConstants.kChannelClimbOUt);
+  DoubleSolenoid arms = new DoubleSolenoid(2, PneumaticsModuleType.CTREPCM,
+      KenobiConstants.kChannelClimbOut, KenobiConstants.kChannelClimbIn);
 
   /** Creates a new Kenobi. */
   public KenobiSubsystem() {
@@ -24,21 +24,21 @@ public class KenobiSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void elevatorsOut() {
-    elevators.set(Value.kForward);
+  public void armsOut() {
+    arms.set(Value.kForward);
   }
 
-  public void elevatorsIn() {
-    elevators.set(Value.kOff);
+  public void armsIn() {
+    arms.set(Value.kReverse);
   }
 
-  protected boolean elevatorOut = false;
+  private boolean elevatorOut = false;
 
-  public void elevatorsDo() {
+  public void armsDo() {
     if (elevatorOut) {
-      elevatorsIn();
+      armsIn();
     } else {
-      elevatorsOut();
+      armsOut();
     }
     elevatorOut = !elevatorOut;
   }

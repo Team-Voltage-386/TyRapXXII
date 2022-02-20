@@ -79,7 +79,7 @@ public final class Constants {
 
     public static final class KenobiConstants {
         public static final int kChannelClimbIn = 0;
-        public static final int kChannelClimbOUt = 1;
+        public static final int kChannelClimbOut = 1;
     }
 
     public static final class DriveConstants {

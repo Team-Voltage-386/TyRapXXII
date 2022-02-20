@@ -24,6 +24,7 @@ public class D_TeleOp extends CommandBase {
   private double rootForward, rootTurn;
   public Boolean ballFound = false;
   private boolean highGear = false;
+  private boolean armsUp= false;
 
   /**
    * Driver TeleOp Command
@@ -68,7 +69,14 @@ public class D_TeleOp extends CommandBase {
     _bss.intakeDo(_driverController.getRawButtonPressed(kY));
     if (_driverController.getRawButtonPressed(kRightBumper)) _bss.ballOnTheWay = false;
 
-    if(_manipulatorController.getRawButtonPressed(kX)) _kss.elevatorsDo();
+    if(_manipulatorController.getRawButtonPressed(kX)) {
+      armsUp=!armsUp;
+      if(armsUp){
+        _kss.armsIn();
+      } else {
+        _kss.armsOut();
+      }
+    }
 
     // runIntake(_controller.getRawButtonPressed(kY));
   }
