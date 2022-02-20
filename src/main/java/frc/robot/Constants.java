@@ -50,7 +50,7 @@ public final class Constants {
     public static final class BigIronConstants {
         public static final int kDrumLeadID = 11;
         public static final int kDrumFollowID = 12;
-        public static final int kDrumDirection = -1;
+        public static final int kDrumDirection = 1;
         public static final int kDrumIdleSpeed = 2800;
         public static final int kDrumSpeedTolerance = 75;
         public static final int kHoodDownLimitPin = 9;
@@ -87,6 +87,9 @@ public final class Constants {
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
         public static final int shiftUp = 2;
         public static final int shiftDown = 3;
+        public static final TalonSRX kGyro = new TalonSRX(9);
+        public static final double kSmoothingAccelFactor = 0.15;
+        public static final double kSmoothingDecelFactor = 0.04;
         public static final double kMPR = 0.029;// meters per revolution
         public static final int kGyro = 10;
 
