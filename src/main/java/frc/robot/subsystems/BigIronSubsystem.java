@@ -70,7 +70,10 @@ public class BigIronSubsystem extends SubsystemBase {
     public boolean ejectBall = false;
     public boolean runBeltMan = false;
     public boolean runHoodMan = false;
+    public String ball1Col = "null";
+    public String ball2Col = "null";
     public double hoodManPower = 0;
+    public int ballCount = 0;
 
     // Misc.
     private final Timer ejectTimer = new Timer();
@@ -84,6 +87,7 @@ public class BigIronSubsystem extends SubsystemBase {
     public boolean ballOnTheWay = false;
     private boolean breachSensorFlag = false;
     private boolean intakeSensorFlag = false;
+    
 
     /** Creates a BigIronSubsystem */
     public BigIronSubsystem() {
@@ -99,16 +103,31 @@ public class BigIronSubsystem extends SubsystemBase {
 
     }
 
+    public void reset() {
+        beltTimer.stop();
+        beltTimer.reset();
+        calibrated = false;
+        drumIdle = false;
+        ball1Col = "null";
+        ball2Col = "null";
+        ballOnTheWay = false;
+        ballCount = 0;
+        drumControllerOn = false;
+        drumControllerOn = false;
+    }
+
     public void runIntake(boolean b) {
-        if (b)
-            intakeMotor.set(ControlMode.PercentOutput, kIntakePower);
-        else
-            intakeMotor.set(ControlMode.PercentOutput, 0);
+        if (intakeOut) {
+            if (b)
+                intakeMotor.set(ControlMode.PercentOutput, kIntakePower);
+            else {
+                intakeMotor.set(ControlMode.PercentOutput, kIntakeReversePower);
+            }
+        } else intakeMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public boolean readyToFire() {
-        return Math.abs(drumSP - drumCurrentSpeed) < kDrumSpeedTolerance
-                && Math.abs(hoodSet - hoodCurrentPosition) < kHoodPositionTolerance;
+        return Math.abs(drumSP - drumCurrentSpeed) < kDrumSpeedTolerance && Math.abs(hoodSet - hoodCurrentPosition) < kHoodPositionTolerance;
     }
 
 
@@ -140,15 +159,21 @@ public class BigIronSubsystem extends SubsystemBase {
         }
     }
 
+    public void reLoad() {
+        ball1Col = ball2Col;
+        ballCount--;
+        if (ballCount > 0) {
+            ball2Col = "null";
+            ballCount = 0;
+            ballOnTheWay = true;
+        }
+    }
+
     @Override
     public void periodic() {
         readSensors();
         logic();
-        if (!runHoodMan)
-            runHood();
-        else {
-            hoodMotor.set(ControlMode.PercentOutput, hoodManPower);
-        }
+        runHood();
         runDrum();
         runFeedBelt();
         updateWidgets();
@@ -158,32 +183,29 @@ public class BigIronSubsystem extends SubsystemBase {
         if (ejectBall) {
             if (breachSensorFlag) ejectTimer.reset();
             else ejectTimer.start();
-            if (ejectTimer.hasElapsed(1)) {
+            if (ejectTimer.hasElapsed(0.1)) {
                 ejectTimer.stop();
                 ejectTimer.reset();
                 ejectBall = false;
+                if (ballCount > 0) reLoad();
             }
         }
     }
 
     private void readSensors() {
-        double inSens = intakeSensor.getProximity();
         hoodCurrentPosition = hoodEncoder.get();
         breachSensorFlag = !breachSensor.get();
-        
-        intakeSensorFlag = (inSens > 300 || inSens < 240) && intakeOut;
+        double inSens = intakeSensor.getProximity();
+        intakeSensorFlag = (inSens > 290 || inSens < 250) && intakeOut;
         // According to Rev documentation pressure = 250 (voltageOut/voltageSupply)-25
-        // display calculated pressure
         tankPressure = 250 * (pressureSensor.getVoltage() / 5) - 25;
     }
 
     private void runHood() {
         if (calibrated) {
             double control = MathUtil.clamp(pidH.calculate(hoodCurrentPosition), -1 * HC, HC);
-            if (!hoodLowLimit)
-                hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
-            else
-                MathUtil.clamp(control, 0, -1);// limit that hood thing
+            if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
+            else MathUtil.clamp(control, -1, 0);// limit that hood thing
         }
     }
 
@@ -205,15 +227,53 @@ public class BigIronSubsystem extends SubsystemBase {
         }
     }
 
+    private Timer beltTimer = new Timer();
+    private boolean woundBack = false;
+
     private void runFeedBelt() {
-        if (breachSensorFlag) ballOnTheWay = false;
-        if ((fireTheBigIron && breachSensorFlag && readyToFire()) || ballOnTheWay || ejectBall || runBeltMan) {
-            beltMotor.set(ControlMode.PercentOutput, kBeltPower);// run belt
-        } else if (!breachSensorFlag && intakeSensorFlag) {
-            ballOnTheWay = true;
-            beltMotor.set(ControlMode.PercentOutput, kBeltPower);// run belt
-        } else
-            beltMotor.set(ControlMode.PercentOutput, 0); // don't run belt
+        if (ejectBall) beltMotor.set(ControlMode.PercentOutput, kBeltPower);
+
+        else if (ballCount == 0) {
+            if (!ballOnTheWay) {
+                if (!breachSensorFlag && intakeSensorFlag) {
+                    ballOnTheWay = true;
+                    beltTimer.start();
+                    if(ball1Col.equals("null")) ball1Col = getColor();
+                }
+                beltMotor.set(ControlMode.PercentOutput, 0);
+            } else {
+                beltMotor.set(ControlMode.PercentOutput, kBeltPower);
+                if (breachSensorFlag || beltTimer.hasElapsed(5)) {
+                    beltTimer.stop();
+                    beltTimer.reset();
+                    ballOnTheWay = false;
+                    beltMotor.set(ControlMode.PercentOutput, 0);
+                    if (breachSensorFlag) {
+                        woundBack = false;
+                        ballCount++;
+                    }
+                }
+            }
+        } else if (ballCount == 1) {
+            if (!woundBack) {
+                if (breachSensorFlag) beltTimer.start();
+                beltMotor.set(ControlMode.PercentOutput, kBeltReversePower);
+                if (beltTimer.hasElapsed(0.6)) {
+                    beltTimer.stop();
+                    beltTimer.reset();
+                    woundBack = true;
+                    beltMotor.set(ControlMode.PercentOutput, 0);
+                }
+            } else {
+                if (intakeSensorFlag) {
+                    ballCount++;
+                }
+            }
+        } else {
+            if (!ball2Col.equals("null")) ball2Col = getColor();
+            if (!breachSensorFlag) beltMotor.set(ControlMode.PercentOutput, kBeltPower);
+            else beltMotor.set(ControlMode.PercentOutput, 0);
+        }
     }
 
     private final ShuffleboardTab tab = Shuffleboard.getTab("BigIron");
@@ -223,6 +283,16 @@ public class BigIronSubsystem extends SubsystemBase {
     private final NetworkTableEntry botwWidget = tab.add("botw",false).withPosition(1, 0).getEntry();
     private final NetworkTableEntry presWidget = tab.add("pres",0).withPosition(1, 1).getEntry();
     private final NetworkTableEntry colWidget = tab.add("col",0).withPosition(1, 2).getEntry();
+    private final NetworkTableEntry bcWidget = tab.add("ballCount",0).withPosition(2, 0).getEntry();
+    private final NetworkTableEntry b1Widget = tab.add("ball1","null").withPosition(2, 1).getEntry();
+    private final NetworkTableEntry b2Widget = tab.add("ball2","null").withPosition(2,2).getEntry();
+
+    private String getColor() {
+        double b = intakeSensor.getBlue();
+        double r = intakeSensor.getRed();
+        if (b > r) return "blue";
+        return "red";
+    }
 
     private void updateWidgets() {
         brWidget.setBoolean(breachSensorFlag);
@@ -231,5 +301,8 @@ public class BigIronSubsystem extends SubsystemBase {
         botwWidget.setBoolean(ballOnTheWay);
         presWidget.setDouble(tankPressure);
         colWidget.setDouble(intakeSensor.getProximity());
+        bcWidget.setDouble(ballCount);
+        b1Widget.setString(ball1Col);
+        b2Widget.setString(ball2Col);
     }
 }

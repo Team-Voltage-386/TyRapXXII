@@ -63,6 +63,8 @@ public final class Constants {
         public static final int kBeltID = 32;
         public static final int kHoodEncoderPin = 8;
         public static final double kIntakePower = -0.9;
+        public static final double kIntakeReversePower = 0.2;
+        public static final double kBeltReversePower = 0.5;
         public static final double kBeltPower = -0.8;
         public static final double HP = 0;
         public static final double HI = 0;
