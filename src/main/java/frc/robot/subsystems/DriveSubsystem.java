@@ -91,6 +91,7 @@ public class DriveSubsystem extends SubsystemBase {
                 rearRightMotor.follow(frontRightMotor);
                 leftEncoder.setPositionConversionFactor(kMPR);
                 rightEncoder.setPositionConversionFactor(kMPR);
+                odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getRawHeading()));
                 _pigeon = new PigeonIMU(kGyro);
         }
 
