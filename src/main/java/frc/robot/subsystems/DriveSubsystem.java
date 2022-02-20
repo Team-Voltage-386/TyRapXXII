@@ -69,11 +69,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         public DriveSubsystem() {
                 // drivetrain
-                frontLeftMotor.restoreFactoryDefaults();
-                frontRightMotor.restoreFactoryDefaults();
-                rearLeftMotor.restoreFactoryDefaults();
-                rearRightMotor.restoreFactoryDefaults();
-
                 frontLeftMotor.setInverted(true);
                 frontRightMotor.setInverted(false);
                 rearLeftMotor.follow(frontLeftMotor);// front left yields faulty encoder values so that set follower
