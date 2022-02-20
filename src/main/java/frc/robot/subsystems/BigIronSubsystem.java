@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import static frc.robot.Constants.BigIronConstants.*;
 
@@ -75,6 +76,8 @@ public class BigIronSubsystem extends SubsystemBase {
     public String ball2Col = "null";
     public double hoodManPower = 0;
     public int ballCount = 0;
+    public String colorOurs;
+    public String colorAnti;
 
     // Misc.
     private final Timer ejectTimer = new Timer();
@@ -101,6 +104,10 @@ public class BigIronSubsystem extends SubsystemBase {
         drumFollowMotor.restoreFactoryDefaults();
         drumFollowMotor.follow(drumLeadMotor);
 
+        colorOurs=DriverStation.getAlliance().toString();
+        if(colorOurs.equals("Blue")) colorAnti="Red";
+        else if(colorOurs.equals("Red")) colorAnti="Blue";
+        else colorOurs.equals("Invalid");
     }
 
     public void reset() {
@@ -253,7 +260,7 @@ public class BigIronSubsystem extends SubsystemBase {
     private boolean ejectBelt = false;
 
     private void runFeedBelt() {
-        else if (ballCount == 0) {
+        if (ballCount == 0) {
             if (!ballOnTheWay) {
                 if (!breachSensorFlag && intakeSensorFlag) {
                     ballOnTheWay = true;

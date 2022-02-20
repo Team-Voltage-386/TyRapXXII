@@ -87,7 +87,6 @@ public final class Constants {
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
         public static final int shiftUp = 2;
         public static final int shiftDown = 3;
-        public static final TalonSRX kGyro = new TalonSRX(9);
         public static final double kSmoothingAccelFactor = 0.15;
         public static final double kSmoothingDecelFactor = 0.04;
         public static final double kMPR = 0.029;// meters per revolution
