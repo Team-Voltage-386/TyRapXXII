@@ -14,9 +14,9 @@ import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.commands.D_TeleOp;
 import frc.robot.commands.M_Teleop;
-import frc.robot.commands.D_TeleOp;
 import frc.robot.commands.LEDBalls;
 import frc.robot.commands.drive.LinearDrive;
 import frc.robot.commands.drive.StationaryTurn;
@@ -49,6 +49,7 @@ public class RobotContainer {
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BigIronSubsystem bigIron = new BigIronSubsystem();
   private final LEDSubsystem leds= new LEDSubsystem();
+  private final KenobiSubsystem kenobi = new KenobiSubsystem();
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 

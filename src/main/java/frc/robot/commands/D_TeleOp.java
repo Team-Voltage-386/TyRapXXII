@@ -30,15 +30,12 @@ public class D_TeleOp extends CommandBase {
    * Driver TeleOp Command
    * 
    * @param DSS  The drive subsystem used by this command.
-   * @param LLS  the hoop LL subsystem used by this command.
-   * @param LLSB the ball LL subsystem used by this command.
    */
   public D_TeleOp(DriveSubsystem DSS) {
     _dss = DSS;
     _driverController = RobotContainer.driverController;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_dss);
-    test = _bss.tab.add("drive",0).withPosition(3, 0).getEntry();
 
   }
 
@@ -48,14 +45,12 @@ public class D_TeleOp extends CommandBase {
     rootDrive = 0;
     rootTurn = 0;
     pid.setTolerance(1, 1);
-    _bss.reset();
   }
 
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
   }
-
 
   // Called once the command ends or is interrupted.
   @Override

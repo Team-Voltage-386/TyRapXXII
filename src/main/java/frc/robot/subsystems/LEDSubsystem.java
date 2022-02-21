@@ -38,8 +38,8 @@ public class LEDSubsystem extends SubsystemBase {
     ledRight.stop();
   }
 
-  public void setLEDSegment(int indexStart, int indexStop, Color color){
-    for (int i=indexStart; i<=indexStop;i++){
+  public void setLEDSegment(int indexStart, int indexStop, Color color) {
+    for (int i = indexStart; i <= indexStop; i++) {
       ledBuffer.setLED(i, color);
     }
 
