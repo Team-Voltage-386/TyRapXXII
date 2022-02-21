@@ -43,7 +43,7 @@ public class RobotContainer {
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
-  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem, bigIron);
+  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem);
   private final M_Teleop manualManipulatorCommand = new M_Teleop(kenobi);
   
 

@@ -15,7 +15,6 @@ import static frc.robot.Constants.ControllerConstants.*;
 /** Driver TeleOp Command */
 public class D_TeleOp extends CommandBase {
   private final DriveSubsystem _dss;
-  private final BigIronSubsystem _bss;
   private final Joystick _driverController;
   private final PIDController pid = new PIDController(tP, tI, tD);
   private double rootForward, rootTurn;
@@ -29,12 +28,11 @@ public class D_TeleOp extends CommandBase {
    * @param LLS  the hoop LL subsystem used by this command.
    * @param LLSB the ball LL subsystem used by this command.
    */
-  public D_TeleOp(DriveSubsystem DSS, BigIronSubsystem BSS) {
+  public D_TeleOp(DriveSubsystem DSS) {
     _dss = DSS;
-    _bss = BSS;
     _driverController = RobotContainer.driverController;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(_dss, _bss);
+    addRequirements(_dss);
   }
 
   /** Called when the command is initially scheduled. */
@@ -48,31 +46,7 @@ public class D_TeleOp extends CommandBase {
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
-    rootForward = _driverController.getRawAxis(kLeftVertical);
-    rootTurn = -_driverController.getRawAxis(kRightHorizontal);
-
-    if (_driverController.getRawButtonPressed(kB))
-      _bss.drumIdle = !_bss.drumIdle;
-    if (_driverController.getRawButtonPressed(kA)) {
-      highGear = !highGear;
-      _dss.setHighGear(highGear);
-    }
-    _bss.runBeltMan = _driverController.getRawButton(kX);
-    _bss.runIntake(_driverController.getRawButton(kLeftBumper));
-    _dss.arcadeDrive(rootForward, rootTurn);
-    _bss.intakeDo(_driverController.getRawButtonPressed(kY));
-    if (_driverController.getRawButtonPressed(kRightBumper))
-      _bss.ballOnTheWay = false;
-
-    // runIntake(_controller.getRawButtonPressed(kY));
   }
-  /*
-   * protected int intakeState = 0;
-   * private void runIntake(boolean b) {
-   * if (b) intakeState++;
-   * _bss.intakeDo(intakeState%4);
-   * }
-   */
 
   // Called once the command ends or is interrupted.
   @Override
