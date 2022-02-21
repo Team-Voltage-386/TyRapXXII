@@ -328,8 +328,8 @@ public class BigIronSubsystem extends SubsystemBase {
         double b = intakeSensor.getBlue();
         double r = intakeSensor.getRed();
         if (b > r)
-            return "blue";
-        return "red";
+            return "Blue";
+        return "Red";
     }
 
     private void updateWidgets() {

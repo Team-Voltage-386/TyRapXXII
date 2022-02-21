@@ -13,7 +13,9 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.commands.D_TeleOp;
+import frc.robot.commands.LEDBalls;
 import frc.robot.commands.drive.LinearDrive;
 import frc.robot.commands.drive.StationaryTurn;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,11 +41,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BigIronSubsystem bigIron = new BigIronSubsystem();
+  private final LEDSubsystem leds= new LEDSubsystem();
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
   private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem, bigIron);
+  private final LEDBalls doLED = new LEDBalls(bigIron, leds);
 
   // The robot's subsystems and commands are defined here...
 
@@ -54,6 +58,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     driveSubSystem.setDefaultCommand(manualDriveCommand);
+    leds.setDefaultCommand(doLED);
   }
 
   /**
