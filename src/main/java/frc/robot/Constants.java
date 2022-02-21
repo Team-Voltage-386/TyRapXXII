@@ -5,17 +5,24 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
@@ -40,9 +47,36 @@ public final class Constants {
         public static final int kRightJoystickPressed = 10;
     }
 
-    public static final class BallMovementConstants {
-        public static final int kIntakeID = 9;
+    public static final class BigIronConstants {
+        public static final int kDrumLeadID = 11;
+        public static final int kDrumFollowID = 12;
+        public static final int kDrumDirection = 1;
+        public static final int kDrumIdleSpeed = 2800;
+        public static final int kDrumSpeedTolerance = 75;
+        public static final int kHoodDownLimitPin = 9;
+        public static final int kBreachSensorPin = 0;
+        public static final int kIntakeColorSensorThreshold = 140;
+        public static final double kHoodPositionTolerance = 0.05;
+        public static final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
+        public static final int kIntakeID = 30;
+        public static final int kHoodID = 31;
+        public static final int kBeltID = 32;
+        public static final int kHoodEncoderPin = 8;
         public static final double kIntakePower = -0.9;
+        public static final double kIntakeReversePower = 0.2;
+        public static final double kBeltReversePower = 0.5;
+        public static final double kBeltPower = -0.8;
+        public static final double HP = 0;
+        public static final double HI = 0;
+        public static final double HD = 0;
+        public static final double HC = 1;
+        public static final double DP = 0.00045;
+        public static final double DI = 0.001;
+        public static final double DD = 0.000025;
+        public static final int kChannelIntakeForwardGo = 7;
+        public static final int kChannelIntakeForwardVent = 5;
+        public static final int kChannelIntakeBackwardGo = 6;
+        public static final int kChannelIntakeBackwardVent = 4;
     }
 
     public static final class DriveConstants {
@@ -53,12 +87,28 @@ public final class Constants {
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
         public static final int shiftUp = 2;
         public static final int shiftDown = 3;
-        public static final double kMPR = 0.4788;
-        public static final TalonSRX kGyro = new TalonSRX(9);
+        public static final double kSmoothingAccelFactor = 0.15;
+        public static final double kSmoothingDecelFactor = 0.04;
+        public static final double kMPR = 0.029;// meters per revolution
+        public static final int kGyro = 10;
 
-        public static final double dP = 0.1;
-        public static final double dI = 0;
-        public static final double dD = 0.001;
-        public static final double dC = 0.4;
+        public static final double tP = 0.02;// P
+        public static final double tI = 0.005;// I
+        public static final double tD = 0.001;// D
+        public static final double tC = 0.8;// Clamp //t and d are two different PID controllers
+        public static final double dP = 0.35;
+        public static final double dI = 0.2;
+        public static final double dD = 0;
+        public static final double dC = 1;
+    }
+
+    public static final class ShooterData {
+
+    }
+
+    public static final class LEDConstants {
+        public static final int kLEDLength=16;
+        public static final int kRightStrip=8;
+        public static final int kLeftStrip=9;
     }
 }
