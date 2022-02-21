@@ -24,7 +24,7 @@ public class D_TeleOp extends CommandBase {
   private double rootForward, rootTurn;
   public Boolean ballFound = false;
   private boolean highGear = false;
-  private boolean armsUp= false;
+  private boolean armsUp = false;
 
   /**
    * Driver TeleOp Command
@@ -32,7 +32,7 @@ public class D_TeleOp extends CommandBase {
    * @param DSS  The drive subsystem used by this command.
    * @param LLS  the hoop LL subsystem used by this command.
    * @param LLSB the ball LL subsystem used by this command.
-   * @param kss the elevator subsytem
+   * @param kss  the elevator subsytem
    */
   public D_TeleOp(DriveSubsystem DSS, BigIronSubsystem BSS, KenobiSubsystem KSS) {
     _dss = DSS;
@@ -41,7 +41,7 @@ public class D_TeleOp extends CommandBase {
     _driverController = RobotContainer.driverController;
     _manipulatorController = RobotContainer.manipulatorController;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(_dss,_bss,_kss);
+    addRequirements(_dss, _bss, _kss);
   }
 
   /** Called when the command is initially scheduled. */
@@ -58,34 +58,34 @@ public class D_TeleOp extends CommandBase {
     rootForward = _driverController.getRawAxis(kLeftVertical);
     rootTurn = -_driverController.getRawAxis(kRightHorizontal);
 
-    if (_driverController.getRawButtonPressed(kB)) _bss.drumIdle = !_bss.drumIdle;
+    if (_driverController.getRawButtonPressed(kB))
+      _bss.drumIdle = !_bss.drumIdle;
     if (_driverController.getRawButtonPressed(kA)) {
-        highGear = !highGear;
-        _dss.setHighGear(highGear);
+      highGear = !highGear;
+      _dss.setHighGear(highGear);
     }
     _bss.runBeltMan = _driverController.getRawButton(kX);
     _bss.runIntake(_driverController.getRawButton(kLeftBumper));
     _dss.arcadeDrive(rootForward, rootTurn);
     _bss.intakeDo(_driverController.getRawButtonPressed(kY));
-    if (_driverController.getRawButtonPressed(kRightBumper)) _bss.ballOnTheWay = false;
+    if (_driverController.getRawButtonPressed(kRightBumper))
+      _bss.ballOnTheWay = false;
 
-    if(_manipulatorController.getRawButtonPressed(kX)) {
-      armsUp=!armsUp;
-      if(armsUp){
-        _kss.armsIn();
-      } else {
-        _kss.armsOut();
-      }
+    if (_manipulatorController.getRawButtonPressed(kX)) {
+      _kss.armsDo();
     }
+
+    _kss.elevatorDo(_manipulatorController.getRawAxis(kRightVertical));
 
     // runIntake(_controller.getRawButtonPressed(kY));
   }
-/*
-  protected int intakeState = 0;
-  private void runIntake(boolean b) {
-      if (b) intakeState++;
-      _bss.intakeDo(intakeState%4);
-  }*/
+  /*
+   * protected int intakeState = 0;
+   * private void runIntake(boolean b) {
+   * if (b) intakeState++;
+   * _bss.intakeDo(intakeState%4);
+   * }
+   */
 
   // Called once the command ends or is interrupted.
   @Override
