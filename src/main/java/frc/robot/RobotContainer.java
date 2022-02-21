@@ -14,9 +14,12 @@ import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.D_TeleOp;
+import frc.robot.commands.ShootBall;
+import frc.robot.commands.getBall;
 import frc.robot.commands.drive.LinearDrive;
 import frc.robot.commands.drive.StationaryTurn;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
@@ -37,8 +40,8 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final BigIronSubsystem bigIron = new BigIronSubsystem();
+  public final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  public final BigIronSubsystem bigIron = new BigIronSubsystem();
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
@@ -74,9 +77,17 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new SequentialCommandGroup(new LinearDrive(driveSubSystem, 3.0, 0, true),
-        new StationaryTurn(driveSubSystem, 90, true),
-        new LinearDrive(driveSubSystem, 3.0, 0, true));
+    return new SequentialCommandGroup(
+        new getBall(bigIron),
+        new ParallelCommandGroup(new LinearDrive(driveSubSystem, 0.8, 0, false),new getBall(bigIron)),
+        new StationaryTurn(driveSubSystem, 170, false),
+        new ShootBall(bigIron,driveSubSystem,170.0,1),
+        new ShootBall(bigIron,driveSubSystem,170.0,0),
+        new StationaryTurn(driveSubSystem, 15, false),
+        new ParallelCommandGroup(new LinearDrive(driveSubSystem, 1.55, 15, false),new getBall(bigIron)),
+        new StationaryTurn(driveSubSystem, 180, false),
+        new ShootBall(bigIron, driveSubSystem, 180,0)
+        );
   }
 
   public Command getManCommand() {

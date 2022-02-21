@@ -78,12 +78,15 @@ public class DriveSubsystem extends SubsystemBase {
         private final NetworkTableEntry ohWidget = tab.add("Odom_Heading", 0).withPosition(1, 1).withSize(1, 1)
                         .getEntry();
 
+        private final NetworkTableEntry rsWidget = tab.add("rSpeed",0).withPosition(7,4).getEntry();
+
         public DriveSubsystem() {
                 // drivetrain
+                /*
                 frontLeftMotor.restoreFactoryDefaults();
                 frontRightMotor.restoreFactoryDefaults();
                 rearLeftMotor.restoreFactoryDefaults();
-                rearRightMotor.restoreFactoryDefaults();
+                rearRightMotor.restoreFactoryDefaults();*/
 
                 frontLeftMotor.setInverted(true);
                 frontRightMotor.setInverted(false);
@@ -95,11 +98,13 @@ public class DriveSubsystem extends SubsystemBase {
                 _pigeon = new PigeonIMU(kGyro);
         }
 
+        double lastYaw = 0;
         @Override
         public void periodic() {
                 updateIMU();
                 updateOdometry();
                 updateWidgets();
+                lastYaw = ypr[0];
         }
 
         public void updateWidgets() {
@@ -130,6 +135,7 @@ public class DriveSubsystem extends SubsystemBase {
                 yWidget.setDouble(getPose().getY());
                 rhWidget.setDouble(getRawHeading());
                 ohWidget.setDouble(getPose().getRotation().getDegrees());
+                rsWidget.setDouble(getRotationSpeed());
         }
 
         public void resetEncoders() {
@@ -189,5 +195,9 @@ public class DriveSubsystem extends SubsystemBase {
         private void updateOdometry() {
                 odometry.update(Rotation2d.fromDegrees(getRawHeading()), leftEncoder.getPosition(),
                                 rightEncoder.getPosition());
+        }
+
+        public double getRotationSpeed() {
+                return Math.abs(lastYaw - ypr[0])*50;
         }
 }
