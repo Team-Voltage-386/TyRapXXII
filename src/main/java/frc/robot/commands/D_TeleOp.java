@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.KenobiSubsystem;
 
 import static frc.robot.Constants.DriveConstants.*;
 import edu.wpi.first.math.MathUtil;
@@ -30,7 +29,7 @@ public class D_TeleOp extends CommandBase {
    * @param LLS  the hoop LL subsystem used by this command.
    * @param LLSB the ball LL subsystem used by this command.
    */
-  public D_TeleOp(DriveSubsystem DSS, BigIronSubsystem BSS, KenobiSubsystem KSS) {
+  public D_TeleOp(DriveSubsystem DSS, BigIronSubsystem BSS) {
     _dss = DSS;
     _bss = BSS;
     _driverController = RobotContainer.driverController;
@@ -64,7 +63,6 @@ public class D_TeleOp extends CommandBase {
     _bss.intakeDo(_driverController.getRawButtonPressed(kY));
     if (_driverController.getRawButtonPressed(kRightBumper))
       _bss.ballOnTheWay = false;
-
 
     // runIntake(_controller.getRawButtonPressed(kY));
   }

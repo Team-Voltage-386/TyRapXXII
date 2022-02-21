@@ -15,6 +15,7 @@ import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
 import frc.robot.commands.D_TeleOp;
+import frc.robot.commands.M_Teleop;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -42,7 +43,8 @@ public class RobotContainer {
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
-  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem, bigIron, kenobi);
+  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem, bigIron);
+  private final M_Teleop manualManipulatorCommand = new M_Teleop(kenobi);
   
 
   // The robot's subsystems and commands are defined here...
@@ -52,6 +54,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     driveSubSystem.setDefaultCommand(manualDriveCommand);
+    kenobi.setDefaultCommand(manualManipulatorCommand);
   }
 
   /**
