@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DriverStation;
 
 import static frc.robot.Constants.BigIronConstants.*;
 
@@ -103,11 +102,6 @@ public class BigIronSubsystem extends SubsystemBase {
         drumLeadMotor.restoreFactoryDefaults();
         drumFollowMotor.restoreFactoryDefaults();
         drumFollowMotor.follow(drumLeadMotor);
-
-        colorOurs=DriverStation.getAlliance().toString();
-        if(colorOurs.equals("Blue")) colorAnti="Red";
-        else if(colorOurs.equals("Red")) colorAnti="Blue";
-        else colorOurs.equals("Invalid");
     }
 
     public void reset() {

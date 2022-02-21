@@ -23,6 +23,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import static frc.robot.Constants.BigIronConstants.*;
+import edu.wpi.first.wpilibj.DriverStation;
+
+import frc.robot.Utils;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -57,7 +62,11 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    //set default commands
     driveSubSystem.setDefaultCommand(manualDriveCommand);
+    //set our alliance color
+    Utils.ourAlliance = DriverStation.getAlliance().toString();
+    Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
     leds.setDefaultCommand(doLED);
   }
 
