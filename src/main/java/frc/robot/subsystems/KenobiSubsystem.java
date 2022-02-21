@@ -4,19 +4,36 @@
 //GAIN THE HIGH GROUND
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.KenobiConstants;
+import static frc.robot.Constants.KenobiConstants.*;
 
 public class KenobiSubsystem extends SubsystemBase {
+  // motors
+  private final CANSparkMax elevatorLeader = new CANSparkMax(kElevatorLeaderID, MotorType.kBrushless);
+  private final CANSparkMax elevatorFollower = new CANSparkMax(kElevatorFollowerID, MotorType.kBrushless);
+
   // pneumatics
-  DoubleSolenoid arms = new DoubleSolenoid(2, PneumaticsModuleType.CTREPCM,
-      KenobiConstants.kChannelClimbOut, KenobiConstants.kChannelClimbIn);
+  private final DoubleSolenoid arms = new DoubleSolenoid(2, PneumaticsModuleType.CTREPCM,
+      kChannelClimbOut, kChannelClimbIn);
+
+  // sensors
+  private final DigitalInput pneumaticsLimit = new DigitalInput(kPneumaticsDIOID);
+  private final DigitalInput elevatorSensor = new DigitalInput(kElevatorDIOID);
 
   /** Creates a new Kenobi. */
   public KenobiSubsystem() {
+    elevatorFollower.follow(elevatorLeader);
   }
 
   @Override
@@ -32,14 +49,46 @@ public class KenobiSubsystem extends SubsystemBase {
     arms.set(Value.kReverse);
   }
 
-  private boolean elevatorOut = false;
+  protected boolean armsOut = false;
 
   public void armsDo() {
-    if (elevatorOut) {
+    if (armsOut) {
       armsIn();
     } else {
       armsOut();
     }
-    elevatorOut = !elevatorOut;
+    armsOut = !armsOut;
+  }
+
+  protected boolean hitLimitTop = true;// true = hit top limit, false = hit bottom limit
+  protected boolean hitLimitAny = true;// limit sensor
+  protected boolean movingUp = false;// based on power
+
+  public void elevatorDo(double power) {
+    double output = power;
+    hitLimitAny = elevatorSensor.get();
+    movingUp = (power > 0.0);
+    if (hitLimitAny) {
+      if (movingUp)
+        hitLimitTop = true;
+      else
+        hitLimitTop = false;
+    }
+    if (hitLimitAny && ((hitLimitTop && movingUp) || (!hitLimitTop && !movingUp)))
+      output = 0.0;
+    elevatorLeader.set(output);
+  }
+
+  // shuffleboard
+  private ShuffleboardTab tab = Shuffleboard.getTab("Climb");
+  // widgets
+  private NetworkTableEntry pneumaticsLimitWidget = tab.add("armsDown", false).withPosition(0, 0).withSize(1, 1)
+      .getEntry();
+  private NetworkTableEntry elevatorSensorWidget = tab.add("elevatorSensor", false).withPosition(1, 0).withSize(1, 1)
+      .getEntry();
+
+  public void updateWidgets() {
+    pneumaticsLimitWidget.setBoolean(pneumaticsLimit.get());
+    elevatorSensorWidget.setBoolean(elevatorSensor.get());
   }
 }
