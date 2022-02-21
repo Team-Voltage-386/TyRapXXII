@@ -105,4 +105,10 @@ public final class Constants {
     public static final class ShooterData {
 
     }
+
+    public static final class LEDConstants {
+        public static final int kLEDLength=16;
+        public static final int kRightStrip=8;
+        public static final int kLeftStrip=9;
+    }
 }
