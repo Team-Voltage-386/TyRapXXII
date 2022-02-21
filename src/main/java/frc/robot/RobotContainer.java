@@ -13,7 +13,9 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.KenobiSubsystem;
+import frc.robot.commands.D_TeleOp;
+import frc.robot.commands.M_Teleop;
 import frc.robot.commands.D_TeleOp;
 import frc.robot.commands.LEDBalls;
 import frc.robot.commands.drive.LinearDrive;
@@ -47,11 +49,11 @@ public class RobotContainer {
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BigIronSubsystem bigIron = new BigIronSubsystem();
   private final LEDSubsystem leds= new LEDSubsystem();
-
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
-  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem, bigIron);
+  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem);
+  private final M_Teleop manualManipulatorCommand = new M_Teleop(kenobi);
   private final LEDBalls doLED = new LEDBalls(bigIron, leds);
 
   // The robot's subsystems and commands are defined here...
@@ -64,7 +66,7 @@ public class RobotContainer {
     configureButtonBindings();
     //set default commands
     driveSubSystem.setDefaultCommand(manualDriveCommand);
-    //set our alliance color
+    kenobi.setDefaultCommand(manualManipulatorCommand);
     Utils.ourAlliance = DriverStation.getAlliance().toString();
     Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
     leds.setDefaultCommand(doLED);
