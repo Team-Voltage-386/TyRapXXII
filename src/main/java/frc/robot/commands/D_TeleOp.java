@@ -17,14 +17,11 @@ import static frc.robot.Constants.ControllerConstants.*;
 public class D_TeleOp extends CommandBase {
   private final DriveSubsystem _dss;
   private final BigIronSubsystem _bss;
-  private final KenobiSubsystem _kss;
   private final Joystick _driverController;
-  private final Joystick _manipulatorController;
   private final PIDController pid = new PIDController(tP, tI, tD);
   private double rootForward, rootTurn;
   public Boolean ballFound = false;
   private boolean highGear = false;
-  private boolean armsUp = false;
 
   /**
    * Driver TeleOp Command
@@ -32,16 +29,13 @@ public class D_TeleOp extends CommandBase {
    * @param DSS  The drive subsystem used by this command.
    * @param LLS  the hoop LL subsystem used by this command.
    * @param LLSB the ball LL subsystem used by this command.
-   * @param kss  the elevator subsytem
    */
   public D_TeleOp(DriveSubsystem DSS, BigIronSubsystem BSS, KenobiSubsystem KSS) {
     _dss = DSS;
     _bss = BSS;
-    _kss = KSS;
     _driverController = RobotContainer.driverController;
-    _manipulatorController = RobotContainer.manipulatorController;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(_dss, _bss, _kss);
+    addRequirements(_dss, _bss);
   }
 
   /** Called when the command is initially scheduled. */
@@ -71,11 +65,6 @@ public class D_TeleOp extends CommandBase {
     if (_driverController.getRawButtonPressed(kRightBumper))
       _bss.ballOnTheWay = false;
 
-    if (_manipulatorController.getRawButtonPressed(kX)) {
-      _kss.armsDo();
-    }
-
-    _kss.elevatorDo(_manipulatorController.getRawAxis(kRightVertical));
 
     // runIntake(_controller.getRawButtonPressed(kY));
   }
