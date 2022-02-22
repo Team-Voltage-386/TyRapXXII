@@ -45,4 +45,10 @@ public class LEDSubsystem extends SubsystemBase {
 
   }
 
+  public void setLEDSegmentOff(int indexStart, int indexStop) {
+    for (int i = indexStart; i <= indexStop; i++) {
+      ledBuffer.setRGB(i, 0, 0, 0);
+    }
+  }
+
 }
