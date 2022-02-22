@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 import frc.robot.Utils;
 
-
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -48,13 +47,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BigIronSubsystem bigIron = new BigIronSubsystem();
-  private final LEDSubsystem leds= new LEDSubsystem();
+  private final KenobiSubsystem kenobi = new KenobiSubsystem();
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
   private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem);
   private final M_Teleop manualManipulatorCommand = new M_Teleop(kenobi);
-  private final LEDBalls doLED = new LEDBalls(bigIron, leds);
 
   // The robot's subsystems and commands are defined here...
 
@@ -64,13 +62,12 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    //set default commands
+    // set default commands
     driveSubSystem.setDefaultCommand(manualDriveCommand);
     kenobi.setDefaultCommand(manualManipulatorCommand);
     Utils.ourAlliance = DriverStation.getAlliance().toString();
     Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
-    leds.setDefaultCommand(doLED);
-  }
+   }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be

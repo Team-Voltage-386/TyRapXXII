@@ -38,7 +38,6 @@ public class D_TeleOp extends CommandBase {
     _driverController = RobotContainer.driverController;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_dss);
-    test = _bss.tab.add("drive",0).withPosition(3, 0).getEntry();
 
   }
 
@@ -48,7 +47,6 @@ public class D_TeleOp extends CommandBase {
     rootDrive = 0;
     rootTurn = 0;
     pid.setTolerance(1, 1);
-    _bss.reset();
   }
 
   /** Called every time the scheduler runs while the command is scheduled. */
