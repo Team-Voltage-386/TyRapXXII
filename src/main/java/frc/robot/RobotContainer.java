@@ -16,16 +16,28 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
 import frc.robot.commands.D_TeleOp;
 import frc.robot.commands.M_Teleop;
+import frc.robot.commands.D_TeleOp;
+import frc.robot.commands.LEDBalls;
+import frc.robot.commands.drive.LinearDrive;
+import frc.robot.commands.drive.StationaryTurn;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import static frc.robot.Constants.BigIronConstants.*;
+import edu.wpi.first.wpilibj.DriverStation;
+
+import frc.robot.Utils;
+
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -33,37 +45,43 @@ public class RobotContainer {
   public static final Joystick driverController = new Joystick(0);
   public static final Joystick manipulatorController = new Joystick(1);
 
-
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BigIronSubsystem bigIron = new BigIronSubsystem();
-  private final KenobiSubsystem kenobi = new KenobiSubsystem();
-
-
+  private final LEDSubsystem leds= new LEDSubsystem();
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
   private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem);
   private final M_Teleop manualManipulatorCommand = new M_Teleop(kenobi);
-  
+  private final LEDBalls doLED = new LEDBalls(bigIron, leds);
 
   // The robot's subsystems and commands are defined here...
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    //set default commands
     driveSubSystem.setDefaultCommand(manualDriveCommand);
     kenobi.setDefaultCommand(manualManipulatorCommand);
+    Utils.ourAlliance = DriverStation.getAlliance().toString();
+    Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
+    leds.setDefaultCommand(doLED);
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+   * it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -72,8 +90,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return new SequentialCommandGroup(new LinearDrive(driveSubSystem, 3.0, 0, true),
+        new StationaryTurn(driveSubSystem, 90, true),
+        new LinearDrive(driveSubSystem, 3.0, 0, true));
   }
+
   public Command getManCommand() {
     return manualDriveCommand;
   }

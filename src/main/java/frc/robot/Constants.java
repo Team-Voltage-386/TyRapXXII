@@ -50,7 +50,7 @@ public final class Constants {
     public static final class BigIronConstants {
         public static final int kDrumLeadID = 11;
         public static final int kDrumFollowID = 12;
-        public static final int kDrumDirection = -1;
+        public static final int kDrumDirection = 1;
         public static final int kDrumIdleSpeed = 2800;
         public static final int kDrumSpeedTolerance = 75;
         public static final int kHoodDownLimitPin = 9;
@@ -63,6 +63,8 @@ public final class Constants {
         public static final int kBeltID = 32;
         public static final int kHoodEncoderPin = 8;
         public static final double kIntakePower = -0.9;
+        public static final double kIntakeReversePower = 0.2;
+        public static final double kBeltReversePower = 0.5;
         public static final double kBeltPower = -0.8;
         public static final double HP = 0;
         public static final double HI = 0;
@@ -94,20 +96,28 @@ public final class Constants {
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
         public static final int shiftUp = 2;
         public static final int shiftDown = 3;
-        public static final double kMPR = 0.4788;
-        public static final TalonSRX kGyro = new TalonSRX(9);
+        public static final double kSmoothingAccelFactor = 0.15;
+        public static final double kSmoothingDecelFactor = 0.04;
+        public static final double kMPR = 0.029;// meters per revolution
+        public static final int kGyro = 10;
 
-        public static final double tP = 0;
-        public static final double tI = 0;
-        public static final double tD = 0;
-        public static final double tC = 0.8;
-        public static final double dP = 0.1;
-        public static final double dI = 0;
-        public static final double dD = 0.001;
-        public static final double dC = 0.4;
+        public static final double tP = 0.02;// P
+        public static final double tI = 0.005;// I
+        public static final double tD = 0.001;// D
+        public static final double tC = 0.8;// Clamp //t and d are two different PID controllers
+        public static final double dP = 0.35;
+        public static final double dI = 0.2;
+        public static final double dD = 0;
+        public static final double dC = 1;
     }
 
     public static final class ShooterData {
 
+    }
+
+    public static final class LEDConstants {
+        public static final int kLEDLength=16;
+        public static final int kRightStrip=8;
+        public static final int kLeftStrip=9;
     }
 }
