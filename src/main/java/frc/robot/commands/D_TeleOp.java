@@ -46,6 +46,9 @@ public class D_TeleOp extends CommandBase {
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
+    rootForward=_driverController.getRawAxis(kLeftVertical)*-1.0;
+    rootTurn=_driverController.getRawAxis(kRightHorizontal);
+    _dss.arcadeDrive(rootForward, rootTurn);
   }
 
   // Called once the command ends or is interrupted.
