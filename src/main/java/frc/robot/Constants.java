@@ -47,11 +47,18 @@ public final class Constants {
         public static final int kRightJoystickPressed = 10;
     }
 
+    public static final class LimeLightConstants {
+        public static final double targetLostWaitTime = 0.15;
+        public static final double targetHeight = 2.6416;
+        public static final double mountHeight = 0.9;
+        public static final double mountAngle = 40;
+    }
+
     public static final class BigIronConstants {
-        public static final int kDrumLeadID = 11;
-        public static final int kDrumFollowID = 12;
-        public static final int kDrumDirection = 1;
-        public static final int kDrumIdleSpeed = 2800;
+        public static final int kDrumOneID = 11;
+        public static final int kDrumTwoID = 12;
+        public static final int kDrumDirection = -1;
+        public static final int kDrumIdleSpeed = 2000;
         public static final int kDrumSpeedTolerance = 75;
         public static final int kHoodDownLimitPin = 9;
         public static final int kBreachSensorPin = 0;
@@ -66,13 +73,13 @@ public final class Constants {
         public static final double kIntakeReversePower = 0.2;
         public static final double kBeltReversePower = 0.5;
         public static final double kBeltPower = -0.8;
-        public static final double HP = 0;
-        public static final double HI = 0;
+        public static final double HP = 10;
+        public static final double HI = 0.3;
         public static final double HD = 0;
         public static final double HC = 1;
-        public static final double DP = 0.00045;
-        public static final double DI = 0.001;
-        public static final double DD = 0.000025;
+        public static final double DP = 0.0003;
+        public static final double DI = 0.0003;
+        public static final double DD = 0.00001;
         public static final int kChannelIntakeForwardGo = 7;
         public static final int kChannelIntakeForwardVent = 5;
         public static final int kChannelIntakeBackwardGo = 6;
@@ -92,6 +99,10 @@ public final class Constants {
         public static final double kMPR = 0.029;// meters per revolution
         public static final int kGyro = 10;
 
+        public static final double ltP = 0.016;
+        public static final double ltI = 0.023;
+        public static final double ltD = 0.0055;
+
         public static final double tP = 0.02;// P
         public static final double tI = 0.04;// I
         public static final double tD = 0.012;// D
@@ -103,6 +114,14 @@ public final class Constants {
     }
 
     public static final class ShooterData {
-
+        /*
+        The distance MUST be greater at higher indexes, and by GOD 
+        don't make neighboring distance values the same, or Java
+        Satan himself will reject you to be abandoned in the Endless Sea
+        of DBZ, aboard a raft equipped with nothing but a Chromebook.
+        */
+        public static final double[] distances = {4.06,5.03,5.97};
+        public static final int[] drumSpeeds = {3550,3600,3950};
+        public static final double[] hoodPositions = {0.1,0.3,0.5};
     }
 }

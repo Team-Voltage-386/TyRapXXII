@@ -1,6 +1,13 @@
 package frc.robot;
 
 public class Utils {
+
+    public static class Flags {
+        public static boolean hoopTargeted = false;
+        public static boolean hoopLocked = false;
+        public static double targetDistance = 9999;
+    }
+
     /**Lerp
      * @param a first number
      * @param b second number

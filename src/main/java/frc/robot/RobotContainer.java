@@ -11,9 +11,12 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
+import frc.robot.Constants;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.commands.D_TeleOp;
+import frc.robot.commands.M_TeleOp;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.getBall;
 import frc.robot.commands.drive.LinearDrive;
@@ -42,11 +45,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
   public final BigIronSubsystem bigIron = new BigIronSubsystem();
+  public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight-xxii", Constants.LimeLightConstants.targetHeight, Constants.LimeLightConstants.mountAngle, Constants.LimeLightConstants.mountHeight);
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
-  private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem, bigIron);
+  private final D_TeleOp driveTeleOp = new D_TeleOp(driveSubSystem, LLSubsystem);
+  private final M_TeleOp manipTeleOp = new M_TeleOp(bigIron);
 
   // The robot's subsystems and commands are defined here...
 
@@ -56,7 +61,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    driveSubSystem.setDefaultCommand(manualDriveCommand);
+    driveSubSystem.setDefaultCommand(driveTeleOp);
+    bigIron.setDefaultCommand(manipTeleOp);
   }
 
   /**
@@ -78,8 +84,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return new SequentialCommandGroup(
-        new getBall(bigIron),
-        new ParallelCommandGroup(new LinearDrive(driveSubSystem, 0.8, 0, false),new getBall(bigIron)),
+        new ParallelCommandGroup(new LinearDrive(driveSubSystem, 0.8, 0, false),new SequentialCommandGroup(new getBall(bigIron), new getBall(bigIron))),
         new StationaryTurn(driveSubSystem, 170, false),
         new ShootBall(bigIron,driveSubSystem,170.0,1),
         new ShootBall(bigIron,driveSubSystem,170.0,0),
@@ -91,6 +96,6 @@ public class RobotContainer {
   }
 
   public Command getManCommand() {
-    return manualDriveCommand;
+    return null;
   }
 }
