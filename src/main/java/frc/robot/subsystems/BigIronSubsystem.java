@@ -241,7 +241,7 @@ public class BigIronSubsystem extends SubsystemBase {
             double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, kDrumIdleSpeed);
             drumOneMotor.set(control);
         } else if (ejectBall || eff) {
-            drumOneMotor.set(kDrumDirection*0.6);
+            drumOneMotor.set(kDrumDirection*0.5);
         } else {
             drumOneMotor.set(0);
             if (drumPIDRunning) {
@@ -256,7 +256,11 @@ public class BigIronSubsystem extends SubsystemBase {
     private boolean fF = false;
 
     private void runFeedBelt() {
-        if (ballCount == 0) {
+        if (fireTheBigIron) {
+            if (readyToFire() && Utils.Flags.hoopLocked) {
+                beltMotor.set(ControlMode.PercentOutput, kBeltPower); 
+            } else beltMotor.set(ControlMode.PercentOutput, 0);
+        } else if (ballCount == 0) {
             if (!ballOnTheWay) {
                 if (!breachSensorFlag && intakeSensorFlag) {
                     ballOnTheWay = true;
@@ -265,6 +269,7 @@ public class BigIronSubsystem extends SubsystemBase {
                 }
                 beltMotor.set(ControlMode.PercentOutput, 0);
             } else {
+                runIntake(true);
                 beltMotor.set(ControlMode.PercentOutput, kBeltPower);
                 if (breachSensorFlag || beltTimer.hasElapsed(5)) {
                     beltTimer.stop();
@@ -278,23 +283,7 @@ public class BigIronSubsystem extends SubsystemBase {
                 }
             }
         } else if (ballCount == 1) {
-            if (fireTheBigIron) {
-                if (!fF) {
-                    if (breachSensorFlag) {
-                        fF = true;
-                        beltMotor.set(ControlMode.PercentOutput, 0);
-                    } else beltMotor.set(ControlMode.PercentOutput, kBeltPower);
-                } else {
-                    if (readyToFire()) {
-                        if (!breachSensorFlag) {
-                            fireTheBigIron = false;
-                            beltMotor.set(ControlMode.PercentOutput, 0);
-                            fF = false;
-                            ballCount = 0;
-                        } beltMotor.set(ControlMode.PercentOutput, kBeltPower);
-                    }
-                } 
-            } else if (!woundBack) {
+            if (!woundBack) {
                 if (breachSensorFlag) beltTimer.start();
                 beltMotor.set(ControlMode.PercentOutput, kBeltReversePower);
                 if (beltTimer.hasElapsed(0.55)) {
@@ -308,7 +297,7 @@ public class BigIronSubsystem extends SubsystemBase {
                     ballCount++;
                 } else if (ejectBall) {
                     if (breachSensorFlag) {
-                        if (ejectTimer.hasElapsed(1.5)) {
+                        if (ejectTimer.hasElapsed(1)) {
                             beltMotor.set(ControlMode.PercentOutput, kBeltPower);
                             eff = true;
                             ejectBall = false;
@@ -326,19 +315,8 @@ public class BigIronSubsystem extends SubsystemBase {
             }
         } else if (ballCount == 2) {
             if (ball2Col.equals("null")) ball2Col = getColor();
-            if (fireTheBigIron) {
-                if (readyToFire()) {
-                    if (breachSensorFlag) {
-                        beltMotor.set(ControlMode.PercentOutput, kBeltPower);
-                    } else {
-                        beltMotor.set(ControlMode.PercentOutput, 0);
-                        //reLoad();
-                        ballCount = 1;
-                        fF = true;
-                    }
-                }
-            } else if (ejectBall) {
-                if (ejectTimer.hasElapsed(1.5)) {
+            else if (ejectBall) {
+                if (ejectTimer.hasElapsed(1)) {
                     beltMotor.set(ControlMode.PercentOutput, kBeltPower);
                     ejectBall = false;
                     eff = true;
@@ -395,12 +373,8 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
     public void setAimDistance(double m) {
-        int i = -1;
-        for (int j = 1; j < ShooterData.distances.length; j++) {
-            if (m < ShooterData.distances[j]) {
-                i = j;
-            }
-        }
+        int i = ShooterData.distances.length-1;
+        for (int j = 1; j < ShooterData.distances.length; j++) if (m < ShooterData.distances[j]) i = j;
         double upper = ShooterData.distances[i];
         double lower = ShooterData.distances[i-1];
         double lerpFactor = (m-lower)/(upper-lower);

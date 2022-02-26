@@ -3,9 +3,12 @@ package frc.robot.commands.drive;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Utils;
 import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.Constants.DriveConstants.*;
+
 
 public class LinearDrive extends CommandBase {
 
@@ -15,8 +18,10 @@ public class LinearDrive extends CommandBase {
     private Pose2d startPose = new Pose2d();
     private double headingHold = 0;
     private double distanceFromStart = 0;
+    private double drive = 0;
     private final double targetDistance;
     private final Boolean angRel;
+    private final Timer finTimer = new Timer();
     
     /**@param angle angle set
      * @param rel if true, angle set is relative
@@ -27,6 +32,8 @@ public class LinearDrive extends CommandBase {
         targetDistance = distance;
         _dss = DSS;
         addRequirements(_dss);
+        finTimer.stop();
+        finTimer.reset();
     }
 
     @Override
@@ -34,6 +41,9 @@ public class LinearDrive extends CommandBase {
         pidt.reset();
         pidd.reset();
         startPose = _dss.getPose();
+        drive = 0;
+        finTimer.stop();
+        finTimer.reset();
         if (angRel) {
             headingHold += startPose.getRotation().getDegrees();
             while (headingHold > 360) headingHold -= 360;
@@ -44,7 +54,14 @@ public class LinearDrive extends CommandBase {
     @Override
     public void execute() {
         distanceFromStart = startPose.getTranslation().getDistance(_dss.getPose().getTranslation());
-        _dss.arcadeDrive(-1*MathUtil.clamp(pidd.calculate(distanceFromStart,targetDistance),-1*dC,dC), MathUtil.clamp(pidt.calculate(_dss.getHeadingError(headingHold),0), -1*tC,tC));
+        if (distanceFromStart > targetDistance - 0.25) {
+            finTimer.start();
+            drive = Utils.lerp(drive, 0, kAutoDriveSmoothing);
+        } else {
+            drive = Utils.lerp(drive, -1*getDrivePower(targetDistance-distanceFromStart), kAutoDriveSmoothing);
+            finTimer.reset();
+        }
+        _dss.arcadeDrive(drive, MathUtil.clamp(pidt.calculate(_dss.getHeadingError(headingHold),0), -1*tC,tC));
     }
 
     @Override
@@ -54,6 +71,15 @@ public class LinearDrive extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(distanceFromStart-targetDistance) < 0.05;
+        return finTimer.hasElapsed(0.84);
+    }
+
+    private double getDrivePower(double distErr) {
+        int ind = kDriveDistances.length-1;
+        for (int i = 1; i < kDriveDistances.length; i++) if (distErr < kDriveDistances[i]) ind = i;
+        double upper = kDriveDistances[ind];
+        double lower = kDriveDistances[ind-1];
+        double lf = (distErr-lower)/(upper-lower);
+        return Utils.lerp(kDrivePowers[ind-1], kDrivePowers[ind], lf);
     }
 }

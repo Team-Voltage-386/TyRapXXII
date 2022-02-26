@@ -15,6 +15,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.commands.BigIronIdle;
 import frc.robot.commands.D_TeleOp;
 import frc.robot.commands.M_TeleOp;
 import frc.robot.commands.ShootBall;
@@ -83,6 +84,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
+    /*
     return new SequentialCommandGroup(
         new ParallelCommandGroup(new LinearDrive(driveSubSystem, 0.8, 0, false),new SequentialCommandGroup(new getBall(bigIron), new getBall(bigIron))),
         new StationaryTurn(driveSubSystem, 170, false),
@@ -93,6 +95,26 @@ public class RobotContainer {
         new StationaryTurn(driveSubSystem, 180, false),
         new ShootBall(bigIron, driveSubSystem, 180,0)
         );
+*/
+ //standard
+ /*
+    return new SequentialCommandGroup(
+      new ParallelCommandGroup(new LinearDrive(driveSubSystem, 1.5, 0, false),new SequentialCommandGroup(new getBall(bigIron),new getBall(bigIron))),
+      new StationaryTurn(driveSubSystem, 170, false),
+      new ShootBall(bigIron, driveSubSystem, 170, 1),
+      new ShootBall(bigIron, driveSubSystem, 170, 0)
+    );*/
+
+    
+    return new ParallelCommandGroup(
+      new SequentialCommandGroup(
+        new LinearDrive(driveSubSystem, 2, 0, false),
+        new StationaryTurn(driveSubSystem, 180, false),
+        new LinearDrive(driveSubSystem, 2, 180, false),
+        new StationaryTurn(driveSubSystem, 0, false)
+      ),
+      new BigIronIdle(bigIron)
+    );
   }
 
   public Command getManCommand() {

@@ -94,19 +94,23 @@ public final class Constants {
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
         public static final int shiftUp = 2;
         public static final int shiftDown = 3;
-        public static final double kSmoothingAccelFactor = 0.15;
-        public static final double kSmoothingDecelFactor = 0.04;
-        public static final double kMPR = 0.029;// meters per revolution
+        public static final double kSmoothingAccelFactor = 0.13;
+        public static final double kSmoothingDecelFactor = 0.03;
+        public static final double kMaxDownshiftPower = 0.35;
+        public static final double kMPR = 0.0207;// meters per revolution
         public static final int kGyro = 10;
 
         public static final double ltP = 0.016;
         public static final double ltI = 0.023;
         public static final double ltD = 0.0055;
 
-        public static final double tP = 0.02;// P
-        public static final double tI = 0.04;// I
-        public static final double tD = 0.012;// D
-        public static final double tC = 0.8;// Clamp //t and d are two different PID controllers
+        public static final double tP = 0.018;// P
+        public static final double tI = 0.0019;// I
+        public static final double tD = 0.0028;// D
+        public static final double tC = 0.54;// Clamp //t and d are two different PID controllers
+        public static final double[] kDriveDistances = {0,1,2,3,4,30};
+        public static final double[] kDrivePowers = {0.0,0.12,0.6,0.8,1,1};
+        public static final double kAutoDriveSmoothing = 0.06;
         public static final double dP = 0.3;
         public static final double dI = 0.2;
         public static final double dD = 0;

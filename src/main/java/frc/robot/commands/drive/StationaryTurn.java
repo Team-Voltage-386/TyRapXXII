@@ -35,10 +35,10 @@ public class StationaryTurn extends CommandBase {
 
     @Override
     public void execute() {
-        double turn = _dss.getHeadingError(angle);
+        double turn = MathUtil.clamp(pidt.calculate(_dss.getHeadingError(angle),0), -1*tC,tC);
         //if (angle > 35) pidt.setI(0);
         //else pidt.setI(tI);
-        _dss.arcadeDrive(0.03, MathUtil.clamp(pidt.calculate(_dss.getHeadingError(angle),0), -1*tC,tC));
+        _dss.arcadeDrive(0.0, turn);
     }
 
     @Override

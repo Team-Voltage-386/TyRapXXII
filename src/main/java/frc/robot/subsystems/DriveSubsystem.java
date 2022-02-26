@@ -154,10 +154,8 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         public void setHighGear(Boolean t) {
-                if (t)
-                        shifter.set(DoubleSolenoid.Value.kReverse);
-                else
-                        shifter.set(DoubleSolenoid.Value.kForward);
+                if (!t) shifter.set(DoubleSolenoid.Value.kReverse);
+                else shifter.set(DoubleSolenoid.Value.kForward);
         }
 
         public Pose2d getPose() {
