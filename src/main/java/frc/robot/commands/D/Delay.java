@@ -1,46 +1,46 @@
-package frc.robot.commands;
+package frc.robot.commands.D;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BigIronSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import static frc.robot.Constants.DriveConstants.*;
 
-public class getBall extends CommandBase {
+public class Delay extends CommandBase {
 
     private final BigIronSubsystem _bss;
-    private int iBallCount = 0;
-    private final Timer timer = new Timer();
+    private boolean done = false;
+    private final int target;
     
     /**@param angle angle set
      * @param rel if true, angle set is relative
     */
-    public getBall(BigIronSubsystem BSS) {
+    public Delay(BigIronSubsystem BSS, int t) {
         _bss = BSS;
+        target = t;
         addRequirements(_bss);
+        done = false;
     }
 
     @Override
     public void initialize() {
-        _bss.intakeDo(!_bss.intakeOut);
-        _bss.runIntake(true);
-        iBallCount = _bss.ballCount;
-        timer.stop();
-        timer.reset();
+        _bss.intakeDo(_bss.intakeOut);
+        _bss.drumSP = target;
+        _bss.fireTheBigIron = true;
+        done = true;
     } 
 
     @Override
     public void execute() {
-        _bss.intakeDo(false);
-        if (_bss.ballCount > iBallCount) timer.start();
     }
 
     @Override
     public void end(boolean interuppted) {
-        _bss.intakeDo(true);
-        _bss.runIntake(false);
     }
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(0.1);
+        return done;
     }
 }

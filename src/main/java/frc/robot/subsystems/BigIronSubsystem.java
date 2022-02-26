@@ -56,7 +56,7 @@ public class BigIronSubsystem extends SubsystemBase {
 
     // PID Controllers
     private final PIDController pidH = new PIDController(HP, HI, HD);
-    private final PIDController pidD = new PIDController(DP, DI, DD);
+    public final PIDController pidD = new PIDController(DP, DI, DD);
 
     // Sensors
     private final DigitalInput breachSensor = new DigitalInput(kBreachSensorPin);
@@ -85,12 +85,12 @@ public class BigIronSubsystem extends SubsystemBase {
 
     // Private process variables
     private boolean calibrated = false;
-    private double hoodSet = 0.2;
+    public double hoodSet = 0.05;
     private boolean drumPIDRunning = false;
     private double hoodCurrentPosition = 0;
     private boolean hoodLowLimit = false;
     public boolean ballOnTheWay = false;
-    private boolean breachSensorFlag = false;
+    public boolean breachSensorFlag = false;
     private boolean intakeSensorFlag = false;
 
     /** Creates a BigIronSubsystem */
@@ -164,7 +164,7 @@ public class BigIronSubsystem extends SubsystemBase {
                 intakeForward.set(kVent);
                 intakeBackward.set(kGo);
             }
-        } else if (t.hasElapsed(0.5)) {
+        } else if (t.hasElapsed(1)) {
             intakeForward.set(kVent);
             intakeBackward.set(kVent);
         }
@@ -241,7 +241,7 @@ public class BigIronSubsystem extends SubsystemBase {
             double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, kDrumIdleSpeed);
             drumOneMotor.set(control);
         } else if (ejectBall || eff) {
-            drumOneMotor.set(kDrumDirection*0.5);
+            drumOneMotor.set(kDrumDirection*0.3);
         } else {
             drumOneMotor.set(0);
             if (drumPIDRunning) {
@@ -257,7 +257,7 @@ public class BigIronSubsystem extends SubsystemBase {
 
     private void runFeedBelt() {
         if (fireTheBigIron) {
-            if (readyToFire() && Utils.Flags.hoopLocked) {
+            if (readyToFire()) {
                 beltMotor.set(ControlMode.PercentOutput, kBeltPower); 
             } else beltMotor.set(ControlMode.PercentOutput, 0);
         } else if (ballCount == 0) {
@@ -286,7 +286,7 @@ public class BigIronSubsystem extends SubsystemBase {
             if (!woundBack) {
                 if (breachSensorFlag) beltTimer.start();
                 beltMotor.set(ControlMode.PercentOutput, kBeltReversePower);
-                if (beltTimer.hasElapsed(0.55)) {
+                if (beltTimer.hasElapsed(0.6)) {
                     beltTimer.stop();
                     beltTimer.reset();
                     woundBack = true;

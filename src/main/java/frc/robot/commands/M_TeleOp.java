@@ -39,7 +39,7 @@ public class M_TeleOp extends CommandBase {
   @Override
   public void initialize() {
     _bss.reset();
-    _bss.intakeDo(_bss.intakeOut);
+    //_bss.intakeDo(_bss.intakeOut);
   }
 
   /** Called every time the scheduler runs while the command is scheduled. */
@@ -53,6 +53,7 @@ public class M_TeleOp extends CommandBase {
     hoopTargeted = _controller.getRawButton(kLeftBumper);
     _bss.fireTheBigIron = hoopTargeted;
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
+    _bss.hoodSet = 0.1;
   }
 
   // Called once the command ends or is interrupted.

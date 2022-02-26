@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LimeLightConstants;
 
@@ -18,6 +21,8 @@ public class LimeLightSubsystem extends SubsystemBase {
   private final double _MA;
   private final double _MH;
   private final  Timer timer = new Timer();
+  private final ShuffleboardTab tab = Shuffleboard.getTab("LL");
+  private final NetworkTableEntry distWidget = tab.add("dist",0).withPosition(0, 0).withSize(1, 1).getEntry();
 
   /**Carl's attempt at making a lime-light subsystem*/
   public LimeLightSubsystem(String hostName, double targetHeight, double mountAngle, double mountHeight) {
@@ -43,7 +48,10 @@ public class LimeLightSubsystem extends SubsystemBase {
         timer.start();
         tx = (float)_nt.getEntry("tx").getDouble(0);
         ty = (float)_nt.getEntry("ty").getDouble(0);
+        distWidget.setDouble(metersToTarget());
     }
+
+
   }
 
   /**Empty*/

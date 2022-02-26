@@ -105,7 +105,7 @@ public class RobotContainer {
       new ShootBall(bigIron, driveSubSystem, 170, 0)
     );*/
 
-    
+    /*
     return new ParallelCommandGroup(
       new SequentialCommandGroup(
         new LinearDrive(driveSubSystem, 2, 0, false),
@@ -114,6 +114,11 @@ public class RobotContainer {
         new StationaryTurn(driveSubSystem, 0, false)
       ),
       new BigIronIdle(bigIron)
+    );*/
+
+    return new SequentialCommandGroup(
+      new getBall(bigIron),
+      new ShootBall(bigIron, driveSubSystem, 0, 4980, 0, 0.41)
     );
   }
 

@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.driveSubSystem.setHighGear(false);
     m_robotContainer.driveSubSystem.resetOdometry(new Pose2d());
     m_robotContainer.bigIron.intakeDo(!m_robotContainer.bigIron.intakeOut);
+    m_robotContainer.LLSubsystem.lights(true);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
