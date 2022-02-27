@@ -45,7 +45,6 @@ public class M_TeleOp extends CommandBase {
     if (_controller.getRawButtonPressed(kB)) _bss.ejectBall = !_bss.ejectBall;
 
     if (_controller.getRawButtonPressed(kY)) _bss.ballFailedDebug();
-    if (_controller.getRawButtonPressed(kA)) _bss.empty();
 
     hoopTargeted = _controller.getRawButton(kLeftBumper);
     _bss.fireTheBigIron = hoopTargeted;

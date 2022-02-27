@@ -111,16 +111,20 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
     public void ballFailedDebug() {
-        if (ballCount == 2) {
+        if (ballCount == 0) {
+            ballOnTheWay = true;
+            woundBack = false;
+        } else if (ballCount == 1) {
+            ballCount = 0;
+            ballOnTheWay = false;
+            woundBack = false;
+            ejectBall = false;
+            ef = false;
+            eff = false;
+        } else if (ballCount == 2) {
             ballCount = 1;
             woundBack = false;
         }
-    }
-
-    public void empty() {
-        ballCount = 0;
-        ballOnTheWay = false;
-        woundBack = false;
     }
 
     public void reset() {
