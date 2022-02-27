@@ -1,16 +1,10 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.BigIronSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.LimeLightSubsystem;
 
 import static frc.robot.Constants.DriveConstants.*;
 
-import com.fasterxml.jackson.core.TreeCodec;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
@@ -50,10 +44,12 @@ public class M_TeleOp extends CommandBase {
     _bss.intakeDo(_controller.getRawButtonPressed(kRightBumper));
     if (_controller.getRawButtonPressed(kB)) _bss.ejectBall = !_bss.ejectBall;
 
+    if (_controller.getRawButtonPressed(kY)) _bss.ballFailedDebug();
+    if (_controller.getRawButtonPressed(kA)) _bss.empty();
+
     hoopTargeted = _controller.getRawButton(kLeftBumper);
     _bss.fireTheBigIron = hoopTargeted;
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
-    _bss.hoodSet = 0.1;
   }
 
   // Called once the command ends or is interrupted.

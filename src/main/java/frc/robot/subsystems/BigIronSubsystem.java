@@ -4,6 +4,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Utils;
 import frc.robot.Constants.ShooterData;
+import frc.robot.Utils.Flags;
 
 import static frc.robot.Constants.ShooterData.*;
 
@@ -109,6 +110,19 @@ public class BigIronSubsystem extends SubsystemBase {
 
     }
 
+    public void ballFailedDebug() {
+        if (ballCount == 2) {
+            ballCount = 1;
+            woundBack = false;
+        }
+    }
+
+    public void empty() {
+        ballCount = 0;
+        ballOnTheWay = false;
+        woundBack = false;
+    }
+
     public void reset() {
         pidD.reset();
         pidH.reset();
@@ -165,8 +179,13 @@ public class BigIronSubsystem extends SubsystemBase {
                 intakeBackward.set(kGo);
             }
         } else if (t.hasElapsed(1)) {
-            intakeForward.set(kVent);
-            intakeBackward.set(kVent);
+            if (Flags.complianceOverride) {
+                intakeForward.set(kGo);
+                intakeBackward.set(kVent);
+            } else {
+                intakeForward.set(kVent);
+                intakeBackward.set(kVent);
+            }
         }
     }
 
@@ -297,7 +316,7 @@ public class BigIronSubsystem extends SubsystemBase {
                     ballCount++;
                 } else if (ejectBall) {
                     if (breachSensorFlag) {
-                        if (ejectTimer.hasElapsed(1)) {
+                        if (ejectTimer.hasElapsed(0.5)) {
                             beltMotor.set(ControlMode.PercentOutput, kBeltPower);
                             eff = true;
                             ejectBall = false;
@@ -316,7 +335,7 @@ public class BigIronSubsystem extends SubsystemBase {
         } else if (ballCount == 2) {
             if (ball2Col.equals("null")) ball2Col = getColor();
             else if (ejectBall) {
-                if (ejectTimer.hasElapsed(1)) {
+                if (ejectTimer.hasElapsed(0.5)) {
                     beltMotor.set(ControlMode.PercentOutput, kBeltPower);
                     ejectBall = false;
                     eff = true;
@@ -324,10 +343,14 @@ public class BigIronSubsystem extends SubsystemBase {
             } else if (eff) {
                 if (!breachSensorFlag) {
                     beltMotor.set(ControlMode.PercentOutput, 0);
-                    reLoad();
+                    ball1Col = ball2Col;
+                    ball2Col = "null";
+                    ballCount = 1;
                     ef = false;
                     eff = ef;
                     fireTheBigIron = false;
+                    ejectBall = true;
+                    woundBack = true;
                 }
             } else beltMotor.set(ControlMode.PercentOutput, 0);  
             if (!breachSensorFlag) beltMotor.set(ControlMode.PercentOutput, kBeltPower);
