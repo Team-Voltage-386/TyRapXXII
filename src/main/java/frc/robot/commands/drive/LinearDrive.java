@@ -14,7 +14,6 @@ public class LinearDrive extends CommandBase {
 
     private final DriveSubsystem _dss;
     private final PIDController pidt = new PIDController(tP,tI,tD);
-    private final PIDController pidd = new PIDController(dP, dI, dD);
     private Pose2d startPose = new Pose2d();
     private double headingHold = 0;
     private double distanceFromStart = 0;
@@ -39,7 +38,6 @@ public class LinearDrive extends CommandBase {
     @Override
     public void initialize() {
         pidt.reset();
-        pidd.reset();
         startPose = _dss.getPose();
         drive = 0;
         finTimer.stop();

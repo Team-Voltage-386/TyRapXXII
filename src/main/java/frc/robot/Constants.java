@@ -58,8 +58,8 @@ public final class Constants {
         public static final int kDrumOneID = 11;
         public static final int kDrumTwoID = 12;
         public static final int kDrumDirection = -1;
-        public static final int kDrumIdleSpeed = 2000;
-        public static final int kDrumSpeedTolerance = 40;
+        public static final int kDrumIdleSpeed = 2200;
+        public static final int kDrumSpeedTolerance = 100;
         public static final int kHoodDownLimitPin = 9;
         public static final int kBreachSensorPin = 0;
         public static final int kIntakeColorSensorThreshold = 140;
@@ -73,12 +73,12 @@ public final class Constants {
         public static final double kIntakeReversePower = 0.2;
         public static final double kBeltReversePower = 0.5;
         public static final double kBeltPower = -0.9;
-        public static final double HP = 10;
-        public static final double HI = 0.5;
+        public static final double HP = 20;
+        public static final double HI = 0.8;
         public static final double HD = 0;
         public static final double HC = 1;
-        public static final double DP = 0.00043;
-        public static final double DI = 0.0005;
+        public static final double DP = 0.0004;
+        public static final double DI = 0.00068;
         public static final double DD = 0.00001;
         public static final int kChannelIntakeForwardGo = 7;
         public static final int kChannelIntakeForwardVent = 5;
@@ -95,13 +95,13 @@ public final class Constants {
         public static final int shiftUp = 2;
         public static final int shiftDown = 3;
         public static final double kSmoothingAccelFactor = 0.13;
-        public static final double kSmoothingDecelFactor = 0.03;
+        public static final double kSmoothingDecelFactor = 0.02;
         public static final double kMaxDownshiftPower = 0.35;
         public static final double kMPR = 0.0207;// meters per revolution
         public static final int kGyro = 10;
 
         public static final double ltP = 0.016;
-        public static final double ltI = 0.023;
+        public static final double ltI = 0.04;
         public static final double ltD = 0.0055;
 
         public static final double tP = 0.018;// P
@@ -111,10 +111,6 @@ public final class Constants {
         public static final double[] kDriveDistances = {0,1,2,3,4,30};
         public static final double[] kDrivePowers = {0.0,0.12,0.6,0.8,1,1};
         public static final double kAutoDriveSmoothing = 0.06;
-        public static final double dP = 0.3;
-        public static final double dI = 0.2;
-        public static final double dD = 0;
-        public static final double dC = 1;
     }
 
     public static final class ShooterData {
@@ -124,8 +120,8 @@ public final class Constants {
         Satan himself will reject you to be abandoned in the Endless Sea
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
-        public static final double[] distances = {4.06,5.03,5.97};
-        public static final int[] drumSpeeds = {3550,3600,3950};
-        public static final double[] hoodPositions = {0.1,0.3,0.5};
+        public static final double[] distances = {1,2,3,4,5,6};
+        public static final int[] drumSpeeds = {2100,2200,2300,2400,2500,2600};
+        public static final double[] hoodPositions = {0.05,0.1,0.2,0.3,0.4,0.5};
     }
 }

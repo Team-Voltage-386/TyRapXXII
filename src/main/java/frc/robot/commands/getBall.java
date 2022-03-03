@@ -16,6 +16,7 @@ public class getBall extends CommandBase {
     public getBall(BigIronSubsystem BSS) {
         _bss = BSS;
         addRequirements(_bss);
+        
     }
 
     @Override
@@ -30,7 +31,6 @@ public class getBall extends CommandBase {
     @Override
     public void execute() {
         _bss.intakeDo(false);
-        if (_bss.ballCount > iBallCount) timer.start();
     }
 
     @Override
@@ -41,6 +41,6 @@ public class getBall extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(0.1);
+        return _bss.ballCount > iBallCount;
     }
 }

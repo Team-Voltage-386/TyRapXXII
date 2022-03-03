@@ -6,9 +6,12 @@ import static frc.robot.Constants.DriveConstants.*;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.Utils.Flags;
+
 import static frc.robot.Utils.Flags.*;
 
 import static frc.robot.Constants.ControllerConstants.*;
@@ -43,11 +46,15 @@ public class M_TeleOp extends CommandBase {
     _bss.runIntake(_controller.getRawAxis(kRightTrigger) > 0.3);
     _bss.intakeDo(_controller.getRawButtonPressed(kRightBumper));
     if (_controller.getRawButtonPressed(kB)) _bss.ejectBall = !_bss.ejectBall;
-
+    if (_controller.getRawButtonReleased(kLeftBumper)) {
+      _bss.ballCount = 1;
+      _bss.ballFailedDebug();
+      _bss.drumIdle = false;
+    }
     if (_controller.getRawButtonPressed(kY)) _bss.ballFailedDebug();
-
     hoopTargeted = _controller.getRawButton(kLeftBumper);
     _bss.fireTheBigIron = hoopTargeted;
+
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
   }
 

@@ -25,11 +25,12 @@ public class LimeLightSubsystem extends SubsystemBase {
   private final NetworkTableEntry distWidget = tab.add("dist",0).withPosition(0, 0).withSize(1, 1).getEntry();
 
   /**Carl's attempt at making a lime-light subsystem*/
-  public LimeLightSubsystem(String hostName, double targetHeight, double mountAngle, double mountHeight) {
+  public LimeLightSubsystem(String hostName, double targetHeight, double mountAngle, double mountHeight, int pl) {
       _nt = NetworkTableInstance.getDefault().getTable(hostName);
       _TH = targetHeight;
       _MA = mountAngle;
       _MH = mountHeight;
+      setPipeLine(pl);
       driverMode(false);
       timer.start();
   }

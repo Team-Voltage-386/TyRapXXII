@@ -9,26 +9,20 @@ import static frc.robot.Constants.DriveConstants.*;
 
 public class Delay extends CommandBase {
 
-    private final BigIronSubsystem _bss;
-    private boolean done = false;
-    private final int target;
+    private final Timer timer = new Timer();
+    private final double time;
     
     /**@param angle angle set
      * @param rel if true, angle set is relative
     */
-    public Delay(BigIronSubsystem BSS, int t) {
-        _bss = BSS;
-        target = t;
-        addRequirements(_bss);
-        done = false;
+    public Delay(double t) {
+        time = t;
     }
 
     @Override
     public void initialize() {
-        _bss.intakeDo(_bss.intakeOut);
-        _bss.drumSP = target;
-        _bss.fireTheBigIron = true;
-        done = true;
+        timer.reset();
+        timer.start();
     } 
 
     @Override
@@ -37,10 +31,11 @@ public class Delay extends CommandBase {
 
     @Override
     public void end(boolean interuppted) {
+        timer.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return done;
+        return timer.hasElapsed(time);
     }
 }

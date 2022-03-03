@@ -19,7 +19,9 @@ import frc.robot.commands.BigIronIdle;
 import frc.robot.commands.D_TeleOp;
 import frc.robot.commands.M_TeleOp;
 import frc.robot.commands.ShootBall;
+import frc.robot.commands.ShootBallMan;
 import frc.robot.commands.getBall;
+import frc.robot.commands.D.Delay;
 import frc.robot.commands.drive.LinearDrive;
 import frc.robot.commands.drive.StationaryTurn;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -46,7 +48,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
   public final BigIronSubsystem bigIron = new BigIronSubsystem();
-  public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight-xxii", Constants.LimeLightConstants.targetHeight, Constants.LimeLightConstants.mountAngle, Constants.LimeLightConstants.mountHeight);
+  public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight-xxii", Constants.LimeLightConstants.targetHeight, Constants.LimeLightConstants.mountAngle, Constants.LimeLightConstants.mountHeight, 0);
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
@@ -101,8 +103,7 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       new ParallelCommandGroup(new LinearDrive(driveSubSystem, 1.5, 0, false),new SequentialCommandGroup(new getBall(bigIron),new getBall(bigIron))),
       new StationaryTurn(driveSubSystem, 170, false),
-      new ShootBall(bigIron, driveSubSystem, 170, 1),
-      new ShootBall(bigIron, driveSubSystem, 170, 0)
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );*/
 
     /*
@@ -117,8 +118,9 @@ public class RobotContainer {
     );*/
 
     return new SequentialCommandGroup(
+      new Delay(2),
       new getBall(bigIron),
-      new ShootBall(bigIron, driveSubSystem, 0, 4980, 0, 0.41)
+      new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 2900, 0.1)
     );
   }
 

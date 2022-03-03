@@ -55,13 +55,14 @@ public class D_TeleOp extends CommandBase {
     rootDrive = 0;
     rootTurn = 0;
     pid.setTolerance(1, 1);
-    _lls.setPipeLine(0);
-    _lls.lights(true);
+    //_lls.setPipeLine(0);
+    //_lls.lights(true);
   }
 
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
+    Flags.hoopVisible = _lls.targetFound;
     Flags.complianceOverride = _controller.getRawButton(kRightBumper);
     double controllerIn = _controller.getRawAxis(kLeftVertical);
     if (Math.abs(controllerIn) > Math.abs(rootDrive)) rootDrive = Utils.lerp(rootDrive, controllerIn, kSmoothingAccelFactor);
@@ -75,18 +76,18 @@ public class D_TeleOp extends CommandBase {
     }
     if (_lls.targetFound && hoopTargeted) {
       //_controller.setRumble(RumbleType.kRightRumble, 0.5);
-      if (Math.abs(_lls.tx) > 1.1) {
+      if (Math.abs(_lls.tx) > 1.7) {
         hoopLocked = false;
-        rootTurn = MathUtil.clamp(pid.calculate(_lls.tx), -tC, tC);
+        rootTurn += MathUtil.clamp(pid.calculate(_lls.tx), -tC, tC);
       }
       else {
         pid.reset();
         hoopLocked = true;
         rootTurn = 0;
       }
-    } else {
+    } 
+    else {
       pid.reset();
-      _controller.setRumble(RumbleType.kRightRumble, 0);
     }
     _dss.arcadeDrive(rootDrive, rootTurn);
     if (_lls.targetFound) targetDistance = _lls.metersToTarget();
@@ -95,6 +96,6 @@ public class D_TeleOp extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    _lls.lights(false);
+    //_lls.lights(false);
   }
 }

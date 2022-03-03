@@ -7,6 +7,7 @@ public class Utils {
         public static boolean hoopLocked = false;
         public static double targetDistance = 9999;
         public static boolean complianceOverride = false;
+        public static boolean hoopVisible = false;
     }
 
     /**Lerp

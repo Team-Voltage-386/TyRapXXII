@@ -141,6 +141,8 @@ public class BigIronSubsystem extends SubsystemBase {
         ball2Col = "null";
         ballOnTheWay = false;
         ballCount = 0;
+        intakeSensorFlag = false;
+        breachSensorFlag = false;
         fireTheBigIron = false;
         ef = false;
         eff = false;
@@ -241,7 +243,10 @@ public class BigIronSubsystem extends SubsystemBase {
         if (calibrated) {
             double control = MathUtil.clamp(pidH.calculate(hoodCurrentPosition, hoodSet), -1, 1);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
-            else hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 1, 0));// limit that hood thing*/
+            else {
+                hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 1, 0));// limit that hood thing
+                pidH.reset();
+            }
         } else {
             if (hoodLowLimit) {
                 calibrated = true;
@@ -249,7 +254,7 @@ public class BigIronSubsystem extends SubsystemBase {
                 hoodEncoder.reset();
             }
             else {
-                hoodMotor.set(ControlMode.PercentOutput, -0.5);
+                hoodMotor.set(ControlMode.PercentOutput, -0.9);
             }
         }
     }
@@ -276,11 +281,10 @@ public class BigIronSubsystem extends SubsystemBase {
 
     private Timer beltTimer = new Timer();
     private boolean woundBack = false;
-    private boolean fF = false;
 
     private void runFeedBelt() {
         if (fireTheBigIron) {
-            if (readyToFire()) {
+            if (readyToFire() && Flags.hoopLocked) {
                 beltMotor.set(ControlMode.PercentOutput, kBeltPower); 
             } else beltMotor.set(ControlMode.PercentOutput, 0);
         } else if (ballCount == 0) {
@@ -362,7 +366,7 @@ public class BigIronSubsystem extends SubsystemBase {
 }
 
     public final ShuffleboardTab tab = Shuffleboard.getTab("BigIron");
-    private final NetworkTableEntry eWidget = tab.add("Eject", false).withPosition(0, 0).getEntry();
+    private final NetworkTableEntry hllWidget = tab.add("HoodLL", false).withPosition(0, 0).getEntry();
     private final NetworkTableEntry ejectBeltWidget = tab.add("BreachSensor", false).withPosition(0, 1).getEntry();
     private final NetworkTableEntry colWidget = tab.add("col", 0).withPosition(0, 2).getEntry();
     private final NetworkTableEntry botwWidget = tab.add("botw", false).withPosition(1, 0).getEntry();
@@ -377,7 +381,7 @@ public class BigIronSubsystem extends SubsystemBase {
     private final NetworkTableEntry dWidget = tab.add("distance",0).withPosition(3,3).getEntry();
 
     private void updateWidgets() {
-        eWidget.setBoolean(hoodLowLimit);
+        hllWidget.setBoolean(hoodLowLimit);
         ejectBeltWidget.setBoolean(breachSensorFlag);
         colWidget.setDouble(intakeSensor.getProximity());
         botwWidget.setBoolean(ballOnTheWay);
