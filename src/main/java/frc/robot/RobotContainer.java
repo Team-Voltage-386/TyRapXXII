@@ -120,7 +120,7 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       new Delay(2),
       new getBall(bigIron),
-      new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 2900, 0.1)
+      new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 3150, 0.035)
     );
   }
 

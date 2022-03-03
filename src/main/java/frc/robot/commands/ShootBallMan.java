@@ -62,7 +62,7 @@ public class ShootBallMan extends CommandBase {
         _bss.drumSP = drumSpeed;
         _bss.hoodSet = hoodPos;
 
-        Flags.hoopLocked = !(Math.abs(_lls.tx) > 3);
+        Flags.hoopLocked = !(Math.abs(_lls.tx) > 2);
 
         if (!loaded && _bss.breachSensorFlag) {
             loaded = true;

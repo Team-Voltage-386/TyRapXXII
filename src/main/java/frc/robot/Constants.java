@@ -59,11 +59,11 @@ public final class Constants {
         public static final int kDrumTwoID = 12;
         public static final int kDrumDirection = -1;
         public static final int kDrumIdleSpeed = 2200;
-        public static final int kDrumSpeedTolerance = 100;
+        public static final int kDrumSpeedTolerance = 60;
         public static final int kHoodDownLimitPin = 9;
         public static final int kBreachSensorPin = 0;
         public static final int kIntakeColorSensorThreshold = 140;
-        public static final double kHoodPositionTolerance = 0.01;
+        public static final double kHoodPositionTolerance = 0.005;
         public static final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
         public static final int kIntakeID = 30;
         public static final int kHoodID = 31;
@@ -78,8 +78,8 @@ public final class Constants {
         public static final double HD = 0;
         public static final double HC = 1;
         public static final double DP = 0.0004;
-        public static final double DI = 0.00068;
-        public static final double DD = 0.00001;
+        public static final double DI = 0.0006;
+        public static final double DD = 0.00002;
         public static final int kChannelIntakeForwardGo = 7;
         public static final int kChannelIntakeForwardVent = 5;
         public static final int kChannelIntakeBackwardGo = 6;
@@ -120,8 +120,8 @@ public final class Constants {
         Satan himself will reject you to be abandoned in the Endless Sea
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
-        public static final double[] distances = {1,2,3,4,5,6};
-        public static final int[] drumSpeeds = {2100,2200,2300,2400,2500,2600};
-        public static final double[] hoodPositions = {0.05,0.1,0.2,0.3,0.4,0.5};
+        public static final double[] distances = {1.1074,1.55,2.16,2.7022,3.47,3.97};
+        public static final int[] drumSpeeds = {2750,2800,2850,2950,3150,3350};
+        public static final double[] hoodPositions = {0.01,0.02,0.03,0.1,0.035,0.04};
     }
 }

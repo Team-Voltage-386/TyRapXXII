@@ -244,7 +244,7 @@ public class BigIronSubsystem extends SubsystemBase {
             double control = MathUtil.clamp(pidH.calculate(hoodCurrentPosition, hoodSet), -1, 1);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
             else {
-                hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 1, 0));// limit that hood thing
+                hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing
                 pidH.reset();
             }
         } else {
