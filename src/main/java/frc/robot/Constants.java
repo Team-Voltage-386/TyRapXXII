@@ -80,8 +80,8 @@ public final class Constants {
     }
 
     public static final class KenobiConstants {
-        public static final int kChannelClimbIn = 0;
-        public static final int kChannelClimbOut = 1;
+        public static final int kChannelClimbIn = 1;
+        public static final int kChannelClimbOut = 0;
         public static final int kElevatorLeaderID = 13;
         public static final int kElevatorFollowerID = 14;
         public static final int kPneumaticsDIOID = 5;

@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -73,12 +74,11 @@ public class KenobiSubsystem extends SubsystemBase {
     }
     armsOut = !armsOut;
   }
-
+/**@param power negative is up, positive is down */
   public void elevatorDo(double power) {
     double output = power;
-    boolean goingUp = power > 0.0; // edit to see which direction is which
-    if ((elevatorUpperLimitBoolean && goingUp) || (elevatorLowerLimitBoolean && !goingUp))
-      output = 0.0;
+    if (elevatorLowerLimitBoolean) output = MathUtil.clamp(output, -1.0, 0.0);
+    else if(elevatorUpperLimitBoolean) output = MathUtil.clamp(output, 0.0, 1.0);
     elevatorLeader.set(output);
   }
 

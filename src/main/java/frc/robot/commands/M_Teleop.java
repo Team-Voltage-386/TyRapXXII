@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import frc.robot.RobotContainer;
+import frc.robot.Constants.BigIronConstants;
+import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,15 +16,17 @@ import static frc.robot.Constants.ControllerConstants.*;
 
 public class M_Teleop extends CommandBase {
   private final KenobiSubsystem _kss;
+  private final BigIronSubsystem _bss;
   private final Joystick _manipulatorController;
 
   /** Creates a new M_Teleop. */
-  public M_Teleop(KenobiSubsystem KSS) {
+  public M_Teleop(KenobiSubsystem KSS, BigIronSubsystem BSS) {
     _kss = KSS;
+    _bss = BSS;
     _manipulatorController = RobotContainer.manipulatorController;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(_kss);
+    addRequirements(_kss, _bss);
   }
 
   // Called when the command is initially scheduled.
@@ -37,6 +41,8 @@ public class M_Teleop extends CommandBase {
     if (_manipulatorController.getRawButtonPressed(kX)) {
       _kss.armsDo();
     }
+
+    _bss.intakeDo(_manipulatorController.getRawButtonPressed(kRightBumper));
 
     _kss.elevatorDo(_manipulatorController.getRawAxis(kRightVertical) * 0.5);
   }

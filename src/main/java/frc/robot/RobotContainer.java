@@ -50,7 +50,7 @@ public class RobotContainer {
   public static ShuffleboardTab driverTab;
 
   private final D_TeleOp manualDriveCommand = new D_TeleOp(driveSubSystem);
-  private final M_Teleop manualManipulatorCommand = new M_Teleop(kenobi);
+  private final M_Teleop manualManipulatorCommand = new M_Teleop(kenobi, bigIron);
 
   // The robot's subsystems and commands are defined here...
 
