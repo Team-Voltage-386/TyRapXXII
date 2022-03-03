@@ -13,14 +13,15 @@ import static frc.robot.Constants.LEDConstants.*;
 public class LEDSubsystem extends SubsystemBase {
   AddressableLED ledRight = new AddressableLED(kRightStrip);
   AddressableLED ledLeft = new AddressableLED(kLeftStrip);
-  AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(kLEDLength);
+  AddressableLEDBuffer ledBufferLeft = new AddressableLEDBuffer(kLEDLength);
+  AddressableLEDBuffer ledBufferRight = new AddressableLEDBuffer(kLEDLength);
 
   /** Creates a new LEDSubsystem. */
   public LEDSubsystem() {
     ledRight.setLength(kLEDLength);
     ledLeft.setLength(kLEDLength);
-    ledRight.setData(ledBuffer);
-    ledLeft.setData(ledBuffer);
+    ledRight.setData(ledBufferRight);
+    ledLeft.setData(ledBufferLeft);
   }
 
   @Override
@@ -38,9 +39,10 @@ public class LEDSubsystem extends SubsystemBase {
     ledRight.stop();
   }
 
-  public void setLEDSegment(int indexStart, int indexStop, Color color){
-    for (int i=indexStart; i<=indexStop;i++){
-      ledBuffer.setLED(i, color);
+  public void setLEDSegment(int indexStart, int indexStop, Color color) {
+    for (int i = indexStart; i <= indexStop; i++) {
+      ledBufferLeft.setLED(i, color);
+      ledBufferRight.setLED(i, color);
     }
 
   }
