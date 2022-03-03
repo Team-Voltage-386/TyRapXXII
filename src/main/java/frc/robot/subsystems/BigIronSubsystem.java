@@ -80,6 +80,8 @@ public class BigIronSubsystem extends SubsystemBase {
     public String ball2Col = "null";
     public double hoodManPower = 0;
     public int ballCount = 0;
+    public String colorOurs;
+    public String colorAnti;
 
     // Misc.
     private final Timer ejectTimer = new Timer();
@@ -107,7 +109,6 @@ public class BigIronSubsystem extends SubsystemBase {
         //drumLeadMotor.restoreFactoryDefaults();
         //drumFollowMotor.restoreFactoryDefaults();
         drumTwoMotor.follow(drumOneMotor,true);
-
     }
 
     public void ballFailedDebug() {

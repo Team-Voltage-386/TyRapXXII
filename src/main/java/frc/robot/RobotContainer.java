@@ -14,10 +14,11 @@ import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.Constants;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.KenobiSubsystem;
+import frc.robot.commands.D_TeleOp;
+import frc.robot.commands.M_Teleop;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.commands.BigIronIdle;
-import frc.robot.commands.D_TeleOp;
-import frc.robot.commands.M_TeleOp;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.ShootBallMan;
 import frc.robot.commands.getBall;
@@ -30,6 +31,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import static frc.robot.Constants.BigIronConstants.*;
+import edu.wpi.first.wpilibj.DriverStation;
+
+import frc.robot.Utils;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -46,6 +51,9 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
+  private final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  private final BigIronSubsystem bigIron = new BigIronSubsystem();
+  private final KenobiSubsystem kenobi = new KenobiSubsystem();
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
   public final BigIronSubsystem bigIron = new BigIronSubsystem();
   public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight-xxii", Constants.LimeLightConstants.targetHeight, Constants.LimeLightConstants.mountAngle, Constants.LimeLightConstants.mountHeight, 0);
@@ -64,6 +72,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    Utils.ourAlliance = DriverStation.getAlliance().toString();
+    Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
     driveSubSystem.setDefaultCommand(driveTeleOp);
     bigIron.setDefaultCommand(manipTeleOp);
   }

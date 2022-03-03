@@ -86,6 +86,16 @@ public final class Constants {
         public static final int kChannelIntakeBackwardVent = 4;
     }
 
+    public static final class KenobiConstants {
+        public static final int kChannelClimbIn = 1;
+        public static final int kChannelClimbOut = 0;
+        public static final int kElevatorLeaderID = 13;
+        public static final int kElevatorFollowerID = 14;
+        public static final int kPneumaticsDIOID = 5;
+        public static final int kElevatorLowerLimitDIOID = 1;
+        public static final int kElevatorUpperLimitDIOID = 2;
+    }
+
     public static final class DriveConstants {
         public static final int kFrontLeft = 2; // CAN (Spark)
         public static final int kFrontRight = 3; // CAN (Spark)
@@ -123,5 +133,11 @@ public final class Constants {
         public static final double[] distances = {1.1074,1.55,2.16,2.7022,3.47,3.97};
         public static final int[] drumSpeeds = {2750,2800,2850,2950,3150,3350};
         public static final double[] hoodPositions = {0.01,0.02,0.03,0.1,0.035,0.04};
+    }
+
+    public static final class LEDConstants {
+        public static final int kLEDLength = 16;
+        public static final int kRightStrip = 8;
+        public static final int kLeftStrip = 9;
     }
 }
