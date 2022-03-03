@@ -37,7 +37,7 @@ public class M_Teleop extends CommandBase {
       _kss.armsDo();
     }
 
-    _kss.elevatorDo(_manipulatorController.getRawAxis(kRightVertical));
+    _kss.elevatorDo(_manipulatorController.getRawAxis(kRightVertical) * 0.5);
   }
 
   // Called once the command ends or is interrupted.

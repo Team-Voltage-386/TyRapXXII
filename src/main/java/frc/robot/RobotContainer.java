@@ -16,8 +16,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
 import frc.robot.commands.D_TeleOp;
 import frc.robot.commands.M_Teleop;
-import frc.robot.commands.D_TeleOp;
-import frc.robot.commands.LEDBalls;
 import frc.robot.commands.drive.LinearDrive;
 import frc.robot.commands.drive.StationaryTurn;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -67,7 +65,7 @@ public class RobotContainer {
     kenobi.setDefaultCommand(manualManipulatorCommand);
     Utils.ourAlliance = DriverStation.getAlliance().toString();
     Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
-   }
+  }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
