@@ -76,7 +76,7 @@ public class KenobiSubsystem extends SubsystemBase {
 
   public void elevatorDo(double power) {
     double output = power;
-    boolean goingUp = power > 0.0;
+    boolean goingUp = power > 0.0; // edit to see which direction is which
     if ((elevatorUpperLimitBoolean && goingUp) || (elevatorLowerLimitBoolean && !goingUp))
       output = 0.0;
     elevatorLeader.set(output);
