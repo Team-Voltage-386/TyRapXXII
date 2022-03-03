@@ -85,7 +85,8 @@ public final class Constants {
         public static final int kElevatorLeaderID = 13;
         public static final int kElevatorFollowerID = 14;
         public static final int kPneumaticsDIOID = 5;
-        public static final int kElevatorDIOID = 4;//placeholder
+        public static final int kElevatorLowerLimitDIOID = 1;
+        public static final int kElevatorUpperLimitDIOID = 2;
     }
 
     public static final class DriveConstants {
@@ -116,8 +117,8 @@ public final class Constants {
     }
 
     public static final class LEDConstants {
-        public static final int kLEDLength=16;
-        public static final int kRightStrip=8;
-        public static final int kLeftStrip=9;
+        public static final int kLEDLength = 16;
+        public static final int kRightStrip = 8;
+        public static final int kLeftStrip = 9;
     }
 }

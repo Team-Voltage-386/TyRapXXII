@@ -28,6 +28,7 @@ public class M_Teleop extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    _kss.armsIn();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

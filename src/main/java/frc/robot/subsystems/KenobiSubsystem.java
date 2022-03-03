@@ -28,8 +28,18 @@ public class KenobiSubsystem extends SubsystemBase {
       kChannelClimbOut, kChannelClimbIn);
 
   // sensors
-  private final DigitalInput pneumaticsLimit = new DigitalInput(kPneumaticsDIOID);
-  private final DigitalInput elevatorSensor = new DigitalInput(kElevatorDIOID);
+  private final DigitalInput pneumaticsLimitSensor = new DigitalInput(kPneumaticsDIOID);
+  private final DigitalInput elevatorLowerLimitSensor = new DigitalInput(kElevatorLowerLimitDIOID);
+  private final DigitalInput elevatorUpperLimitSensor = new DigitalInput(kElevatorUpperLimitDIOID);
+
+  // booleans, since DIOs are inverted when you get them
+  private boolean pneumaticsLimitBoolean, elevatorLowerLimitBoolean, elevatorUpperLimitBoolean;
+
+  public void updateSensors() {
+    pneumaticsLimitBoolean = !pneumaticsLimitSensor.get();
+    elevatorLowerLimitBoolean = !elevatorLowerLimitSensor.get();
+    elevatorUpperLimitBoolean = !elevatorUpperLimitSensor.get();
+  }
 
   /** Creates a new Kenobi. */
   public KenobiSubsystem() {
@@ -39,15 +49,18 @@ public class KenobiSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    updateSensors();
     updateWidgets();
   }
 
   public void armsOut() {
     arms.set(Value.kForward);
+    armsOut = true;
   }
 
   public void armsIn() {
     arms.set(Value.kReverse);
+    armsOut = false;
   }
 
   protected boolean armsOut = false;
@@ -61,21 +74,10 @@ public class KenobiSubsystem extends SubsystemBase {
     armsOut = !armsOut;
   }
 
-  protected boolean hitLimitTop = true;// true = hit top limit, false = hit bottom limit
-  protected boolean hitLimitAny = true;// limit sensor
-  protected boolean movingUp = false;// based on power
-
   public void elevatorDo(double power) {
     double output = power;
-    hitLimitAny = elevatorSensor.get();
-    movingUp = (power > 0.0);
-    if (hitLimitAny) {
-      if (movingUp)
-        hitLimitTop = true;
-      else
-        hitLimitTop = false;
-    }
-    if (hitLimitAny && ((hitLimitTop && movingUp) || (!hitLimitTop && !movingUp)))
+    boolean goingUp = power > 0.0;
+    if ((elevatorUpperLimitBoolean && goingUp) || (elevatorLowerLimitBoolean && !goingUp))
       output = 0.0;
     elevatorLeader.set(output);
   }
@@ -85,11 +87,14 @@ public class KenobiSubsystem extends SubsystemBase {
   // widgets
   private NetworkTableEntry pneumaticsLimitWidget = tab.add("armsDown", false).withPosition(0, 0).withSize(1, 1)
       .getEntry();
-  private NetworkTableEntry elevatorSensorWidget = tab.add("elevatorSensor", false).withPosition(1, 0).withSize(1, 1)
-      .getEntry();
+  private NetworkTableEntry elevatorLowerLimitSensorWidget = tab.add("lower Limit", false).withPosition(1, 0)
+      .withSize(1, 1).getEntry();
+  private NetworkTableEntry elevatorUpperLimitSensorWidget = tab.add("upper Limit", false).withPosition(2, 0)
+      .withSize(1, 1).getEntry();
 
   public void updateWidgets() {
-    pneumaticsLimitWidget.setBoolean(pneumaticsLimit.get());
-    elevatorSensorWidget.setBoolean(elevatorSensor.get());
+    pneumaticsLimitWidget.setBoolean(pneumaticsLimitBoolean);
+    elevatorLowerLimitSensorWidget.setBoolean(elevatorLowerLimitBoolean);
+    elevatorUpperLimitSensorWidget.setBoolean(elevatorUpperLimitBoolean);
   }
 }
