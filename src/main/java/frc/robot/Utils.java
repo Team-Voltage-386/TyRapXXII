@@ -1,11 +1,18 @@
 package frc.robot;
 
 public class Utils {
-    /**
-     * Lerp
-     * 
-     * @param a      first number
-     * @param b      second number
+
+    public static class Flags {
+        public static boolean hoopTargeted = false;
+        public static boolean hoopLocked = false;
+        public static double targetDistance = 9999;
+        public static boolean complianceOverride = false;
+        public static boolean hoopVisible = false;
+    }
+
+    /**Lerp
+     * @param a first number
+     * @param b second number
      * @param factor lerp factor
      */
     public static double lerp(double a, double b, double factor) {
