@@ -243,9 +243,9 @@ public class BigIronSubsystem extends SubsystemBase {
     private void runHood() {
         if (calibrated) {
             double control = MathUtil.clamp(pidH.calculate(hoodCurrentPosition, hoodSet), -1, 1);
-            if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
+            if (!hoodLowLimit) ;//hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
             else {
-                hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing
+                //hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing
                 pidH.reset();
             }
         } else {
@@ -255,9 +255,10 @@ public class BigIronSubsystem extends SubsystemBase {
                 hoodEncoder.reset();
             }
             else {
-                hoodMotor.set(ControlMode.PercentOutput, -0.9);
+                //hoodMotor.set(ControlMode.PercentOutput, -0.9);
             }
         }
+        hoodMotor.set(ControlMode.PercentOutput, 0);
     }
 
     private void runDrum() {

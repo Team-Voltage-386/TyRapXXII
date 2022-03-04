@@ -1,60 +1,76 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
-import frc.robot.RobotContainer;
-import frc.robot.Constants.BigIronConstants;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import static frc.robot.Constants.DriveConstants.*;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import frc.robot.Utils.Flags;
+
+import static frc.robot.Utils.Flags.*;
 
 import static frc.robot.Constants.ControllerConstants.*;
 
-public class M_Teleop extends CommandBase {
-  private final KenobiSubsystem _kss;
+/** Driver TeleOp Command */
+public class M_TeleOp extends CommandBase {
   private final BigIronSubsystem _bss;
-  private final Joystick _manipulatorController;
+  private final KenobiSubsystem _kss;
+  private final Joystick _controller;
+  private boolean climbActive = false;
 
-  /** Creates a new M_Teleop. */
-  public M_Teleop(KenobiSubsystem KSS, BigIronSubsystem BSS) {
-    _kss = KSS;
+  /**
+   * Manipulator TeleOp Command
+   * @param BSS the BigIron
+   */
+  public M_TeleOp(BigIronSubsystem BSS, KenobiSubsystem kss) {
     _bss = BSS;
-    _manipulatorController = RobotContainer.manipulatorController;
-
+    _kss = kss;
+    _controller = RobotContainer.manipulatorController;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(_kss, _bss);
+    addRequirements(_bss);
   }
 
-  // Called when the command is initially scheduled.
+  /** Called when the command is initially scheduled. */
   @Override
   public void initialize() {
-    _kss.armsIn();
+    _bss.reset();
+    climbActive = false;
+    //_bss.intakeDo(_bss.intakeOut);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
-    if (_manipulatorController.getRawButtonPressed(kX)) {
-      _kss.armsDo();
+    if(_controller.getRawButtonPressed(kX)) _bss.drumIdle = !_bss.drumIdle;
+    _bss.runIntake(_controller.getRawAxis(kRightTrigger) > 0.3);
+    _bss.intakeDo(_controller.getRawButtonPressed(kRightBumper));
+    if (_controller.getRawButtonPressed(kB)) _bss.ejectBall = !_bss.ejectBall;
+    if (_controller.getRawButtonReleased(kLeftBumper)) {
+      _bss.ballCount = 1;
+      _bss.ballFailedDebug();
+      _bss.drumIdle = false;
     }
+    if (_controller.getRawButtonPressed(kY)) _bss.ballFailedDebug();
+    hoopTargeted = _controller.getRawButton(kLeftBumper);
+    _bss.fireTheBigIron = hoopTargeted;
 
-    _bss.intakeDo(_manipulatorController.getRawButtonPressed(kRightBumper));
+    if (hoopTargeted) _bss.setAimDistance(targetDistance);
 
-    _kss.elevatorDo(_manipulatorController.getRawAxis(kRightVertical) * 0.5);
+    _kss.setElePower(-0.6*_controller.getRawAxis(kRightVertical));
+    if (_controller.getRawButtonPressed(kA)) _kss.toggleArms();
+
+    if (_controller.getRawButtonPressed(kLeftOptions)) climbActive = !climbActive;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+    _bss.intakeDo(_bss.intakeOut);
   }
 }

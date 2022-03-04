@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.BigIronSubsystem;
+import frc.robot.subsystems.KenobiSubsystem;
 
 import static frc.robot.Constants.DriveConstants.*;
 
@@ -19,14 +20,17 @@ import static frc.robot.Constants.ControllerConstants.*;
 /** Driver TeleOp Command */
 public class M_TeleOp extends CommandBase {
   private final BigIronSubsystem _bss;
+  private final KenobiSubsystem _kss;
   private final Joystick _controller;
+  private boolean climbActive = false;
 
   /**
    * Manipulator TeleOp Command
    * @param BSS the BigIron
    */
-  public M_TeleOp(BigIronSubsystem BSS) {
+  public M_TeleOp(BigIronSubsystem BSS, KenobiSubsystem kss) {
     _bss = BSS;
+    _kss = kss;
     _controller = RobotContainer.manipulatorController;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_bss);
@@ -36,6 +40,7 @@ public class M_TeleOp extends CommandBase {
   @Override
   public void initialize() {
     _bss.reset();
+    climbActive = false;
     //_bss.intakeDo(_bss.intakeOut);
   }
 
@@ -56,6 +61,11 @@ public class M_TeleOp extends CommandBase {
     _bss.fireTheBigIron = hoopTargeted;
 
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
+
+    _kss.setElePower(-0.6*_controller.getRawAxis(kRightVertical));
+    if (_controller.getRawButtonPressed(kA)) _kss.toggleArms();
+
+    if (_controller.getRawButtonPressed(kLeftOptions)) climbActive = !climbActive;
   }
 
   // Called once the command ends or is interrupted.

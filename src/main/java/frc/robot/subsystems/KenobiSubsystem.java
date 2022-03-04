@@ -34,12 +34,14 @@ public class KenobiSubsystem extends SubsystemBase {
   private final DigitalInput elevatorUpperLimitSensor = new DigitalInput(kElevatorUpperLimitDIOID);
 
   // booleans, since DIOs are inverted when you get them
-  private boolean pneumaticsLimitBoolean, elevatorLowerLimitBoolean, elevatorUpperLimitBoolean;
+  private boolean pneumaticsLimitBoolean = false;
+  public boolean elevatorLowLimitFlag = false;
+  private boolean elevatorUpperLimitFlag = false;
 
-  public void updateSensors() {
+  private void updateSensors() {
     pneumaticsLimitBoolean = !pneumaticsLimitSensor.get();
-    elevatorLowerLimitBoolean = !elevatorLowerLimitSensor.get();
-    elevatorUpperLimitBoolean = !elevatorUpperLimitSensor.get();
+    elevatorLowLimitFlag = !elevatorLowerLimitSensor.get();
+    elevatorUpperLimitFlag = !elevatorUpperLimitSensor.get();
   }
 
   /** Creates a new Kenobi. */
@@ -54,47 +56,35 @@ public class KenobiSubsystem extends SubsystemBase {
     updateWidgets();
   }
 
-  public void armsOut() {
-    arms.set(Value.kForward);
-    armsOut = true;
-  }
 
-  public void armsIn() {
-    arms.set(Value.kReverse);
-    armsOut = false;
-  }
+  public boolean armsOut = false;
 
-  protected boolean armsOut = false;
-
-  public void armsDo() {
+  public void toggleArms() {
     if (armsOut) {
-      armsIn();
+      arms.set(Value.kReverse);
     } else {
-      armsOut();
+      arms.set(Value.kForward);
     }
     armsOut = !armsOut;
   }
+
 /**@param power negative is up, positive is down */
-  public void elevatorDo(double power) {
-    double output = power;
-    if (elevatorLowerLimitBoolean) output = MathUtil.clamp(output, -1.0, 0.0);
-    else if(elevatorUpperLimitBoolean) output = MathUtil.clamp(output, 0.0, 1.0);
-    elevatorLeader.set(output);
+  public void setElePower(double power) {
+    if (elevatorLowLimitFlag) elevatorLeader.set(MathUtil.clamp(power, 0.0, 1.0)); // they work, don't mess with it lol
+    else if(elevatorUpperLimitFlag) elevatorLeader.set(MathUtil.clamp(power, -1.0, 0.0));
+    else elevatorLeader.set(power);
   }
 
   // shuffleboard
   private ShuffleboardTab tab = Shuffleboard.getTab("Climb");
   // widgets
-  private NetworkTableEntry pneumaticsLimitWidget = tab.add("armsDown", false).withPosition(0, 0).withSize(1, 1)
-      .getEntry();
-  private NetworkTableEntry elevatorLowerLimitSensorWidget = tab.add("lower Limit", false).withPosition(1, 0)
-      .withSize(1, 1).getEntry();
-  private NetworkTableEntry elevatorUpperLimitSensorWidget = tab.add("upper Limit", false).withPosition(2, 0)
-      .withSize(1, 1).getEntry();
+  private NetworkTableEntry pneumaticsLimitWidget = tab.add("armsDown", false).withPosition(0, 0).withSize(1, 1).getEntry();
+  private NetworkTableEntry elevatorLowerLimitSensorWidget = tab.add("lower Limit", false).withPosition(1, 0).withSize(1, 1).getEntry();
+  private NetworkTableEntry elevatorUpperLimitSensorWidget = tab.add("upper Limit", false).withPosition(2, 0).withSize(1, 1).getEntry();
 
-  public void updateWidgets() {
+  private void updateWidgets() {
     pneumaticsLimitWidget.setBoolean(pneumaticsLimitBoolean);
-    elevatorLowerLimitSensorWidget.setBoolean(elevatorLowerLimitBoolean);
-    elevatorUpperLimitSensorWidget.setBoolean(elevatorUpperLimitBoolean);
+    elevatorLowerLimitSensorWidget.setBoolean(elevatorLowLimitFlag);
+    elevatorUpperLimitSensorWidget.setBoolean(elevatorUpperLimitFlag);
   }
 }

@@ -16,7 +16,7 @@ import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
 import frc.robot.commands.D_TeleOp;
-import frc.robot.commands.M_Teleop;
+import frc.robot.commands.M_TeleOp;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.commands.BigIronIdle;
 import frc.robot.commands.ShootBall;
@@ -51,18 +51,16 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final BigIronSubsystem bigIron = new BigIronSubsystem();
-  private final KenobiSubsystem kenobi = new KenobiSubsystem();
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
   public final BigIronSubsystem bigIron = new BigIronSubsystem();
+  private final KenobiSubsystem kenobi = new KenobiSubsystem();
   public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight-xxii", Constants.LimeLightConstants.targetHeight, Constants.LimeLightConstants.mountAngle, Constants.LimeLightConstants.mountHeight, 0);
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
   private final D_TeleOp driveTeleOp = new D_TeleOp(driveSubSystem, LLSubsystem);
-  private final M_TeleOp manipTeleOp = new M_TeleOp(bigIron);
+  private final M_TeleOp manipTeleOp = new M_TeleOp(bigIron, kenobi);
 
   // The robot's subsystems and commands are defined here...
 
