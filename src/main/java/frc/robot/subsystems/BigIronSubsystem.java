@@ -113,7 +113,7 @@ public class BigIronSubsystem extends SubsystemBase {
 
     public void ballFailedDebug() {
         if (ballCount == 0) {
-            ballOnTheWay = true;
+            ballOnTheWay = !ballOnTheWay;
             woundBack = false;
         } else if (ballCount == 1) {
             ballCount = 0;
@@ -243,9 +243,9 @@ public class BigIronSubsystem extends SubsystemBase {
     private void runHood() {
         if (calibrated) {
             double control = MathUtil.clamp(pidH.calculate(hoodCurrentPosition, hoodSet), -1, 1);
-            if (!hoodLowLimit) ;//hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
+            if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
             else {
-                //hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing
+                hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing
                 pidH.reset();
             }
         } else {
@@ -255,10 +255,10 @@ public class BigIronSubsystem extends SubsystemBase {
                 hoodEncoder.reset();
             }
             else {
-                //hoodMotor.set(ControlMode.PercentOutput, -0.9);
+                hoodMotor.set(ControlMode.PercentOutput, -0.9);
             }
         }
-        hoodMotor.set(ControlMode.PercentOutput, 0);
+        //hoodMotor.set(ControlMode.PercentOutput, 0);
     }
 
     private void runDrum() {
@@ -268,7 +268,7 @@ public class BigIronSubsystem extends SubsystemBase {
             drumOneMotor.set(control);
         } else if (drumIdle) {
             drumPIDRunning = true;
-            double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, kDrumIdleSpeed);
+            double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, drumSP);
             drumOneMotor.set(control);
         } else if (ejectBall || eff) {
             drumOneMotor.set(kDrumDirection*0.3);

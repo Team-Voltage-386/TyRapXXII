@@ -50,7 +50,7 @@ public final class Constants {
     public static final class LimeLightConstants {
         public static final double targetLostWaitTime = 0.15;
         public static final double targetHeight = 2.6416;
-        public static final double mountHeight = 0.9;
+        public static final double mountHeight = 0.75;
         public static final double mountAngle = 40;
     }
 
@@ -59,11 +59,11 @@ public final class Constants {
         public static final int kDrumTwoID = 12;
         public static final int kDrumDirection = -1;
         public static final int kDrumIdleSpeed = 2200;
-        public static final int kDrumSpeedTolerance = 60;
+        public static final int kDrumSpeedTolerance = 50;
         public static final int kHoodDownLimitPin = 9;
         public static final int kBreachSensorPin = 0;
         public static final int kIntakeColorSensorThreshold = 140;
-        public static final double kHoodPositionTolerance = 0.005;
+        public static final double kHoodPositionTolerance = 0.03;
         public static final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
         public static final int kIntakeID = 30;
         public static final int kHoodID = 31;
@@ -74,11 +74,11 @@ public final class Constants {
         public static final double kBeltReversePower = 0.5;
         public static final double kBeltPower = -0.9;
         public static final double HP = 20;
-        public static final double HI = 0.8;
+        public static final double HI = 0.85;
         public static final double HD = 0;
         public static final double HC = 1;
-        public static final double DP = 0.0004;
-        public static final double DI = 0.0006;
+        public static final double DP = 0.00043;
+        public static final double DI = 0.00074;
         public static final double DD = 0.00002;
         public static final int kChannelIntakeForwardGo = 7;
         public static final int kChannelIntakeForwardVent = 5;
@@ -111,13 +111,13 @@ public final class Constants {
         public static final int kGyro = 10;
 
         public static final double ltP = 0.016;
-        public static final double ltI = 0.04;
+        public static final double ltI = 0.055;
         public static final double ltD = 0.0055;
 
         public static final double tP = 0.018;// P
         public static final double tI = 0.0019;// I
         public static final double tD = 0.0028;// D
-        public static final double tC = 0.54;// Clamp //t and d are two different PID controllers
+        public static final double tC = 0.65;// Clamp //t and d are two different PID controllers
         public static final double[] kDriveDistances = {0,1,2,3,4,30};
         public static final double[] kDrivePowers = {0.0,0.12,0.6,0.8,1,1};
         public static final double kAutoDriveSmoothing = 0.06;
@@ -130,9 +130,9 @@ public final class Constants {
         Satan himself will reject you to be abandoned in the Endless Sea
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
-        public static final double[] distances = {1.1074,1.55,2.16,2.7022,3.47,3.97};
-        public static final int[] drumSpeeds = {2750,2800,2850,2950,3150,3350};
-        public static final double[] hoodPositions = {0.01,0.02,0.03,0.1,0.035,0.04};
+        public static final double[] distances = {1.1074,1.55,2.16,2.7022,3.47,3.97,4.605,5.8};
+        public static final int[] drumSpeeds = {2750,2800,2850,2950,3150,3350,3350,3700};
+        public static final double[] hoodPositions = {0.02,0.02,0.03,0.1,0.035,0.04,0.18,0.34};
     }
 
     public static final class LEDConstants {
@@ -141,3 +141,4 @@ public final class Constants {
         public static final int kLeftStrip = 9;
     }
 }
+

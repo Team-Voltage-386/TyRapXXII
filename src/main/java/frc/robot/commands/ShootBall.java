@@ -17,7 +17,7 @@ public class ShootBall extends CommandBase {
     private final BigIronSubsystem _bss;
     private final DriveSubsystem _dss;
     private final LimeLightSubsystem _lls;
-    private final PIDController pidt = new PIDController(tP,tI,tD);
+    private final PIDController pidt = new PIDController(ltP,ltI,ltD);
     private int iBallCount = 0;
     private int ballShot = 0;
     private final Timer timer = new Timer();
@@ -55,7 +55,7 @@ public class ShootBall extends CommandBase {
 
         if (_lls.targetFound) {
             _dss.arcadeDrive(0.0, pidt.calculate(_lls.tx));
-            if (_lls.tx < 1.7) {
+            if (_lls.tx < 2) {
                 Flags.hoopLocked = true;
             } else Flags.hoopLocked = false;
             _bss.setAimDistance(_lls.metersToTarget());

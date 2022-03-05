@@ -118,18 +118,61 @@ public class RobotContainer {
     /*
     return new ParallelCommandGroup(
       new SequentialCommandGroup(
-        new LinearDrive(driveSubSystem, 2, 0, false),
+        new LinearDrive(driveSubSystem, 2, 0, false,1),
         new StationaryTurn(driveSubSystem, 180, false),
-        new LinearDrive(driveSubSystem, 2, 180, false),
+        new LinearDrive(driveSubSystem, 2, 180, false,1),
         new StationaryTurn(driveSubSystem, 0, false)
+      ),
+      new BigIronIdle(bigIron)
+    );
+*/
+    // 3 Ball Distances
+    /*
+    return new ParallelCommandGroup(new SequentialCommandGroup(
+      new LinearDrive(driveSubSystem,1.5,0,false,1),
+      new StationaryTurn(driveSubSystem, 170, false),
+      new StationaryTurn(driveSubSystem, 10, false),
+      new LinearDrive(driveSubSystem,3.15, 8,false,1),
+      new LinearDrive(driveSubSystem, 2, 8, false, -1),
+      new StationaryTurn(driveSubSystem, 170, false)
+    ),
+    new BigIronIdle(bigIron));
+
+    /*
+    return new SequentialCommandGroup(
+      new Delay(2),
+      new getBall(bigIron),
+      new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 3650, 0.35)
+    );*/
+
+    // beginnings of the 5
+    /*
+    return new ParallelCommandGroup(
+      new SequentialCommandGroup(
+        new LinearDrive(driveSubSystem, 1.2, 0, false, -1),
+        new StationaryTurn(driveSubSystem, -80, false),
+        new LinearDrive(driveSubSystem, 2, -90, false, 1),
+        new StationaryTurn(driveSubSystem, -45, false),
+        new LinearDrive(driveSubSystem, 2, -40, false, 1)
       ),
       new BigIronIdle(bigIron)
     );*/
 
-    return new SequentialCommandGroup(
-      new Delay(2),
-      new getBall(bigIron),
-      new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 3150, 0.035)
+    // the 5
+    return new ParallelCommandGroup(
+      new SequentialCommandGroup(
+        new LinearDrive(driveSubSystem, 1.2, 0, false, -1),
+        new StationaryTurn(driveSubSystem, -80, false),
+        new LinearDrive(driveSubSystem, 2, -90, false, 1),
+        new StationaryTurn(driveSubSystem, -45, false),
+        new LinearDrive(driveSubSystem, 2.5, -40, false, 1),
+        new StationaryTurn(driveSubSystem, 80, false),
+        new StationaryTurn(driveSubSystem, -120, false),
+        new LinearDrive(driveSubSystem,3,-130,false,1),
+        new LinearDrive(driveSubSystem,2,-130,false,-1),
+        new StationaryTurn(driveSubSystem, 80, false)
+      ),
+      new BigIronIdle(bigIron)
     );
   }
 

@@ -17,7 +17,7 @@ public class ShootBallMan extends CommandBase {
     private final BigIronSubsystem _bss;
     private final DriveSubsystem _dss;
     private final LimeLightSubsystem _lls;
-    private final PIDController pidt = new PIDController(tP,tI,tD);
+    private final PIDController pidt = new PIDController(ltP,ltI,ltD);
     private int iBallCount = 0;
     private int ballShot = 0;
     private final Timer timer = new Timer();

@@ -31,16 +31,19 @@ public class getBall extends CommandBase {
     @Override
     public void execute() {
         _bss.intakeDo(false);
+        if (_bss.ballCount > iBallCount) timer.start();
     }
 
     @Override
     public void end(boolean interuppted) {
         _bss.intakeDo(true);
         _bss.runIntake(false);
+        timer.stop();
+        timer.reset();
     }
 
     @Override
     public boolean isFinished() {
-        return _bss.ballCount > iBallCount;
+        return timer.hasElapsed(0.2);
     }
 }

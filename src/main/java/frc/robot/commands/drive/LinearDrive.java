@@ -21,15 +21,17 @@ public class LinearDrive extends CommandBase {
     private final double targetDistance;
     private final Boolean angRel;
     private final Timer finTimer = new Timer();
+    private final double d;
     
     /**@param angle angle set
      * @param rel if true, angle set is relative
     */
-    public LinearDrive(DriveSubsystem DSS,double distance,double angle,Boolean rel) {
+    public LinearDrive(DriveSubsystem DSS,double distance,double angle,Boolean rel,double dir) {
         angRel = rel;
         headingHold = angle;
         targetDistance = distance;
         _dss = DSS;
+        d = dir;
         addRequirements(_dss);
         finTimer.stop();
         finTimer.reset();
@@ -59,7 +61,7 @@ public class LinearDrive extends CommandBase {
             drive = Utils.lerp(drive, -1*getDrivePower(targetDistance-distanceFromStart), kAutoDriveSmoothing);
             finTimer.reset();
         }
-        _dss.arcadeDrive(drive, MathUtil.clamp(pidt.calculate(_dss.getHeadingError(headingHold),0), -1*tC,tC));
+        _dss.arcadeDrive(drive*d, MathUtil.clamp(pidt.calculate(_dss.getHeadingError(headingHold),0), -1*tC,tC));
     }
 
     @Override
@@ -69,7 +71,7 @@ public class LinearDrive extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return finTimer.hasElapsed(0.84);
+        return finTimer.hasElapsed(0.4);
     }
 
     private double getDrivePower(double distErr) {
