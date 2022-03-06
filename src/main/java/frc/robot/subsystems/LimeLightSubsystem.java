@@ -21,8 +21,9 @@ public class LimeLightSubsystem extends SubsystemBase {
   private final double _MA;
   private final double _MH;
   private final  Timer timer = new Timer();
-  private final ShuffleboardTab tab = Shuffleboard.getTab("LL");
-  private final NetworkTableEntry distWidget = tab.add("dist",0).withPosition(0, 0).withSize(1, 1).getEntry();
+  private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
+  private final NetworkTableEntry mainX = mainTab.add("LL-X",0).getEntry();
+  private final NetworkTableEntry mainFound = mainTab.add("TargetFound",false).getEntry();
 
   /**Carl's attempt at making a lime-light subsystem*/
   public LimeLightSubsystem(String hostName, double targetHeight, double mountAngle, double mountHeight, int pl) {
@@ -49,10 +50,9 @@ public class LimeLightSubsystem extends SubsystemBase {
         timer.start();
         tx = (float)_nt.getEntry("tx").getDouble(0);
         ty = (float)_nt.getEntry("ty").getDouble(0);
-        distWidget.setDouble(metersToTarget());
     }
-
-
+    mainFound.setBoolean(targetFound);
+    mainX.setDouble(tx);
   }
 
   /**Empty*/

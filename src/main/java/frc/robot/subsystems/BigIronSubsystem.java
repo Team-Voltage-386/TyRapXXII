@@ -382,6 +382,10 @@ public class BigIronSubsystem extends SubsystemBase {
     private final NetworkTableEntry rtfWidget = tab.add("rtf",false).withPosition(2, 3).getEntry();
     private final NetworkTableEntry dWidget = tab.add("distance",0).withPosition(3,3).getEntry();
 
+    private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
+    private final NetworkTableEntry mainDist = mainTab.add("dist",0).getEntry();
+    private final NetworkTableEntry mainBC = mainTab.add("BallCount",0).getEntry();
+
     private void updateWidgets() {
         hllWidget.setBoolean(hoodLowLimit);
         ejectBeltWidget.setBoolean(breachSensorFlag);
@@ -396,6 +400,9 @@ public class BigIronSubsystem extends SubsystemBase {
         hWidget.setDouble(hoodCurrentPosition);
         rtfWidget.setBoolean(readyToFire());
         dWidget.setDouble(Utils.Flags.targetDistance);
+
+        mainDist.setDouble(Utils.Flags.targetDistance);
+        mainBC.setDouble(ballCount);
     }
 
     private String getColor() {

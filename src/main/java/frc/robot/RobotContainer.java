@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.Constants;
@@ -16,13 +17,13 @@ import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
 import frc.robot.commands.D_TeleOp;
+import frc.robot.commands.Delay;
 import frc.robot.commands.M_TeleOp;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.commands.BigIronIdle;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.ShootBallMan;
 import frc.robot.commands.getBall;
-import frc.robot.commands.D.Delay;
 import frc.robot.commands.drive.LinearDrive;
 import frc.robot.commands.drive.StationaryTurn;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -61,6 +62,10 @@ public class RobotContainer {
 
   private final D_TeleOp driveTeleOp = new D_TeleOp(driveSubSystem, LLSubsystem);
   private final M_TeleOp manipTeleOp = new M_TeleOp(bigIron, kenobi);
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  private final AutoRoutines autos = this.new AutoRoutines();
+
+  private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
 
   // The robot's subsystems and commands are defined here...
 
@@ -75,6 +80,13 @@ public class RobotContainer {
     Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
     driveSubSystem.setDefaultCommand(driveTeleOp);
     bigIron.setDefaultCommand(manipTeleOp);
+
+    autoChooser.setDefaultOption("Basic 2 Ball", autos.basiciiBall);
+    autoChooser.addOption("iiiBallA", autos.iiiBallA);
+    autoChooser.addOption("vBall", autos.vBall);
+    autoChooser.addOption("TuningTest", autos.tuningTest);
+    autoChooser.addOption("ShooterTest", autos.shootTest);
+    mainTab.add("AutoRoutine",autoChooser);
   }
 
   /**
@@ -94,72 +106,33 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    /*
-    return new SequentialCommandGroup(
-        new ParallelCommandGroup(new LinearDrive(driveSubSystem, 0.8, 0, false),new SequentialCommandGroup(new getBall(bigIron), new getBall(bigIron))),
-        new StationaryTurn(driveSubSystem, 170, false),
-        new ShootBall(bigIron,driveSubSystem,170.0,1),
-        new ShootBall(bigIron,driveSubSystem,170.0,0),
-        new StationaryTurn(driveSubSystem, 15, false),
-        new ParallelCommandGroup(new LinearDrive(driveSubSystem, 1.55, 15, false),new getBall(bigIron)),
-        new StationaryTurn(driveSubSystem, 180, false),
-        new ShootBall(bigIron, driveSubSystem, 180,0)
-        );
-*/
- //standard
- /*
-    return new SequentialCommandGroup(
-      new ParallelCommandGroup(new LinearDrive(driveSubSystem, 1.5, 0, false),new SequentialCommandGroup(new getBall(bigIron),new getBall(bigIron))),
-      new StationaryTurn(driveSubSystem, 170, false),
-      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
-    );*/
+    return autoChooser.getSelected();
+  }
 
-    /*
-    return new ParallelCommandGroup(
-      new SequentialCommandGroup(
-        new LinearDrive(driveSubSystem, 2, 0, false,1),
-        new StationaryTurn(driveSubSystem, 180, false),
-        new LinearDrive(driveSubSystem, 2, 180, false,1),
-        new StationaryTurn(driveSubSystem, 0, false)
+  public Command getManCommand() {
+    return null;
+  }
+
+  private final class AutoRoutines {
+    public final Command basiciiBall = new SequentialCommandGroup(
+      new ParallelCommandGroup(
+        new LinearDrive(driveSubSystem, 1.5, 0, false,1),
+        new SequentialCommandGroup(new getBall(bigIron),
+        new getBall(bigIron))),
+      new StationaryTurn(driveSubSystem, 180, false),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
+    );
+    public final Command iiiBallA = new ParallelCommandGroup(new SequentialCommandGroup(
+        new LinearDrive(driveSubSystem,1.5,0,false,1),
+        new StationaryTurn(driveSubSystem, 170, false),
+        new StationaryTurn(driveSubSystem, 10, false),
+        new LinearDrive(driveSubSystem,3.15, 8,false,1),
+        new LinearDrive(driveSubSystem, 2, 8, false, -1),
+        new StationaryTurn(driveSubSystem, 170, false)
       ),
       new BigIronIdle(bigIron)
     );
-*/
-    // 3 Ball Distances
-    /*
-    return new ParallelCommandGroup(new SequentialCommandGroup(
-      new LinearDrive(driveSubSystem,1.5,0,false,1),
-      new StationaryTurn(driveSubSystem, 170, false),
-      new StationaryTurn(driveSubSystem, 10, false),
-      new LinearDrive(driveSubSystem,3.15, 8,false,1),
-      new LinearDrive(driveSubSystem, 2, 8, false, -1),
-      new StationaryTurn(driveSubSystem, 170, false)
-    ),
-    new BigIronIdle(bigIron));
-
-    /*
-    return new SequentialCommandGroup(
-      new Delay(2),
-      new getBall(bigIron),
-      new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 3650, 0.35)
-    );*/
-
-    // beginnings of the 5
-    /*
-    return new ParallelCommandGroup(
-      new SequentialCommandGroup(
-        new LinearDrive(driveSubSystem, 1.2, 0, false, -1),
-        new StationaryTurn(driveSubSystem, -80, false),
-        new LinearDrive(driveSubSystem, 2, -90, false, 1),
-        new StationaryTurn(driveSubSystem, -45, false),
-        new LinearDrive(driveSubSystem, 2, -40, false, 1)
-      ),
-      new BigIronIdle(bigIron)
-    );*/
-
-    // the 5
-    return new ParallelCommandGroup(
+    public final Command vBall = new ParallelCommandGroup(
       new SequentialCommandGroup(
         new LinearDrive(driveSubSystem, 1.2, 0, false, -1),
         new StationaryTurn(driveSubSystem, -80, false),
@@ -174,9 +147,19 @@ public class RobotContainer {
       ),
       new BigIronIdle(bigIron)
     );
-  }
-
-  public Command getManCommand() {
-    return null;
+    public final Command tuningTest = new ParallelCommandGroup(
+      new SequentialCommandGroup(
+        new LinearDrive(driveSubSystem, 2, 0, false,1),
+        new StationaryTurn(driveSubSystem, 180, false),
+        new LinearDrive(driveSubSystem, 2, 180, false,1),
+        new StationaryTurn(driveSubSystem, 0, false)
+      ),
+      new BigIronIdle(bigIron)
+    );
+    public final Command shootTest = new SequentialCommandGroup(
+      new Delay(2),
+      new getBall(bigIron),
+      new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 3650, 0.35)
+    );
   }
 }

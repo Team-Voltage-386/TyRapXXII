@@ -136,7 +136,16 @@ public class DriveSubsystem extends SubsystemBase {
                 rhWidget.setDouble(getRawHeading());
                 ohWidget.setDouble(getPose().getRotation().getDegrees());
                 rsWidget.setDouble(getRotationSpeed());
+
+                mainHeading.setDouble(getPose().getRotation().getDegrees());
+                mainX.setDouble(getPose().getX());
+                mainY.setDouble(getPose().getY());
         }
+
+        private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
+        private final NetworkTableEntry mainHeading = mainTab.add("heading",0).getEntry();
+        private final NetworkTableEntry mainX = mainTab.add("x",0).getEntry();
+        private final NetworkTableEntry mainY = mainTab.add("y",0).getEntry();
 
         public void resetEncoders() {
                 rightEncoder.setPosition(0.0);
