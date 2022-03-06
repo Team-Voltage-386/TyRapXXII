@@ -62,8 +62,8 @@ public class M_TeleOp extends CommandBase {
 
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
 
-    _kss.setElePower(-0.6*_controller.getRawAxis(kRightVertical));
-    if (_controller.getRawButtonPressed(kA)) _kss.toggleArms();
+    //_kss.setElePower(-0.6*_controller.getRawAxis(kRightVertical));
+    //if (_controller.getRawButtonPressed(kA)) _kss.toggleArms();
 
     if (_controller.getRawButtonPressed(kLeftOptions)) climbActive = !climbActive;
   }

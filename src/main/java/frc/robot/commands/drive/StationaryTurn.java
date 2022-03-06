@@ -14,6 +14,7 @@ public class StationaryTurn extends CommandBase {
     private Pose2d startPose = new Pose2d();
     private double angle;
     private final Boolean relTurn;
+    private double dir = 0;
 
     public StationaryTurn(DriveSubsystem DSS,double value,Boolean relativeTurn) {
         relTurn = relativeTurn;
@@ -35,7 +36,9 @@ public class StationaryTurn extends CommandBase {
 
     @Override
     public void execute() {
-        double turn = MathUtil.clamp(pidt.calculate(_dss.getHeadingError(angle),0), -1*tC,tC);
+        double v = _dss.getHeadingError(angle);
+        dir = v/Math.abs(v);
+        double turn = MathUtil.clamp(pidt.calculate(v,0), -1*tC,tC) - (dir * 0.4);
         //if (angle > 35) pidt.setI(0);
         //else pidt.setI(tI);
         _dss.arcadeDrive(0.0, turn);
