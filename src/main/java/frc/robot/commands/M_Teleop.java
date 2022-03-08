@@ -47,7 +47,7 @@ public class M_TeleOp extends CommandBase {
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
-    if(_controller.getRawButtonPressed(kX)) _bss.drumIdle = !_bss.drumIdle;
+    if(_controller.getRawButtonPressed(kA)) _bss.drumIdle = !_bss.drumIdle;
     _bss.runIntake(_controller.getRawAxis(kRightTrigger) > 0.3);
     _bss.intakeDo(_controller.getRawButtonPressed(kRightBumper));
     if (_controller.getRawButtonPressed(kB)) _bss.ejectBall = !_bss.ejectBall;
@@ -62,10 +62,9 @@ public class M_TeleOp extends CommandBase {
 
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
 
-    _kss.setElePower(-0.6*_controller.getRawAxis(kRightVertical));
-    //if (_controller.getRawButtonPressed(kA)) _kss.toggleArms();
+    if (climbActive) _kss.setElePower(-0.6*_controller.getRawAxis(kRightVertical));
 
-    if (_controller.getRawButtonPressed(kLeftOptions)) climbActive = !climbActive;
+    if (_controller.getRawButtonPressed(kX)) climbActive = !climbActive;
   }
 
   // Called once the command ends or is interrupted.
