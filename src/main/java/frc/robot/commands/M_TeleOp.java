@@ -39,7 +39,7 @@ public class M_TeleOp extends CommandBase {
   /** Called when the command is initially scheduled. */
   @Override
   public void initialize() {
-    _bss.reset();
+    //_bss.reset();
     climbActive = false;
     //_bss.intakeDo(_bss.intakeOut);
   }
@@ -62,7 +62,7 @@ public class M_TeleOp extends CommandBase {
 
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
 
-    //_kss.setElePower(-0.6*_controller.getRawAxis(kRightVertical));
+    _kss.setElePower(-0.6*_controller.getRawAxis(kRightVertical));
     //if (_controller.getRawButtonPressed(kA)) _kss.toggleArms();
 
     if (_controller.getRawButtonPressed(kLeftOptions)) climbActive = !climbActive;

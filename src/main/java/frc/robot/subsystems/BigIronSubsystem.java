@@ -100,6 +100,7 @@ public class BigIronSubsystem extends SubsystemBase {
     public BigIronSubsystem() {
         pidD.reset();
         pidH.reset();
+        hoodMotor.configNeutralDeadband(0);
 
         intakeMotor.configFactoryDefault();
         intakeMotor.configNeutralDeadband(0);
@@ -137,7 +138,7 @@ public class BigIronSubsystem extends SubsystemBase {
         ejectTimer.reset();
         ejectBall = false;
         calibrated = false;
-        drumIdle = false;
+        //drumIdle = false;
         ball1Col = "null";
         ball2Col = "null";
         ballOnTheWay = false;
@@ -247,6 +248,7 @@ public class BigIronSubsystem extends SubsystemBase {
             else {
                 hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing
                 pidH.reset();
+                hoodEncoder.reset();
             }
         } else {
             if (hoodLowLimit) {
@@ -262,11 +264,7 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
     private void runDrum() {
-        if (fireTheBigIron) {
-            drumPIDRunning = true;
-            double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, drumSP);
-            drumOneMotor.set(control);
-        } else if (drumIdle) {
+        if (fireTheBigIron || drumIdle) {
             drumPIDRunning = true;
             double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, drumSP);
             drumOneMotor.set(control);
@@ -370,9 +368,9 @@ public class BigIronSubsystem extends SubsystemBase {
     public final ShuffleboardTab tab = Shuffleboard.getTab("BigIron");
     private final NetworkTableEntry hllWidget = tab.add("HoodLL", false).withPosition(0, 0).getEntry();
     private final NetworkTableEntry ejectBeltWidget = tab.add("BreachSensor", false).withPosition(0, 1).getEntry();
-    private final NetworkTableEntry colWidget = tab.add("col", 0).withPosition(0, 2).getEntry();
+    private final NetworkTableEntry colWidget = tab.add("lf", 0).withPosition(0, 2).getEntry();
     private final NetworkTableEntry botwWidget = tab.add("botw", false).withPosition(1, 0).getEntry();
-    private final NetworkTableEntry presWidget = tab.add("pres", 0).withPosition(1, 1).getEntry();
+    private final NetworkTableEntry presWidget = tab.add("hsp", 0).withPosition(1, 1).getEntry();
     private final NetworkTableEntry inWidget = tab.add("intake",false).withPosition(1, 2).getEntry();
     private final NetworkTableEntry bcWidget = tab.add("ballCount", 0).withPosition(2, 0).getEntry();
     private final NetworkTableEntry b1Widget = tab.add("ball1", "null").withPosition(2, 1).getEntry();
@@ -389,9 +387,8 @@ public class BigIronSubsystem extends SubsystemBase {
     private void updateWidgets() {
         hllWidget.setBoolean(hoodLowLimit);
         ejectBeltWidget.setBoolean(breachSensorFlag);
-        colWidget.setDouble(intakeSensor.getProximity());
         botwWidget.setBoolean(ballOnTheWay);
-        presWidget.setDouble(tankPressure);
+        presWidget.setDouble(hoodSet);
         inWidget.setBoolean(intakeSensorFlag);
         bcWidget.setDouble(ballCount);
         b1Widget.setString(ball1Col);
@@ -414,15 +411,21 @@ public class BigIronSubsystem extends SubsystemBase {
 
     public void setAimDistance(double m) {
         int i = ShooterData.distances.length-1;
-        for (int j = 1; j < ShooterData.distances.length; j++) if (m < ShooterData.distances[j]) i = j;
+        for (int j = 1; j < ShooterData.distances.length; j++) {
+            if (m < ShooterData.distances[j]) {
+                i = j;
+                break;
+            }
+        }
         double upper = ShooterData.distances[i];
         double lower = ShooterData.distances[i-1];
-        double lerpFactor = (m-lower)/(upper-lower);
+        double lerpFactor = (m-lower)/Math.abs(upper-lower);
+        colWidget.setDouble(lerpFactor);
         upper = ShooterData.drumSpeeds[i];
         lower = ShooterData.drumSpeeds[i-1];
-        drumSP = (int)Utils.lerp(lower, upper, lerpFactor);
+        drumSP = (int)Utils.lerpB(lower, upper, lerpFactor);
         upper = ShooterData.hoodPositions[i];
         lower = ShooterData.hoodPositions[i-1];
-        hoodSet = Utils.lerp(lower, upper, lerpFactor);
+        hoodSet = Utils.lerpB(lower, upper, lerpFactor);
     }
 }

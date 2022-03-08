@@ -71,6 +71,9 @@ public class Robot extends TimedRobot {
     //m_robotContainer.bigIron.intakeDo(!m_robotContainer.bigIron.intakeOut);
     m_robotContainer.LLSubsystem.lights(true);
     m_robotContainer.LLSubsystem.setPipeLine(0);
+    m_robotContainer.bigIron.drumSP = 3000;
+    m_robotContainer.bigIron.hoodSet = 0.01;
+    m_robotContainer.bigIron.drumIdle = true;
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

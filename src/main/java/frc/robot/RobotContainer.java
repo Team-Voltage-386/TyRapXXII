@@ -78,15 +78,17 @@ public class RobotContainer {
 
     Utils.ourAlliance = DriverStation.getAlliance().toString();
     Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
-    driveSubSystem.setDefaultCommand(driveTeleOp);
-    bigIron.setDefaultCommand(manipTeleOp);
 
     autoChooser.setDefaultOption("Basic 2 Ball", autos.basiciiBall);
-    autoChooser.addOption("iiiBallA", autos.iiiBallA);
-    autoChooser.addOption("vBall", autos.vBall);
+    autoChooser.addOption("3 Ball A", autos.iiiBallA);
+    autoChooser.addOption("4 Ball B", autos.ivBallB);
     autoChooser.addOption("TuningTest", autos.tuningTest);
     autoChooser.addOption("ShooterTest", autos.shootTest);
+    autoChooser.addOption("MartianRock", autos.marRock);
+    autoChooser.addOption("4 Ball A (HP)", autos.ivBallA);
     mainTab.add("AutoRoutine",autoChooser);
+    bigIron.setDefaultCommand(manipTeleOp);
+    driveSubSystem.setDefaultCommand(driveTeleOp);
   }
 
   /**
@@ -110,42 +112,89 @@ public class RobotContainer {
   }
 
   public Command getManCommand() {
-    return null;
+    return new ParallelCommandGroup(driveTeleOp,manipTeleOp);
   }
 
   private final class AutoRoutines {
     public final Command basiciiBall = new SequentialCommandGroup(
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem, 1.5, 0, false,1),
-        new SequentialCommandGroup(new getBall(bigIron),
-        new getBall(bigIron))),
+        new SequentialCommandGroup(
+          new getBall(bigIron,3),
+          new getBall(bigIron,3))
+          ),
       new StationaryTurn(driveSubSystem, 180, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
-    public final Command iiiBallA = new ParallelCommandGroup(new SequentialCommandGroup(
+    public final Command iiiBallA =new SequentialCommandGroup(
+      new ParallelCommandGroup(
         new LinearDrive(driveSubSystem,1.5,0,false,1),
-        new StationaryTurn(driveSubSystem, 170, false),
-        new StationaryTurn(driveSubSystem, 10, false),
-        new LinearDrive(driveSubSystem,3.15, 8,false,1),
-        new LinearDrive(driveSubSystem, 2, 8, false, -1),
-        new StationaryTurn(driveSubSystem, 170, false)
+        new SequentialCommandGroup(
+          new getBall(bigIron,3),
+          new getBall(bigIron,3)
+        )
       ),
-      new BigIronIdle(bigIron)
+      new StationaryTurn(driveSubSystem, 160, false),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem),
+      new StationaryTurn(driveSubSystem, 14, false),
+      new ParallelCommandGroup(
+        new LinearDrive(driveSubSystem,3.2, 12,false,1),
+        new getBall(bigIron,4)
+      ),
+      new LinearDrive(driveSubSystem, 1, 8, false, -1),
+      new StationaryTurn(driveSubSystem, 170, false),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
-    public final Command vBall = new ParallelCommandGroup(
-      new SequentialCommandGroup(
-        new LinearDrive(driveSubSystem, 1.2, 0, false, -1),
-        new StationaryTurn(driveSubSystem, -80, false),
-        new LinearDrive(driveSubSystem, 2, -90, false, 1),
-        new StationaryTurn(driveSubSystem, -45, false),
-        new LinearDrive(driveSubSystem, 2.5, -40, false, 1),
-        new StationaryTurn(driveSubSystem, 80, false),
-        new StationaryTurn(driveSubSystem, -120, false),
-        new LinearDrive(driveSubSystem,3,-130,false,1),
-        new LinearDrive(driveSubSystem,2,-130,false,-1),
-        new StationaryTurn(driveSubSystem, 80, false)
+    public final Command ivBallA = new SequentialCommandGroup(
+      new ParallelCommandGroup(
+        new LinearDrive(driveSubSystem,1.5,0,false,1),
+        new SequentialCommandGroup(
+          new getBall(bigIron,3),
+          new getBall(bigIron,3)
+        )
       ),
-      new BigIronIdle(bigIron)
+      new StationaryTurn(driveSubSystem, 160, false),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem),
+      new StationaryTurn(driveSubSystem, 14, false),
+      new ParallelCommandGroup(
+        new LinearDrive(driveSubSystem,3.2, 12,false,1),
+        new getBall(bigIron,4)
+      ),
+      new getBall(bigIron,0.8),
+      new LinearDrive(driveSubSystem, 1, 8, false, -1),
+      new StationaryTurn(driveSubSystem, 170, false),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
+    );
+    public final Command ivBallB = new SequentialCommandGroup(
+      new ParallelCommandGroup(
+        new LinearDrive(driveSubSystem, 1.25, 0, false, -1),
+        new getBall(bigIron,2)
+      ),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem),
+      new StationaryTurn(driveSubSystem, -100, false),
+      new ParallelCommandGroup(
+        new LinearDrive(driveSubSystem, 2, -105, false, 1),
+        new getBall(bigIron,2.5)
+      ),
+      new StationaryTurn(driveSubSystem, -45, false),
+      new ParallelCommandGroup(
+        new LinearDrive(driveSubSystem, 2.5, -40, false, 1),
+        new getBall(bigIron,3.5)
+      ),
+      new StationaryTurn(driveSubSystem, 50, false),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem),
+      new StationaryTurn(driveSubSystem, -110, false),
+      new ParallelCommandGroup(
+        new LinearDrive(driveSubSystem,3,-124,false,1),
+        new getBall(bigIron,4)
+      ),
+      new LinearDrive(driveSubSystem,1,-130,false,-1),
+      new StationaryTurn(driveSubSystem, 50, false),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
+    );
+    public final Command marRock = new SequentialCommandGroup(
+      new Delay(10),
+      new LinearDrive(driveSubSystem, 1.4, 0, false, 1)
     );
     public final Command tuningTest = new ParallelCommandGroup(
       new SequentialCommandGroup(
@@ -158,8 +207,8 @@ public class RobotContainer {
     );
     public final Command shootTest = new SequentialCommandGroup(
       new Delay(2),
-      new getBall(bigIron),
-      new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 3650, 0.35)
+      new getBall(bigIron,2),
+      new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 1500, 0.35)
     );
   }
 }

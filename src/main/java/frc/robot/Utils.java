@@ -15,8 +15,14 @@ public class Utils {
      * @param b second number
      * @param factor lerp factor
      */
-    public static double lerp(double a, double b, double factor) {
-        double c = b - a;
+    public static double lerpA(double a, double b, double factor) {
+        double c = b-a;
+        c = factor * c;
+        return a + c;
+    }
+
+    public static double lerpB(double a, double b, double factor) {
+        double c = Math.abs(b - a);
         c = factor * c;
         return a + c;
     }

@@ -56,9 +56,9 @@ public class LinearDrive extends CommandBase {
         distanceFromStart = startPose.getTranslation().getDistance(_dss.getPose().getTranslation());
         if (distanceFromStart > targetDistance - 0.25) {
             finTimer.start();
-            drive = Utils.lerp(drive, 0, kAutoDriveSmoothing);
+            drive = Utils.lerpA(drive, 0, kAutoDriveSmoothing);
         } else {
-            drive = Utils.lerp(drive, -1*getDrivePower(targetDistance-distanceFromStart), kAutoDriveSmoothing);
+            drive = Utils.lerpA(drive, -1*getDrivePower(targetDistance-distanceFromStart), kAutoDriveSmoothing);
             finTimer.reset();
         }
         _dss.arcadeDrive(drive*d, MathUtil.clamp(pidt.calculate(_dss.getHeadingError(headingHold),0), -1*tC,tC));
@@ -80,6 +80,6 @@ public class LinearDrive extends CommandBase {
         double upper = kDriveDistances[ind];
         double lower = kDriveDistances[ind-1];
         double lf = (distErr-lower)/(upper-lower);
-        return Utils.lerp(kDrivePowers[ind-1], kDrivePowers[ind], lf);
+        return Utils.lerpA(kDrivePowers[ind-1], kDrivePowers[ind], lf);
     }
 }

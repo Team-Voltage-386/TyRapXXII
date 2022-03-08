@@ -23,6 +23,7 @@ public class BigIronIdle extends CommandBase {
 
     @Override
     public void initialize() {
+        _bss.reset();
         _bss.intakeDo(!_bss.intakeOut);
         _bss.fireTheBigIron = false;
         done = true;

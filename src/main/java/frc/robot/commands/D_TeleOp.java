@@ -67,8 +67,8 @@ public class D_TeleOp extends CommandBase {
     Flags.hoopVisible = _lls.targetFound;
     Flags.complianceOverride = _controller.getRawButton(kRightBumper);
     double controllerIn = _controller.getRawAxis(kLeftVertical);
-    if (Math.abs(controllerIn) > Math.abs(rootDrive)) rootDrive = Utils.lerp(rootDrive, controllerIn, kSmoothingAccelFactor);
-    else rootDrive = Utils.lerp(rootDrive, controllerIn, kSmoothingDecelFactor);
+    if (Math.abs(controllerIn) > Math.abs(rootDrive)) rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingAccelFactor);
+    else rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingDecelFactor);
     rootTurn = -_controller.getRawAxis(kRightHorizontal);
     if (_controller.getRawButtonPressed(kLeftBumper)) {
       if (!(highGear && Math.abs(rootDrive) > kMaxDownshiftPower)) {

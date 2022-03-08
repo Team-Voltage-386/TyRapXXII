@@ -63,7 +63,7 @@ public final class Constants {
         public static final int kHoodDownLimitPin = 9;
         public static final int kBreachSensorPin = 0;
         public static final int kIntakeColorSensorThreshold = 140;
-        public static final double kHoodPositionTolerance = 0.03;
+        public static final double kHoodPositionTolerance = 0.006;
         public static final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
         public static final int kIntakeID = 30;
         public static final int kHoodID = 31;
@@ -73,7 +73,7 @@ public final class Constants {
         public static final double kIntakeReversePower = 0.2;
         public static final double kBeltReversePower = 0.5;
         public static final double kBeltPower = -0.9;
-        public static final double HP = 20;
+        public static final double HP = 50;
         public static final double HI = 0.85;
         public static final double HD = 0;
         public static final double HC = 1;
@@ -110,8 +110,8 @@ public final class Constants {
         public static final double kMPR = 0.0207;// meters per revolution
         public static final int kGyro = 10;
 
-        public static final double ltP = 0.016;
-        public static final double ltI = 0.055;
+        public static final double ltP = 0.018;
+        public static final double ltI = 0.05;
         public static final double ltD = 0.0055;
 
         public static final double tP = 0.018;// P
@@ -130,9 +130,9 @@ public final class Constants {
         Satan himself will reject you to be abandoned in the Endless Sea
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
-        public static final double[] distances = {1.1074,1.55,2.16,2.7022,3.47,3.97,4.605,5.8};
-        public static final int[] drumSpeeds = {2750,2800,2850,2950,3150,3350,3350,3700};
-        public static final double[] hoodPositions = {0.02,0.02,0.03,0.1,0.035,0.04,0.18,0.34};
+        public static final double[] distances = {1.1074,1.55,2.16,2.7022,3,3.47,3.97,4.605,5.8};
+        public static final int[] drumSpeeds = {2450,2500,2850,2950,2900,3100,3350,3350,3700};
+        public static final double[] hoodPositions = {0.005,0.006,0.03,0.1,0.1,0.035,0.04,0.18,0.34};
     }
 
     public static final class LEDConstants {
