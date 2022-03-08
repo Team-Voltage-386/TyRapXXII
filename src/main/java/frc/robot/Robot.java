@@ -92,6 +92,7 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     m_robotContainer.LLSubsystem.setPipeLine(0);
+    m_robotContainer.LLSubsystem.lights(true);
     m_robotContainer.driveSubSystem.setHighGear(false);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();

@@ -210,7 +210,6 @@ public class BigIronSubsystem extends SubsystemBase {
     public void periodic() {
         readSensors();
         logic();
-        runHood();
         runDrum();
         runFeedBelt();
         updateWidgets();
@@ -241,9 +240,9 @@ public class BigIronSubsystem extends SubsystemBase {
         drumCurrentSpeed = -1*drumOneMotor.getEncoder().getVelocity();
     }
 
-    private void runHood() {
+    public void runHood(double val) {
         if (calibrated) {
-            double control = MathUtil.clamp(pidH.calculate(hoodCurrentPosition, hoodSet), -1, 1);
+            double control = MathUtil.clamp(val, -1, 1);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
             else {
                 hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing

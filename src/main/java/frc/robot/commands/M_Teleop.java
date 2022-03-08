@@ -56,14 +56,13 @@ public class M_TeleOp extends CommandBase {
       _bss.ballFailedDebug();
       _bss.drumIdle = false;
     }
+
     if (_controller.getRawButtonPressed(kY)) _bss.ballFailedDebug();
-    hoopTargeted = _controller.getRawButton(kLeftBumper);
-    _bss.fireTheBigIron = hoopTargeted;
 
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
 
-    _kss.setElePower(-0.6*_controller.getRawAxis(kRightVertical));
-    //if (_controller.getRawButtonPressed(kA)) _kss.toggleArms();
+    _kss.setElePower(-0.3*_controller.getRawAxis(kRightVertical));
+    _bss.runHood(_controller.getRawAxis(kLeftVertical));
 
     if (_controller.getRawButtonPressed(kLeftOptions)) climbActive = !climbActive;
   }
