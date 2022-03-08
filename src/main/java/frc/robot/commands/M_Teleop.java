@@ -64,6 +64,8 @@ public class M_TeleOp extends CommandBase {
     _kss.setElePower(-0.3*_controller.getRawAxis(kRightVertical));
     _bss.runHood(_controller.getRawAxis(kLeftVertical));
 
+    _bss.runBeltMan = _controller.getRawButton(kA);
+
     if (_controller.getRawButtonPressed(kLeftOptions)) climbActive = !climbActive;
   }
 

@@ -361,8 +361,8 @@ public class BigIronSubsystem extends SubsystemBase {
                 }
             } else beltMotor.set(ControlMode.PercentOutput, 0);  
             if (!breachSensorFlag) beltMotor.set(ControlMode.PercentOutput, kBeltPower);
-    } 
-}
+        } else if (runBeltMan) beltMotor.set(ControlMode.PercentOutput, kBeltPower);
+    }
 
     public final ShuffleboardTab tab = Shuffleboard.getTab("BigIron");
     private final NetworkTableEntry hllWidget = tab.add("HoodLL", false).withPosition(0, 0).getEntry();
