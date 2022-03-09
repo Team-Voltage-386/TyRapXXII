@@ -43,43 +43,6 @@ public class DriveSubsystem extends SubsystemBase {
         Pose2d pos = new Pose2d();
         DifferentialDriveOdometry odometry;
 
-        // shuffleboard
-        private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
-
-        // Create output widgets
-        private NetworkTableEntry frontLeftOutputWidget = tab.add("F-L Output", 0).withPosition(0, 0).getEntry();
-        private NetworkTableEntry frontRightOutputWidget = tab.add("F-R Output", 0).withPosition(1, 0).getEntry();
-        private NetworkTableEntry backLeftOutputWidget = tab.add("B-L Output", 0).withPosition(0, 1).getEntry();
-        private NetworkTableEntry backRightOutputWidget = tab.add("B-R Output", 0).withPosition(1, 1).getEntry();
-
-        // Create temperature widgets
-        private NetworkTableEntry frontLeftTempWidget = tab.add("F-L Temp", 0).withPosition(3, 0).getEntry();
-        private NetworkTableEntry frontRightTempWidget = tab.add("F-R Temp", 0).withPosition(4, 0).getEntry();
-        private NetworkTableEntry backLeftTempWidget = tab.add("B-L Temp", 0).withPosition(3, 1).getEntry();
-        private NetworkTableEntry backRightTempWidget = tab.add("B-R Temp", 0).withPosition(4, 1).getEntry();
-
-        // Create current widgets
-        private NetworkTableEntry frontLeftCurrentWidget = tab.add("F-L Current", 0).withPosition(6, 0).getEntry();
-        private NetworkTableEntry frontRightCurrentWidget = tab.add("F-R Current", 0).withPosition(7, 0).getEntry();
-        private NetworkTableEntry backLeftCurrentWidget = tab.add("B-L Current", 0).withPosition(6, 1).getEntry();
-        private NetworkTableEntry backRightCurrentWidget = tab.add("B-R Current", 0).withPosition(7, 1).getEntry();
-
-        // Create encoder widgets
-        private NetworkTableEntry leftEncoderWidget = tab.add("Left Encoder", 0).withSize(2, 1).withPosition(2, 2)
-                        .getEntry();
-        private NetworkTableEntry rightEncoderWidget = tab.add("Right Encoder", 0).withSize(2, 1).withPosition(4, 2)
-                        .getEntry();
-
-        // odometry widgets
-        private NetworkTableEntry xWidget = tab.add("Position X", 0.0).withPosition(0, 2).withSize(1, 1).getEntry();
-        private NetworkTableEntry yWidget = tab.add("Position Y", 0.0).withPosition(1, 2).withSize(1, 1).getEntry();
-        private final NetworkTableEntry rhWidget = tab.add("Raw_Heading", 0).withPosition(0, 1).withSize(1, 1)
-                        .getEntry();
-        private final NetworkTableEntry ohWidget = tab.add("Odom_Heading", 0).withPosition(1, 1).withSize(1, 1)
-                        .getEntry();
-
-        private final NetworkTableEntry rsWidget = tab.add("rSpeed",0).withPosition(7,4).getEntry();
-
         public DriveSubsystem() {
                 // drivetrain
                 /*
@@ -108,44 +71,15 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         public void updateWidgets() {
-                // Update output widgets
-                frontLeftOutputWidget.setDouble(frontLeftMotor.get());
-                frontRightOutputWidget.setDouble(frontRightMotor.get());
-                backLeftOutputWidget.setDouble(rearLeftMotor.get());
-                backRightOutputWidget.setDouble(rearRightMotor.get());
-
-                // Update temp widgets
-                frontLeftTempWidget.setDouble(frontLeftMotor.getMotorTemperature());
-                frontRightTempWidget.setDouble(frontRightMotor.getMotorTemperature());
-                backLeftTempWidget.setDouble(rearLeftMotor.getMotorTemperature());
-                backRightTempWidget.setDouble(rearRightMotor.getMotorTemperature());
-
-                // Update current widgets
-                frontLeftCurrentWidget.setDouble(frontLeftMotor.getOutputCurrent());
-                frontRightCurrentWidget.setDouble(frontRightMotor.getOutputCurrent());
-                backLeftCurrentWidget.setDouble(rearLeftMotor.getOutputCurrent());
-                backRightCurrentWidget.setDouble(rearRightMotor.getOutputCurrent());
-
-                // Update encoder widgets
-                leftEncoderWidget.setDouble(leftEncoder.getPosition());
-                rightEncoderWidget.setDouble(rightEncoder.getPosition());
-
-                // update odometry widgets
-                xWidget.setDouble(getPose().getX());
-                yWidget.setDouble(getPose().getY());
-                rhWidget.setDouble(getRawHeading());
-                ohWidget.setDouble(getPose().getRotation().getDegrees());
-                rsWidget.setDouble(getRotationSpeed());
-
                 mainHeading.setDouble(getPose().getRotation().getDegrees());
                 mainX.setDouble(getPose().getX());
                 mainY.setDouble(getPose().getY());
         }
 
         private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-        private final NetworkTableEntry mainHeading = mainTab.add("heading",0).getEntry();
-        private final NetworkTableEntry mainX = mainTab.add("x",0).getEntry();
-        private final NetworkTableEntry mainY = mainTab.add("y",0).getEntry();
+        private final NetworkTableEntry mainHeading = mainTab.add("heading",0).withPosition(3, 3).withSize(1, 1).getEntry();
+        private final NetworkTableEntry mainX = mainTab.add("x",0).withPosition(3, 1).withSize(1,1).getEntry();
+        private final NetworkTableEntry mainY = mainTab.add("y",0).withPosition(3, 2).withSize(1,1).getEntry();
 
         public void resetEncoders() {
                 rightEncoder.setPosition(0.0);

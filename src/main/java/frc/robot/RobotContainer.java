@@ -86,7 +86,7 @@ public class RobotContainer {
     autoChooser.addOption("ShooterTest", autos.shootTest);
     autoChooser.addOption("MartianRock", autos.marRock);
     autoChooser.addOption("4 Ball A (HP)", autos.ivBallA);
-    mainTab.add("AutoRoutine",autoChooser);
+    mainTab.add("AutoRoutine",autoChooser).withPosition(0,0).withSize(3,1);
     bigIron.setDefaultCommand(manipTeleOp);
     driveSubSystem.setDefaultCommand(driveTeleOp);
   }

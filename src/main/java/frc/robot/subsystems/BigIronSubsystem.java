@@ -365,39 +365,11 @@ public class BigIronSubsystem extends SubsystemBase {
     } 
 }
 
-    public final ShuffleboardTab tab = Shuffleboard.getTab("BigIron");
-    private final NetworkTableEntry hllWidget = tab.add("HoodLL", false).withPosition(0, 0).getEntry();
-    private final NetworkTableEntry ejectBeltWidget = tab.add("BreachSensor", false).withPosition(0, 1).getEntry();
-    private final NetworkTableEntry colWidget = tab.add("lf", 0).withPosition(0, 2).getEntry();
-    private final NetworkTableEntry botwWidget = tab.add("botw", false).withPosition(1, 0).getEntry();
-    private final NetworkTableEntry presWidget = tab.add("hsp", 0).withPosition(1, 1).getEntry();
-    private final NetworkTableEntry inWidget = tab.add("intake",false).withPosition(1, 2).getEntry();
-    private final NetworkTableEntry bcWidget = tab.add("ballCount", 0).withPosition(2, 0).getEntry();
-    private final NetworkTableEntry b1Widget = tab.add("ball1", "null").withPosition(2, 1).getEntry();
-    private final NetworkTableEntry b2Widget = tab.add("ball2", "null").withPosition(2, 2).getEntry();
-    private final NetworkTableEntry dsWidget = tab.add("drumSpeed",0).withPosition(0,3).getEntry();
-    private final NetworkTableEntry hWidget = tab.add("hoodPosition",0).withPosition(1, 3).getEntry();
-    private final NetworkTableEntry rtfWidget = tab.add("rtf",false).withPosition(2, 3).getEntry();
-    private final NetworkTableEntry dWidget = tab.add("distance",0).withPosition(3,3).getEntry();
-
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-    private final NetworkTableEntry mainDist = mainTab.add("dist",0).getEntry();
-    private final NetworkTableEntry mainBC = mainTab.add("BallCount",0).getEntry();
+    private final NetworkTableEntry mainDist = mainTab.add("dist",0).withPosition(5,0).withSize(1, 1).getEntry();
+    private final NetworkTableEntry mainBC = mainTab.add("BallCount",0).withPosition(3,0).withSize(1,1).getEntry();
 
     private void updateWidgets() {
-        hllWidget.setBoolean(hoodLowLimit);
-        ejectBeltWidget.setBoolean(breachSensorFlag);
-        botwWidget.setBoolean(ballOnTheWay);
-        presWidget.setDouble(hoodSet);
-        inWidget.setBoolean(intakeSensorFlag);
-        bcWidget.setDouble(ballCount);
-        b1Widget.setString(ball1Col);
-        b2Widget.setString(ball2Col);
-        dsWidget.setDouble(drumCurrentSpeed);
-        hWidget.setDouble(hoodCurrentPosition);
-        rtfWidget.setBoolean(readyToFire());
-        dWidget.setDouble(Utils.Flags.targetDistance);
-
         mainDist.setDouble(Utils.Flags.targetDistance);
         mainBC.setDouble(ballCount);
     }
@@ -420,7 +392,6 @@ public class BigIronSubsystem extends SubsystemBase {
         double upper = ShooterData.distances[i];
         double lower = ShooterData.distances[i-1];
         double lerpFactor = (m-lower)/Math.abs(upper-lower);
-        colWidget.setDouble(lerpFactor);
         upper = ShooterData.drumSpeeds[i];
         lower = ShooterData.drumSpeeds[i-1];
         drumSP = (int)Utils.lerpB(lower, upper, lerpFactor);
