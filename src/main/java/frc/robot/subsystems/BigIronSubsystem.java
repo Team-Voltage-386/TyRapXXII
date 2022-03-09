@@ -165,7 +165,7 @@ public class BigIronSubsystem extends SubsystemBase {
         return Math.abs(drumSP - drumCurrentSpeed) < kDrumSpeedTolerance && Math.abs(hoodSet - hoodCurrentPosition) < kHoodPositionTolerance;
     }
 
-    public boolean intakeOut = false;
+    public boolean intakeOut = true;
     private Timer t = new Timer();
 
     /**
