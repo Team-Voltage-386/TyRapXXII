@@ -36,7 +36,7 @@ public class KenobiSubsystem extends SubsystemBase {
   // booleans, since DIOs are inverted when you get them
   private boolean pneumaticsLimitBoolean = false;
   public boolean elevatorLowLimitFlag = false;
-  private boolean elevatorUpperLimitFlag = false;
+  public boolean elevatorUpperLimitFlag = false;
 
   private void updateSensors() {
     pneumaticsLimitBoolean = !pneumaticsLimitSensor.get();

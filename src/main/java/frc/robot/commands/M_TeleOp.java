@@ -23,6 +23,7 @@ public class M_TeleOp extends CommandBase {
   private final KenobiSubsystem _kss;
   private final Joystick _controller;
   private boolean climbActive = false;
+  private boolean sentUp = false;
 
   /**
    * Manipulator TeleOp Command
@@ -41,7 +42,8 @@ public class M_TeleOp extends CommandBase {
   public void initialize() {
     //_bss.reset();
     climbActive = false;
-    //_bss.intakeDo(_bss.intakeOut);
+    sentUp = false;
+    _bss.intakeDo(!_bss.intakeOut);
   }
 
   /** Called every time the scheduler runs while the command is scheduled. */
@@ -66,6 +68,16 @@ public class M_TeleOp extends CommandBase {
     else _kss.setElePower(0);
 
     if (_controller.getRawButtonPressed(kX)) climbActive = !climbActive;
+    if (climbActive) {
+      if (!_kss.elevatorUpperLimitFlag&&!sentUp) _kss.setElePower(0.7);
+      else {
+        sentUp = true;
+        _kss.setElePower(-0.7*_controller.getRawAxis(kRightVertical));
+      }
+    } else {
+      if (sentUp = true) sentUp = false;
+      _kss.setElePower(0);
+    }
   }
 
   // Called once the command ends or is interrupted.

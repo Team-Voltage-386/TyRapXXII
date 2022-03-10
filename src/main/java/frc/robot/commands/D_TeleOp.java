@@ -57,6 +57,7 @@ public class D_TeleOp extends CommandBase {
     rootDrive = 0;
     rootTurn = 0;
     pid.setTolerance(1, 1);
+    _dss.setHighGear(true);
     //_lls.setPipeLine(0);
     //_lls.lights(true);
   }
