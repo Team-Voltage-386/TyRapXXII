@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    feCam = CameraServer.startAutomaticCapture();
+    //feCam = CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -69,7 +69,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.driveSubSystem.setHighGear(false);
     m_robotContainer.driveSubSystem.resetOdometry(new Pose2d());
-    //m_robotContainer.bigIron.intakeDo(!m_robotContainer.bigIron.intakeOut);
+    m_robotContainer.bigIron.intakeDo(!m_robotContainer.bigIron.intakeOut);
     m_robotContainer.LLSubsystem.lights(true);
     m_robotContainer.LLSubsystem.setPipeLine(0);
     m_robotContainer.bigIron.drumSP = 3000;

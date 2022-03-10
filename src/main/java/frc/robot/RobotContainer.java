@@ -82,8 +82,8 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Basic 2 Ball", autos.basiciiBall);
     autoChooser.addOption("3 Ball A", autos.iiiBallA);
     autoChooser.addOption("4 Ball B", autos.ivBallB);
-    autoChooser.addOption("TuningTest", autos.tuningTest);
-    autoChooser.addOption("ShooterTest", autos.shootTest);
+    //autoChooser.addOption("TuningTest", autos.tuningTest);
+    //autoChooser.addOption("ShooterTest", autos.shootTest);
     autoChooser.addOption("MartianRock", autos.marRock);
     autoChooser.addOption("4 Ball A (HP)", autos.ivBallA);
     mainTab.add("AutoRoutine",autoChooser).withPosition(0,0).withSize(3,1);

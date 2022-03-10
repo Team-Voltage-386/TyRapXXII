@@ -106,6 +106,7 @@ public class BigIronSubsystem extends SubsystemBase {
         intakeMotor.configNeutralDeadband(0);
         drumOneMotor.setInverted(false);
         drumTwoMotor.setInverted(false);
+        intakeOut = false;
 
         //drumLeadMotor.restoreFactoryDefaults();
         //drumFollowMotor.restoreFactoryDefaults();
