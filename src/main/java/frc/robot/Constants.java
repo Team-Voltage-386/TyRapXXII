@@ -69,7 +69,7 @@ public final class Constants {
         public static final int kHoodID = 31;
         public static final int kBeltID = 32;
         public static final int kHoodEncoderPin = 8;
-        public static final double kIntakePower = -0.5;
+        public static final double kIntakePower = -0.65;
         public static final double kIntakeReversePower = 0.2;
         public static final double kBeltReversePower = 0.5;
         public static final double kBeltPower = -0.9;
@@ -131,7 +131,7 @@ public final class Constants {
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
         public static final double[] distances = {1.1074,1.55,2.16,2.7022,3,3.47,3.97,4.605,5.8};
-        public static final int[] drumSpeeds = {2450,2500,2850,2950,2900,3100,3350,3450,3700};
+        public static final int[] drumSpeeds = {2450,2500,2850,2950,2900,3100,3350,3450,3800};
         public static final double[] hoodPositions = {0.005,0.006,0.03,0.1,0.1,0.035,0.04,0.18,0.34};
     }
 

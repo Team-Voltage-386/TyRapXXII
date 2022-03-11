@@ -194,6 +194,8 @@ public class BigIronSubsystem extends SubsystemBase {
                 intakeBackward.set(kVent);
             }
         }
+        if (intakeOut) intakeMotor.set(kIntakePower);
+        else intakeMotor.set(0);
     }
 
     public void reLoad() {
@@ -213,6 +215,7 @@ public class BigIronSubsystem extends SubsystemBase {
         runDrum();
         runFeedBelt();
         updateWidgets();
+        setLED();
     }
 
     boolean ef = false;
@@ -264,18 +267,11 @@ public class BigIronSubsystem extends SubsystemBase {
 
     private void runDrum() {
         if (fireTheBigIron || drumIdle) {
-            drumPIDRunning = true;
             double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, drumSP);
             drumOneMotor.set(control);
         } else if (ejectBall || eff) {
             drumOneMotor.set(kDrumDirection*0.3);
-        } else {
-            drumOneMotor.set(0);
-            if (drumPIDRunning) {
-                pidD.reset();
-                drumPIDRunning = false;
-            }
-        }
+        } else drumOneMotor.set(0);
     }
 
     private Timer beltTimer = new Timer();
@@ -432,9 +428,10 @@ public class BigIronSubsystem extends SubsystemBase {
         if (aniRunning) {
             if (aniProg > 7) {
                 aniProg = 0;
-                aniRunning = newBall;
+                aniRunning = false;
             } else aniProg++;
         }
+        if (newBall) aniRunning = true;
         lastBallCount = ballCount;
     }
 }

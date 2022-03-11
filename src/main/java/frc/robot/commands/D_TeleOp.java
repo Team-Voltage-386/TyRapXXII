@@ -79,7 +79,7 @@ public class D_TeleOp extends CommandBase {
     }
     if (_lls.targetFound && hoopTargeted) {
       //_controller.setRumble(RumbleType.kRightRumble, 0.5);
-      if (Math.abs(_lls.tx) > 1.7) {
+      if (Math.abs(_lls.tx) > 1.2) {
         hoopLocked = false;
         rootTurn += MathUtil.clamp(pid.calculate(_lls.tx), -tC, tC);
       }

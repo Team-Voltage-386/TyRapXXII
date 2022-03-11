@@ -39,6 +39,7 @@ public class LinearDrive extends CommandBase {
 
     @Override
     public void initialize() {
+        _dss.setHighGear(false);
         pidt.reset();
         startPose = _dss.getPose();
         drive = 0;
