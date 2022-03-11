@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
@@ -29,8 +30,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 
 import static frc.robot.Constants.BigIronConstants.*;
 
@@ -40,7 +44,7 @@ import static frc.robot.Constants.BigIronConstants.*;
  */
 public class BigIronSubsystem extends SubsystemBase {
     // motors
-    private final TalonSRX intakeMotor = new TalonSRX(kIntakeID);
+    private final CANSparkMax intakeMotor = new CANSparkMax(kIntakeID, MotorType.kBrushless);
     private final CANSparkMax drumOneMotor = new CANSparkMax(kDrumOneID, MotorType.kBrushless);
     private final CANSparkMax drumTwoMotor = new CANSparkMax(kDrumTwoID, MotorType.kBrushless);
     private final TalonSRX hoodMotor = new TalonSRX(kHoodID);
@@ -85,6 +89,7 @@ public class BigIronSubsystem extends SubsystemBase {
 
     // Misc.
     private final Timer ejectTimer = new Timer();
+    private final Timer ledTimer = new Timer();
 
     // Private process variables
     private boolean calibrated = false;
@@ -102,8 +107,6 @@ public class BigIronSubsystem extends SubsystemBase {
         pidH.reset();
         hoodMotor.configNeutralDeadband(0);
 
-        intakeMotor.configFactoryDefault();
-        intakeMotor.configNeutralDeadband(0);
         drumOneMotor.setInverted(false);
         drumTwoMotor.setInverted(false);
         intakeOut = false;
@@ -111,6 +114,7 @@ public class BigIronSubsystem extends SubsystemBase {
         //drumLeadMotor.restoreFactoryDefaults();
         //drumFollowMotor.restoreFactoryDefaults();
         drumTwoMotor.follow(drumOneMotor,true);
+        ledTimer.start();
     }
 
     public void ballFailedDebug() {
@@ -152,14 +156,8 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
     public void runIntake(boolean b) {
-        if (intakeOut) {
-            if (b)
-                intakeMotor.set(ControlMode.PercentOutput, kIntakePower);
-            else {
-                intakeMotor.set(ControlMode.PercentOutput, 0);
-            }
-        } else
-            intakeMotor.set(ControlMode.PercentOutput, 0);
+        if (intakeOut && b) intakeMotor.set(kIntakePower);
+        else intakeMotor.set(0);
     }
 
     public boolean readyToFire() {
@@ -399,5 +397,44 @@ public class BigIronSubsystem extends SubsystemBase {
         upper = ShooterData.hoodPositions[i];
         lower = ShooterData.hoodPositions[i-1];
         hoodSet = Utils.lerpB(lower, upper, lerpFactor);
+    }
+
+
+
+
+    ///LED CRAP
+    AddressableLED ledA = new AddressableLED(8);
+
+    AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(16);
+
+    Color blue = new Color(0, 0, 200);
+    Color red = new Color(200,0,0);
+    Color yellow = new Color(119,105,1);
+    int lastBallCount = 0;
+    int aniProg = 0;
+    private Color col = null;
+    boolean aniRunning = false;
+
+    private void setLED() {
+        if (col == null) {
+            if (DriverStation.getAlliance().toString() == "Blue") col = blue;
+            else col = red;
+        }
+        if (ledTimer.advanceIfElapsed(0.5) && aniRunning){
+            for (int i = 0; i < 8; i++) {
+                if (ballCount == 2 && i < aniProg) ledBuffer.setLED(i+8, col);
+                else ledBuffer.setLED(i+8, yellow);
+                if (ballCount > 0 && i < aniProg) ledBuffer.setLED(i, col);
+                else ledBuffer.setLED(i, yellow);
+            }
+        }
+        boolean newBall = ballCount > lastBallCount;
+        if (aniRunning) {
+            if (aniProg > 7) {
+                aniProg = 0;
+                aniRunning = newBall;
+            } else aniProg++;
+        }
+        lastBallCount = ballCount;
     }
 }

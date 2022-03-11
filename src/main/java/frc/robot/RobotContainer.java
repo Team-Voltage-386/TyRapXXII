@@ -76,8 +76,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    Utils.ourAlliance = DriverStation.getAlliance().toString();
-    Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
+    // Utils.ourAlliance = DriverStation.getAlliance().toString();
+    // Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
 
     autoChooser.setDefaultOption("Basic 2 Ball", autos.basiciiBall);
     autoChooser.addOption("3 Ball A", autos.iiiBallA);

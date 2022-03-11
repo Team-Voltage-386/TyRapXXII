@@ -26,18 +26,4 @@ public class Utils {
         c = factor * c;
         return a + c;
     }
-
-    public static String ourAlliance = "";
-    public static String antiAlliance = "";
-
-    public static String giveAntiAlliance(String ourAlliance) {
-        String output = "";
-        if (ourAlliance.equals("Blue"))
-            output = "Red";
-        else if (ourAlliance.equals("Red"))
-            output = "Blue";
-        else
-            output = "Invalid";
-        return output;
-    }
 }

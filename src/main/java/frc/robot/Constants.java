@@ -69,7 +69,7 @@ public final class Constants {
         public static final int kHoodID = 31;
         public static final int kBeltID = 32;
         public static final int kHoodEncoderPin = 8;
-        public static final double kIntakePower = -0.9;
+        public static final double kIntakePower = -0.5;
         public static final double kIntakeReversePower = 0.2;
         public static final double kBeltReversePower = 0.5;
         public static final double kBeltPower = -0.9;
@@ -110,7 +110,7 @@ public final class Constants {
         public static final double kMPR = 0.0207;// meters per revolution
         public static final int kGyro = 10;
 
-        public static final double ltP = 0.018;
+        public static final double ltP = 0.017;
         public static final double ltI = 0.05;
         public static final double ltD = 0.0055;
 
