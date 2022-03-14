@@ -215,7 +215,7 @@ public class BigIronSubsystem extends SubsystemBase {
         runDrum();
         runFeedBelt();
         updateWidgets();
-        setLED();
+        //setLED();
     }
 
     boolean ef = false;
@@ -396,10 +396,10 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
 
-
+/*
 
     ///LED CRAP
-    AddressableLED ledA = new AddressableLED(8);
+    AddressableLED ledA = new AddressableLED(16);
 
     AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(16);
 
@@ -416,22 +416,23 @@ public class BigIronSubsystem extends SubsystemBase {
             if (DriverStation.getAlliance().toString() == "Blue") col = blue;
             else col = red;
         }
-        if (ledTimer.advanceIfElapsed(0.5) && aniRunning){
+        if (ledTimer.advanceIfElapsed(0.5)){
             for (int i = 0; i < 8; i++) {
                 if (ballCount == 2 && i < aniProg) ledBuffer.setLED(i+8, col);
                 else ledBuffer.setLED(i+8, yellow);
                 if (ballCount > 0 && i < aniProg) ledBuffer.setLED(i, col);
                 else ledBuffer.setLED(i, yellow);
             }
+            ledA.setData(ledBuffer);
+            boolean newBall = ballCount > lastBallCount;
+            if (aniRunning) {
+                if (aniProg > 7) {
+                    aniProg = 0;
+                    aniRunning = false;
+                } else aniProg++;
+            }
+            if (newBall) aniRunning = true;
         }
-        boolean newBall = ballCount > lastBallCount;
-        if (aniRunning) {
-            if (aniProg > 7) {
-                aniProg = 0;
-                aniRunning = false;
-            } else aniProg++;
-        }
-        if (newBall) aniRunning = true;
         lastBallCount = ballCount;
-    }
+    }*/
 }

@@ -50,7 +50,7 @@ public final class Constants {
     public static final class LimeLightConstants {
         public static final double targetLostWaitTime = 0.15;
         public static final double targetHeight = 2.6416;
-        public static final double mountHeight = 0.75;
+        public static final double mountHeight = 0.95;
         public static final double mountAngle = 40;
     }
 
@@ -77,9 +77,9 @@ public final class Constants {
         public static final double HI = 0.85;
         public static final double HD = 0;
         public static final double HC = 1;
-        public static final double DP = 0.00043;
-        public static final double DI = 0.00074;
-        public static final double DD = 0.00002;
+        public static final double DP = 0.00047;
+        public static final double DI = 0.0007;
+        public static final double DD = 0.000021;
         public static final int kChannelIntakeForwardGo = 7;
         public static final int kChannelIntakeForwardVent = 5;
         public static final int kChannelIntakeBackwardGo = 6;
@@ -114,7 +114,7 @@ public final class Constants {
         public static final double ltI = 0.05;
         public static final double ltD = 0.0055;
 
-        public static final double tP = 0.018;// P
+        public static final double tP = 0.019;// P
         public static final double tI = 0.0019;// I
         public static final double tD = 0.0028;// D
         public static final double tC = 0.65;// Clamp //t and d are two different PID controllers
@@ -130,9 +130,9 @@ public final class Constants {
         Satan himself will reject you to be abandoned in the Endless Sea
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
-        public static final double[] distances = {1.1074,1.55,2.16,2.7022,3,3.47,3.97,4.605,5.8};
-        public static final int[] drumSpeeds = {2450,2500,2850,2950,2900,3100,3350,3450,3800};
-        public static final double[] hoodPositions = {0.005,0.006,0.03,0.1,0.1,0.035,0.04,0.18,0.34};
+        public static final double[] distances = {1.1074,1.55,2,2.16,2.7022,3,3.47,3.97,4.605,5.8};
+        public static final int[] drumSpeeds = {2450,2500,2700,2850,2850,2900,3200,3370,3950,3900};
+        public static final double[] hoodPositions = {0.005,0.006,0.022,0.03,0.1,0.2,0.2,0.04,0.20,0.34};
     }
 
     public static final class LEDConstants {

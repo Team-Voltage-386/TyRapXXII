@@ -55,7 +55,7 @@ public class ShootBall extends CommandBase {
 
         if (_lls.targetFound) {
             _dss.arcadeDrive(0.0, pidt.calculate(_lls.tx));
-            if (_lls.tx < 0.7) {
+            if (_lls.tx < 1.2) {
                 pidt.reset();
                 Flags.hoopLocked = true;
             } else Flags.hoopLocked = false;

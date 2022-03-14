@@ -76,9 +76,6 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // Utils.ourAlliance = DriverStation.getAlliance().toString();
-    // Utils.antiAlliance = Utils.giveAntiAlliance(Utils.ourAlliance);
-
     autoChooser.setDefaultOption("Basic 2 Ball", autos.basiciiBall);
     autoChooser.addOption("3 Ball A", autos.iiiBallA);
     autoChooser.addOption("4 Ball B", autos.ivBallB);
@@ -141,7 +138,7 @@ public class RobotContainer {
         new LinearDrive(driveSubSystem,3.2, 12,false,1),
         new getBall(bigIron,4)
       ),
-      new LinearDrive(driveSubSystem, 1, 8, false, -1),
+      new LinearDrive(driveSubSystem, 2, 8, false, -1),
       new StationaryTurn(driveSubSystem, 170, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
