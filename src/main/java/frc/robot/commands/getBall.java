@@ -35,7 +35,7 @@ public class getBall extends CommandBase {
     @Override
     public void execute() {
         _bss.intakeDo(false);
-        if (_bss.ballCount > iBallCount) timer.start();
+        if (_bss.ballCount > iBallCount || _bss.ballOnTheWay) timer.start();
     }
 
     @Override

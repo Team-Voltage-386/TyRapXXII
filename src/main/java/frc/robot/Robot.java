@@ -36,7 +36,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    //feCam = CameraServer.startAutomaticCapture();
+    feCam = CameraServer.startAutomaticCapture();
+    m_robotContainer.bigIron.ledsOn = false;
   }
 
   /**
@@ -57,7 +58,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.bigIron.ledsOn = false;
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -75,6 +78,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.bigIron.drumSP = 3000;
     m_robotContainer.bigIron.hoodSet = 0.01;
     m_robotContainer.bigIron.drumIdle = true;
+    m_robotContainer.bigIron.ledsOn = true;
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -94,9 +98,11 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     m_robotContainer.LLSubsystem.setPipeLine(0);
     m_robotContainer.driveSubSystem.setHighGear(false);
+    m_robotContainer.bigIron.drumIdle = false;
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.bigIron.ledsOn = true;
   }
 
   /** This function is called periodically during operator control. */

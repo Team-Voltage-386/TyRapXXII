@@ -55,7 +55,7 @@ public class RobotContainer {
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
   public final BigIronSubsystem bigIron = new BigIronSubsystem();
   private final KenobiSubsystem kenobi = new KenobiSubsystem();
-  public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight-xxii", Constants.LimeLightConstants.targetHeight, Constants.LimeLightConstants.mountAngle, Constants.LimeLightConstants.mountHeight, 0);
+  public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight", Constants.LimeLightConstants.targetHeight, Constants.LimeLightConstants.mountAngle, Constants.LimeLightConstants.mountHeight, 0);
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
@@ -135,7 +135,7 @@ public class RobotContainer {
       new ShootBall(bigIron, driveSubSystem, LLSubsystem),
       new StationaryTurn(driveSubSystem, 14, false),
       new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem,3.2, 12,false,1),
+        new LinearDrive(driveSubSystem,3.24, 12,false,1),
         new getBall(bigIron,4)
       ),
       new LinearDrive(driveSubSystem, 2, 8, false, -1),

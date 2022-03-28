@@ -35,6 +35,7 @@ public class M_TeleOp extends CommandBase {
     _controller = RobotContainer.manipulatorController;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_bss);
+    addRequirements(_kss);
   }
 
   /** Called when the command is initially scheduled. */
@@ -42,7 +43,8 @@ public class M_TeleOp extends CommandBase {
   public void initialize() {
     //_bss.reset();
     climbActive = false;
-    sentUp = false;
+    _bss.drumIdle = false;
+    sentUp = true;
     _bss.intakeDo(!_bss.intakeOut);
   }
 
@@ -52,7 +54,7 @@ public class M_TeleOp extends CommandBase {
     if(_controller.getRawButtonPressed(kA)) _bss.drumIdle = !_bss.drumIdle;
     _bss.runIntake(_controller.getRawAxis(kRightTrigger) > 0.3);
     _bss.intakeDo(_controller.getRawButtonPressed(kRightBumper));
-    if (_controller.getRawButtonPressed(kB)) _bss.ejectBall = !_bss.ejectBall;
+    if (_controller.getRawButtonPressed(kLeftJoystickPressed)) _bss.ejectBall = !_bss.ejectBall;
     if (_controller.getRawButtonReleased(kLeftBumper)) {
       _bss.ballCount = 1;
       _bss.ballFailedDebug();
@@ -64,20 +66,23 @@ public class M_TeleOp extends CommandBase {
 
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
 
-    if (climbActive) _kss.setElePower(-0.85*_controller.getRawAxis(kRightVertical));
-    else _kss.setElePower(0);
-
-    if (_controller.getRawButtonPressed(kX)) climbActive = !climbActive;
     if (climbActive) {
-      if (!_kss.elevatorUpperLimitFlag&&!sentUp) _kss.setElePower(0.9);
+      if (sentUp) _kss.setElePower(-0.85* Math.pow(_controller.getRawAxis(kRightVertical),3));
       else {
-        sentUp = true;
-        _kss.setElePower(-0.7*_controller.getRawAxis(kRightVertical));
+        if (!(_kss.getEnc().getPosition() > 35)) _kss.setElePower(0.8);
+        else {
+          sentUp = true;
+          _kss.setElePower(0);
+        }
       }
     } else {
-      if (sentUp = true) sentUp = false;
       _kss.setElePower(0);
+      sentUp = false;
     }
+
+    if (_controller.getRawButtonPressed(kX)) climbActive = !climbActive;
+    if (_controller.getRawButtonPressed(kRightJoystickPressed)) _bss.reset();
+    _bss.climbing = climbActive;
   }
 
   // Called once the command ends or is interrupted.

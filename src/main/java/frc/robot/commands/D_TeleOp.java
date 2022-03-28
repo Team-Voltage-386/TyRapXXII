@@ -72,10 +72,8 @@ public class D_TeleOp extends CommandBase {
     else rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingDecelFactor);
     rootTurn = -_controller.getRawAxis(kRightHorizontal);
     if (_controller.getRawButtonPressed(kLeftBumper)) {
-      if (!(highGear && Math.abs(rootDrive) > kMaxDownshiftPower)) {
-        highGear = !highGear;
-        _dss.setHighGear(highGear);
-      }
+      highGear = !highGear;
+      _dss.setHighGear(highGear);
     }
     if (_lls.targetFound && hoopTargeted) {
       //_controller.setRumble(RumbleType.kRightRumble, 0.5);

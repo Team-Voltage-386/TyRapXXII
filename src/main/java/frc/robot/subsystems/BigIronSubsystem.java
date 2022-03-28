@@ -74,6 +74,7 @@ public class BigIronSubsystem extends SubsystemBase {
     // Public values
     public boolean fireTheBigIron = false;
     public boolean drumControllerOn = false;
+    public boolean climbing = false;
     public boolean drumIdle = false;
     public double drumCurrentSpeed = 0;
     public double drumSP = 2000;
@@ -94,7 +95,6 @@ public class BigIronSubsystem extends SubsystemBase {
     // Private process variables
     private boolean calibrated = false;
     public double hoodSet = 0.05;
-    private boolean drumPIDRunning = false;
     private double hoodCurrentPosition = 0;
     private boolean hoodLowLimit = false;
     public boolean ballOnTheWay = false;
@@ -115,12 +115,15 @@ public class BigIronSubsystem extends SubsystemBase {
         //drumFollowMotor.restoreFactoryDefaults();
         drumTwoMotor.follow(drumOneMotor,true);
         ledTimer.start();
+        ledA.setLength(16);
+        ledA.start();
     }
 
     public void ballFailedDebug() {
         if (ballCount == 0) {
-            ballOnTheWay = !ballOnTheWay;
+            ballOnTheWay = true;
             woundBack = false;
+            beltMotor.set(ControlMode.PercentOutput, 0);
         } else if (ballCount == 1) {
             ballCount = 0;
             ballOnTheWay = false;
@@ -128,6 +131,7 @@ public class BigIronSubsystem extends SubsystemBase {
             ejectBall = false;
             ef = false;
             eff = false;
+            beltMotor.set(ControlMode.PercentOutput, 0);
         } else if (ballCount == 2) {
             ballCount = 1;
             woundBack = false;
@@ -153,6 +157,9 @@ public class BigIronSubsystem extends SubsystemBase {
         fireTheBigIron = false;
         ef = false;
         eff = false;
+        beltMotor.set(ControlMode.PercentOutput, 0);
+        drumOneMotor.set(0);
+        drumTwoMotor.set(0);
     }
 
     public void runIntake(boolean b) {
@@ -215,7 +222,7 @@ public class BigIronSubsystem extends SubsystemBase {
         runDrum();
         runFeedBelt();
         updateWidgets();
-        //setLED();
+        setLED();
     }
 
     boolean ef = false;
@@ -271,7 +278,10 @@ public class BigIronSubsystem extends SubsystemBase {
             drumOneMotor.set(control);
         } else if (ejectBall || eff) {
             drumOneMotor.set(kDrumDirection*0.3);
-        } else drumOneMotor.set(0);
+        } else {
+            drumOneMotor.set(0);
+            pidD.reset();
+        }
     }
 
     private Timer beltTimer = new Timer();
@@ -319,7 +329,7 @@ public class BigIronSubsystem extends SubsystemBase {
                     ballCount++;
                 } else if (ejectBall) {
                     if (breachSensorFlag) {
-                        if (ejectTimer.hasElapsed(0.5)) {
+                        if (ejectTimer.hasElapsed(0.5) && ef) {
                             beltMotor.set(ControlMode.PercentOutput, kBeltPower);
                             eff = true;
                             ejectBall = false;
@@ -338,7 +348,7 @@ public class BigIronSubsystem extends SubsystemBase {
         } else if (ballCount == 2) {
             if (ball2Col.equals("null")) ball2Col = getColor();
             else if (ejectBall) {
-                if (ejectTimer.hasElapsed(0.5)) {
+                if (ejectTimer.hasElapsed(0.5) && ef) {
                     beltMotor.set(ControlMode.PercentOutput, kBeltPower);
                     ejectBall = false;
                     eff = true;
@@ -396,43 +406,75 @@ public class BigIronSubsystem extends SubsystemBase {
     }
 
 
-/*
+
 
     ///LED CRAP
-    AddressableLED ledA = new AddressableLED(16);
+    AddressableLED ledA = new AddressableLED(9);
 
     AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(16);
 
-    Color blue = new Color(0, 0, 200);
-    Color red = new Color(200,0,0);
-    Color yellow = new Color(119,105,1);
+    Color blue = new Color(0, 0, 0.9);
+    Color red = new Color(0.9,0,0);
+    Color yellow = new Color(0.45,0.3,0.01);
     int lastBallCount = 0;
     int aniProg = 0;
+    int clI = 0;
     private Color col = null;
     boolean aniRunning = false;
+    public boolean ledsOn = false;
 
     private void setLED() {
-        if (col == null) {
-            if (DriverStation.getAlliance().toString() == "Blue") col = blue;
-            else col = red;
-        }
-        if (ledTimer.advanceIfElapsed(0.5)){
-            for (int i = 0; i < 8; i++) {
-                if (ballCount == 2 && i < aniProg) ledBuffer.setLED(i+8, col);
-                else ledBuffer.setLED(i+8, yellow);
-                if (ballCount > 0 && i < aniProg) ledBuffer.setLED(i, col);
-                else ledBuffer.setLED(i, yellow);
+        if (ledsOn) {
+            if (!climbing) {
+                if (col == null) {
+                    for (int i= 0; i < 16; i++) ledBuffer.setLED(i, yellow);
+                    ledTimer.reset();
+                    ledTimer.start();
+                }
+                if (DriverStation.getAlliance().toString() == "Blue") col = blue;
+                else col = red;
+                if (ledTimer.advanceIfElapsed(0.05)){
+                    for (int i = 0; i < 8; i++) {
+                        if (ballCount == 2 && i < aniProg) ledBuffer.setLED(i+8, col);
+                        else ledBuffer.setLED(i+8, yellow);
+                        if (ballCount == 1 && i < aniProg) ledBuffer.setLED(i, col);
+                        else if (ballCount == 2) ledBuffer.setLED(i, col);
+                        else ledBuffer.setLED(i, yellow);
+                    }
+                    boolean newBall = ballCount != lastBallCount;
+                    if (aniRunning) {
+                        if (aniProg > 7) {
+                            aniRunning = false;
+                        } else aniProg++;
+                    }
+                    if (newBall) {
+                        if (ballCount != 0) aniRunning = true;
+                        aniProg = 0;
+                        if (ballCount < 2) for (int i= 0; i < 16; i++) ledBuffer.setLED(i, yellow);
+                        if (ballCount == 2) for (int i = 0; i < 8; i++) ledBuffer.setLED(i+8, yellow);
+                    }
+                    lastBallCount = ballCount;
+                }
+            } else {
+                if (ledTimer.advanceIfElapsed(0.3)) {
+                    for (int i = 0; i < 8; i++) {
+                        if (clI %2 != 0) {
+                            ledBuffer.setLED(i*2, col);
+                            ledBuffer.setLED((i*2) + 1, yellow);
+                        } else {
+                            ledBuffer.setLED(i*2, yellow);
+                            ledBuffer.setLED((i*2) + 1, col);
+                        }
+                    }
+                    clI++;
+                }
             }
             ledA.setData(ledBuffer);
-            boolean newBall = ballCount > lastBallCount;
-            if (aniRunning) {
-                if (aniProg > 7) {
-                    aniProg = 0;
-                    aniRunning = false;
-                } else aniProg++;
-            }
-            if (newBall) aniRunning = true;
+        } else {
+            col = null;
+            for (int i = 0; i < 16; i++) ledBuffer.setLED(i,new Color(0,0,0));
+            ledA.setData(ledBuffer);
+            ledTimer.stop();
         }
-        lastBallCount = ballCount;
-    }*/
+    }
 }
