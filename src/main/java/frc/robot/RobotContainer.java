@@ -108,10 +108,14 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
 
+  /**@return the two teleop commands in parallel*/
   public Command getManCommand() {
     return new ParallelCommandGroup(driveTeleOp,manipTeleOp);
   }
 
+  /** All the autos are in this class for organization
+   * @author Carl C.
+   */
   private final class AutoRoutines {
     public final Command basiciiBall = new SequentialCommandGroup(
       new ParallelCommandGroup(

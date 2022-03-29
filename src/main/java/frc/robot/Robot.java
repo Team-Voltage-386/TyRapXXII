@@ -68,6 +68,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+
+    // sanity check to make sure everything is in the proper state
     m_robotContainer.bigIron.reset();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.driveSubSystem.setHighGear(false);
@@ -80,7 +82,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.bigIron.drumIdle = true;
     m_robotContainer.bigIron.ledsOn = true;
 
-    // schedule the autonomous command (example)
+    // schedule the autonomous command
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -96,6 +98,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+
+    // just some sanity checks here, makes sure the robot is in the right state
     m_robotContainer.LLSubsystem.setPipeLine(0);
     m_robotContainer.driveSubSystem.setHighGear(false);
     m_robotContainer.bigIron.drumIdle = false;

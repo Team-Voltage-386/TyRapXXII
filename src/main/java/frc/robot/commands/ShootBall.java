@@ -12,6 +12,9 @@ import frc.robot.subsystems.LimeLightSubsystem;
 
 import static frc.robot.Constants.DriveConstants.*;
 
+/**Shoots all the balls in the robot
+ * @author Carl C.
+ */
 public class ShootBall extends CommandBase {
 
     private final BigIronSubsystem _bss;
@@ -26,8 +29,10 @@ public class ShootBall extends CommandBase {
     private final Timer tim = new Timer();
 
     
-    /**@param angle angle set
-     * @param rel if true, angle set is relative
+    /**Creates a new ShootBall instruction
+     * @param BSS the bigIron
+     * @param DSS the drivesubsystem
+     * @param LLS the limelight used for targeting
     */
     public ShootBall(BigIronSubsystem BSS,DriveSubsystem DSS, LimeLightSubsystem LLS) {
         _bss = BSS;
@@ -38,7 +43,7 @@ public class ShootBall extends CommandBase {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() { // sets state
         tim.stop();
         tim.reset();
         iBallCount = _bss.ballCount;
@@ -48,11 +53,12 @@ public class ShootBall extends CommandBase {
     } 
 
     @Override
-    public void execute() {
+    public void execute() { 
+        // set flags
         Utils.Flags.targetDistance = _lls.metersToTarget();
-
         _bss.fireTheBigIron = true;
 
+        // turn the robot towards the target
         if (_lls.targetFound) {
             _dss.arcadeDrive(0.0, pidt.calculate(_lls.tx));
             if (_lls.tx < 1.2) {
@@ -62,6 +68,7 @@ public class ShootBall extends CommandBase {
             _bss.setAimDistance(_lls.metersToTarget());
         }
 
+        // logic for when to finish
         if (!loaded && _bss.breachSensorFlag) {
             loaded = true;
         } else if (loaded && !_bss.breachSensorFlag) {
@@ -71,13 +78,13 @@ public class ShootBall extends CommandBase {
     }
 
     @Override
-    public void end(boolean interuppted) {
+    public void end(boolean interuppted) { // at end sets bc = 0 and cleans up
         _bss.fireTheBigIron = false;
         _bss.ballCount = 0;
     }
 
     @Override
     public boolean isFinished() {
-        return ballShot == iBallCount;
+        return ballShot == iBallCount; // finishes when all balls are shot
     }
 }

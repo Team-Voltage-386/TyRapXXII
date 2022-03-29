@@ -9,7 +9,9 @@ import frc.robot.Utils;
 import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.Constants.DriveConstants.*;
 
-
+/** Drives the robot a set distance forward (note, distances here will NOT correspond to limelight distances, they are calibrated differently and neither is perfect meters) 
+ * @author Carl C.
+*/
 public class LinearDrive extends CommandBase {
 
     private final DriveSubsystem _dss;
@@ -23,8 +25,12 @@ public class LinearDrive extends CommandBase {
     private final Timer finTimer = new Timer();
     private final double d;
     
-    /**@param angle angle set
+    /**Creates a new LinearDrive instrucction
+     * @param DSS the drivesubsystem
+     * @param distance the distance to drive (if calibrated, roughly in meters)
+     * @param angle angle set
      * @param rel if true, angle set is relative
+     * @param dir a 1 or -1 for forwards or backwards (could be enum but I'm lazy)
     */
     public LinearDrive(DriveSubsystem DSS,double distance,double angle,Boolean rel,double dir) {
         angRel = rel;
@@ -39,13 +45,13 @@ public class LinearDrive extends CommandBase {
 
     @Override
     public void initialize() {
-        _dss.setHighGear(false);
+        _dss.setHighGear(false); // checks low gear and resets systems
         pidt.reset();
         startPose = _dss.getPose();
         drive = 0;
         finTimer.stop();
         finTimer.reset();
-        if (angRel) {
+        if (angRel) { // calculate angle setpoint
             headingHold += startPose.getRotation().getDegrees();
             while (headingHold > 360) headingHold -= 360;
             while (headingHold < 0) headingHold += 360;
@@ -55,7 +61,7 @@ public class LinearDrive extends CommandBase {
     @Override
     public void execute() {
         distanceFromStart = startPose.getTranslation().getDistance(_dss.getPose().getTranslation());
-        if (distanceFromStart > targetDistance - 0.25) {
+        if (distanceFromStart > targetDistance - 0.25) { // drive until the distance from the start is within 0.25 of target, then start timer
             finTimer.start();
             drive = Utils.lerpA(drive, 0, kAutoDriveSmoothing);
         } else {
@@ -66,16 +72,16 @@ public class LinearDrive extends CommandBase {
     }
 
     @Override
-    public void end(boolean interuppted) {
+    public void end(boolean interuppted) { // at end stop drive
         _dss.arcadeDrive(0.0, 0.0);
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean isFinished() { // timer ensures the robot stops properly (smoothing is applied)
         return finTimer.hasElapsed(0.4);
     }
 
-    private double getDrivePower(double distErr) {
+    private double getDrivePower(double distErr) { // gets the drive error from the array of distances and powers, kinda like the shooter calibration
         int ind = kDriveDistances.length-1;
         for (int i = 1; i < kDriveDistances.length; i++) if (distErr < kDriveDistances[i]) ind = i;
         double upper = kDriveDistances[ind];

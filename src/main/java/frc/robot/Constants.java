@@ -26,8 +26,8 @@ import edu.wpi.first.wpilibj.util.Color;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    /** the indexes to address buttons on the controller */
     public static final class ControllerConstants {
-
         public static final int kLeftVertical = 1;
         public static final int kRightVertical = 5;
         public static final int kLeftHorizontal = 0;
@@ -47,6 +47,7 @@ public final class Constants {
         public static final int kRightJoystickPressed = 10;
     }
 
+    /** limelight settings */
     public static final class LimeLightConstants {
         public static final double targetLostWaitTime = 0.15;
         public static final double targetHeight = 2.6416;
@@ -54,6 +55,7 @@ public final class Constants {
         public static final double mountAngle = 40;
     }
 
+    /** shooting system constants */
     public static final class BigIronConstants {
         public static final int kDrumOneID = 11;
         public static final int kDrumTwoID = 12;
@@ -86,6 +88,7 @@ public final class Constants {
         public static final int kChannelIntakeBackwardVent = 4;
     }
 
+    /** the climbing constants */
     public static final class KenobiConstants {
         public static final int kChannelClimbIn = 1;
         public static final int kChannelClimbOut = 0;
@@ -96,6 +99,7 @@ public final class Constants {
         public static final int kElevatorUpperLimitDIOID = 2;
     }
 
+    /** Can IDs, PID values, ect. */
     public static final class DriveConstants {
         public static final int kFrontLeft = 2; // CAN (Spark)
         public static final int kFrontRight = 3; // CAN (Spark)
@@ -123,6 +127,9 @@ public final class Constants {
         public static final double kAutoDriveSmoothing = 0.06;
     }
 
+    /** the known values that the shooting code interpolates between 
+     * @author Carl C.
+    */
     public static final class ShooterData {
         /*
         The distance MUST be greater at higher indexes, and by GOD 

@@ -23,7 +23,9 @@ import frc.robot.Utils.Flags;
 
 import static frc.robot.Constants.ControllerConstants.*;
 
-/** Driver TeleOp Command */
+/** Driver TeleOp Command 
+ * @author Carl C.
+*/
 public class D_TeleOp extends CommandBase {
   private final DriveSubsystem _dss;
   private final Joystick _controller;
@@ -34,14 +36,13 @@ public class D_TeleOp extends CommandBase {
   private boolean highGear = false;
   private double rootDrive = 0;
 
-  /**
-   * Driver TeleOp Command
-   * 
-   * @param DSS  The drive subsystem used by this command.
-   * @param BSS the BigIron
-   * @param LLS  the hoop LL subsystem used by this command.
-   */
-
+/**
+ * Creates a Driver TeleOp command
+ * 
+ * @param DSS  The drive subsystem used by this command.
+ * @param BSS the BigIron
+ * @param LLS  the hoop LL subsystem used by this command.
+ */
   public D_TeleOp(DriveSubsystem DSS, LimeLightSubsystem LLS) {
     _dss = DSS;
     _lls = LLS;
@@ -65,16 +66,23 @@ public class D_TeleOp extends CommandBase {
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
+    //set flags
     Flags.hoopVisible = _lls.targetFound;
     Flags.complianceOverride = _controller.getRawButton(kRightBumper);
+
+    //driving logic, uses lerpA to smooth the drive 
     double controllerIn = _controller.getRawAxis(kLeftVertical);
     if (Math.abs(controllerIn) > Math.abs(rootDrive)) rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingAccelFactor);
     else rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingDecelFactor);
     rootTurn = -_controller.getRawAxis(kRightHorizontal);
+
+    // Change gear on left bumper
     if (_controller.getRawButtonPressed(kLeftBumper)) {
       highGear = !highGear;
       _dss.setHighGear(highGear);
     }
+
+    // logic for the alignment of the robot
     if (_lls.targetFound && hoopTargeted) {
       //_controller.setRumble(RumbleType.kRightRumble, 0.5);
       if (Math.abs(_lls.tx) > 1.2) {
@@ -90,6 +98,8 @@ public class D_TeleOp extends CommandBase {
     else {
       pid.reset();
     }
+
+    // set drive and distance flag
     _dss.arcadeDrive(rootDrive, rootTurn);
     if (_lls.targetFound) targetDistance = _lls.metersToTarget();
   }

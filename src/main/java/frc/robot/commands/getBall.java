@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BigIronSubsystem;
 
+/**Runs the intake and ball system until a new ball is collected
+ * @author Carl C.
+ */
 public class getBall extends CommandBase {
 
     private final BigIronSubsystem _bss;
@@ -12,8 +15,9 @@ public class getBall extends CommandBase {
     private final Timer timeOut = new Timer();
     private final double to;
     
-    /**@param angle angle set
-     * @param rel if true, angle set is relative
+    /**Creates a new getBall Instruction
+     * @param BSS The BigIron
+     * @param timeOut a timeout in case the ball isn't picked up
     */
     public getBall(BigIronSubsystem BSS, double timeOut) {
         _bss = BSS;
@@ -33,7 +37,7 @@ public class getBall extends CommandBase {
     } 
 
     @Override
-    public void execute() {
+    public void execute() { // run the systems until the ball count increases
         _bss.intakeDo(false);
         if (_bss.ballCount > iBallCount || _bss.ballOnTheWay) timer.start();
     }
@@ -47,6 +51,6 @@ public class getBall extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(0.2) || timeOut.hasElapsed(to);
+        return timer.hasElapsed(0.2) || timeOut.hasElapsed(to); // when the timer has reached either 0.2 or the timeout stop
     }
 }
