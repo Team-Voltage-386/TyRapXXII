@@ -9,7 +9,10 @@ import frc.robot.Utils;
 import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.Constants.DriveConstants.*;
 
-/** Drives the robot a set distance forward (note, distances here will NOT correspond to limelight distances, they are calibrated differently and neither is perfect meters) 
+/** Drives the robot a set distance (note, distances here will NOT correspond to limelight distances, they are calibrated differently and neither is perfect meters). 
+ * Also of note, this instruction only drives the robot until the odometry distance from start is correct, it holds the heading of the robot,
+ *  but does not drive to a specified point. If the robot is bumped, or experiences major drive error, even if only momentarily, the final position 
+ * can be affected drastically.
  * @author Carl C.
 */
 public class LinearDrive extends CommandBase {
@@ -80,8 +83,12 @@ public class LinearDrive extends CommandBase {
     public boolean isFinished() { // timer ensures the robot stops properly (smoothing is applied)
         return finTimer.hasElapsed(0.4);
     }
-
-    private double getDrivePower(double distErr) { // gets the drive error from the array of distances and powers, kinda like the shooter calibration
+    /**
+     * gets the drive error from the array of distances and powers, kinda like the shooter calibration
+     * @param distErr the difference between the distance from start and the instructed drive distance
+     * @return the strength with which to power the drive motors. -1 <-> 1
+     */
+    private double getDrivePower(double distErr) { 
         int ind = kDriveDistances.length-1;
         for (int i = 1; i < kDriveDistances.length; i++) if (distErr < kDriveDistances[i]) ind = i;
         double upper = kDriveDistances[ind];

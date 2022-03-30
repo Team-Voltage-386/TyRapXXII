@@ -46,7 +46,6 @@ public class ShootBall extends CommandBase {
         iBallCount = _bss.ballCount;
         _bss.fireTheBigIron = true;
         loaded = false;
-        //_bss.pidD.reset();
     } 
 
     @Override

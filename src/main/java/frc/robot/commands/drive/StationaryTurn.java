@@ -7,6 +7,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.Constants.DriveConstants.*;
 
+/**
+ * An instruction to rotate the robot
+ * @author Carl C.
+ */
 public class StationaryTurn extends CommandBase {
 
     private final DriveSubsystem _dss;
@@ -16,6 +20,13 @@ public class StationaryTurn extends CommandBase {
     private final Boolean relTurn;
     private double dir = 0;
 
+    /**
+     * Creates a new StationaryTurn instruction
+     * @param DSS The drivesubsystem
+     * @param value the number of degrees to rotate
+     * @param relativeTurn if true, will rotate this number of clockwise degrees from current heading, else will rotate to heading relative to 
+     * robot starting position
+     */
     public StationaryTurn(DriveSubsystem DSS,double value,Boolean relativeTurn) {
         relTurn = relativeTurn;
         angle = value;
@@ -24,10 +35,10 @@ public class StationaryTurn extends CommandBase {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() { // get start position and configure starting state
         pidt.reset();
         startPose = _dss.getPose();
-        if (relTurn) {
+        if (relTurn) { // calculate heading hold
             angle += startPose.getRotation().getDegrees();
             while (angle > 360) angle -= 360;
             while (angle < 0) angle += 360;
@@ -39,8 +50,6 @@ public class StationaryTurn extends CommandBase {
         double v = _dss.getHeadingError(angle);
         dir = v/Math.abs(v);
         double turn = MathUtil.clamp(pidt.calculate(v,0), -1*tC,tC) - (dir * 0.4);
-        //if (angle > 35) pidt.setI(0);
-        //else pidt.setI(tI);
         _dss.arcadeDrive(0.0, turn);
     }
 

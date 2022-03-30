@@ -25,7 +25,7 @@ public class SpoolDrum extends CommandBase {
 
     @Override
     public void initialize() {
-        _bss.intakeDo(_bss.intakeOut);
+        _bss.intakeUpdate(_bss.intakeOut);
         _bss.drumSP = target;
         _bss.fireTheBigIron = true;
         done = true;

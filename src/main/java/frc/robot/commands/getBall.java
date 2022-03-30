@@ -27,8 +27,7 @@ public class getBall extends CommandBase {
 
     @Override
     public void initialize() {
-        _bss.intakeDo(!_bss.intakeOut);
-        _bss.runIntake(true);
+        _bss.intakeUpdate(!_bss.intakeOut);
         iBallCount = _bss.ballCount;
         timer.stop();
         timer.reset();
@@ -38,13 +37,12 @@ public class getBall extends CommandBase {
 
     @Override
     public void execute() { // run the systems until the ball count increases
-        _bss.intakeDo(false);
+        _bss.intakeUpdate(false);
         if (_bss.ballCount > iBallCount || _bss.ballOnTheWay) timer.start();
     }
 
     @Override
     public void end(boolean interuppted) {
-        _bss.runIntake(false);
         timer.stop();
         timer.reset();
     }

@@ -185,7 +185,7 @@ public class BigIronSubsystem extends SubsystemBase {
      * @param b a toggle for the intake retract and deploy, meant to be used with controller.getRawButtonPressed(k);
      * @Usage bigIronSubSystem.intakeDo(controller.getRawButtonPressed(k));
      */
-    public void intakeDo(boolean b) {
+    public void intakeUpdate(boolean b) {
         if (b) {
             if (!intakeOut) {
                 intakeOut = true;
