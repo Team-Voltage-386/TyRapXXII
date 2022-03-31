@@ -45,7 +45,7 @@ public class RobotContainer {
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
   public final BigIronSubsystem bigIron = new BigIronSubsystem();
   private final KenobiSubsystem kenobi = new KenobiSubsystem();
-  public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight", Constants.LimeLightConstants.targetHeight, Constants.LimeLightConstants.mountAngle, Constants.LimeLightConstants.mountHeight, 0);
+  public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight", 0);
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;

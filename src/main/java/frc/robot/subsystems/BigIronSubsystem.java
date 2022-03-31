@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -258,17 +257,17 @@ public class BigIronSubsystem extends SubsystemBase {
     /** calibrate and control hood position */
     private void runHood() {
         if (calibrated) {
-            double control = MathUtil.clamp(hALG.get(hoodCurrentPosition, hoodSet), -1, 1);
+            double control = hALG.get(hoodCurrentPosition, hoodSet);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
             else {
                 hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing
-                pidH.reset();
+                hPID.reset();
                 hoodEncoder.reset();
             }
         } else { // if not calibrated run hood down until limit is triggered
             if (hoodLowLimit) {
                 calibrated = true;
-                pidH.reset();
+                hPID.reset();
                 hoodEncoder.reset();
             }
             else {
@@ -280,14 +279,11 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /** Update and run drum speed pid loops */
     private void runDrum() {
-        if (fireTheBigIron || drumIdle) {
-            double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, drumSP);
-            drumOneMotor.set(control);
-        } else if (ejectBall || eff) { // eject uses a constant
-            drumOneMotor.set(kDrumDirection*0.3);
-        } else {
+        if (fireTheBigIron || drumIdle) drumOneMotor.set(dALG.get(drumCurrentSpeed, drumSP));
+        else if (ejectBall || eff) drumOneMotor.set(kDrumEjectPower);
+        else {
             drumOneMotor.set(0);
-            pidD.reset();
+            dPID.reset();
         }
     }
 
