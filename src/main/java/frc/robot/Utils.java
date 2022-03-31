@@ -41,4 +41,8 @@ public class Utils {
         c = factor * c;
         return a + c;
     }
+
+    public static interface doubAlg {
+        double get(double d);
+    }
 }
