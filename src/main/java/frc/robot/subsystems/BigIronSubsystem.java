@@ -182,8 +182,7 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /**
      * Refresh the intake logic, sets intake in/out and controls compliance
-     * @param b a toggle for the intake retract and deploy, meant to be used with controller.getRawButtonPressed(k);
-     * @Usage bigIronSubSystem.intakeDo(controller.getRawButtonPressed(k));
+     * @param b a toggle for the intake retract and deploy, meant to be used with controller.getRawButtonPressed(k); inside the {@link frc.robot.commands.M_TeleOp} command
      */
     public void intakeUpdate(boolean b) {
         if (b) {
@@ -212,7 +211,7 @@ public class BigIronSubsystem extends SubsystemBase {
         else intakeMotor.set(0);
     }
 
-    // prepares ball chute for next shot
+    /**prepares ball chute for next shot*/
     public void reLoad() {
         ball1Col = ball2Col;
         if (ballCount > 1) {
@@ -301,7 +300,7 @@ public class BigIronSubsystem extends SubsystemBase {
     /** The most complex piece of code in the robot, is utterly absurd. Took forever to get working and 
      * is borderline black magic. This method controls how the feed belt is run and when. It also contains 
      * the logic that increases/decreases the ball count. Changing any part of this could completely 
-     * break the robot's ability to intake balls and shoot them. You've been warned.
+     * break the robot's ability to intake balls and shoot them.
      */
     private void runFeedBelt() {
         if (fireTheBigIron) { // if firing, run belt as long as the robot is ready to fire
@@ -389,13 +388,13 @@ public class BigIronSubsystem extends SubsystemBase {
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private final NetworkTableEntry mainDist = mainTab.add("dist",0).withPosition(5,0).withSize(1, 1).getEntry();
     private final NetworkTableEntry mainBC = mainTab.add("BallCount",0).withPosition(3,0).withSize(1,1).getEntry();
-    /** update the widgets */
+    /** update the widgets, by calling for the tab "Main" in each class everything ends up on the same shuffleboard tab*/
     private void updateWidgets() {
         mainDist.setDouble(Utils.Flags.targetDistance);
         mainBC.setDouble(ballCount);
     }
 
-    /** get the color of the ball; does not work with enough accuracy to be used; ball color isn't used anywhere
+    /** get the color of the ball; does not work with enough accuracy; ball color isn't used anywhere
      * @return a string for the color, "Blue" or "Red"
      */
     private String getColor() {
@@ -405,7 +404,7 @@ public class BigIronSubsystem extends SubsystemBase {
         return "Red";
     }
 
-    /** Sets the drum speed and hood position by interpolating between points in a database. 
+    /** Sets the drum speed and hood position by interpolating between points in the {@link ShooterData}. 
      * The key to TyRapXXII's shooter.
      * @param m the distance to the target in meters as reported by the limelight
      * @author Carl C.
@@ -446,7 +445,7 @@ public class BigIronSubsystem extends SubsystemBase {
     private Color col = null;
     boolean aniRunning = false;
     public boolean ledsOn = false;
-    /** it runs the animation for the leds, is kinda complicated and I don't feel like explaining it. In short 
+    /** it runs the animation for the leds. In short 
      * it simply steps through the color arrays, setting the color according to the animation progress. The 
      * animation progress is advanced every 0.3 seconds until it is finished. The color normally shows the number 
      * of balls in the robot, and does an alternating pattern when the climb is active. The Color changes according 

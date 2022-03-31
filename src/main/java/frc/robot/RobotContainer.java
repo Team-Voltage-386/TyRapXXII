@@ -90,8 +90,7 @@ public class RobotContainer {
   }
 
   /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
+   * Use this to pass the autonomous command to the main {@link Robot} class. 
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
@@ -103,10 +102,11 @@ public class RobotContainer {
     return new ParallelCommandGroup(driveTeleOp,manipTeleOp);
   }
 
-  /** All the autos are in this class for organization
+  /** All the auto routines are in this class for organization
    * @author Carl C.
    */
   private final class AutoRoutines {
+    /** drives off the tarmac, grabs the ball directly in front, and fires both.<p> As long as the shooter is calibrated this is fantastically reliable */
     public final Command basiciiBall = new SequentialCommandGroup(
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem, 1.5, 0, false,1),
@@ -117,6 +117,7 @@ public class RobotContainer {
       new StationaryTurn(driveSubSystem, 180, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
+    /** 3 ball auto from the primary starting position<p> does function assuming all else goes properly, cuts the time close */
     public final Command iiiBallA =new SequentialCommandGroup(
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem,1.5,0,false,1),
@@ -136,6 +137,7 @@ public class RobotContainer {
       new StationaryTurn(driveSubSystem, 170, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
+    /** A 4 ball auto from the primary starting position <p> needs human player interaction<p> will likely run out of time */
     public final Command ivBallA = new SequentialCommandGroup(
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem,1.5,0,false,1),
@@ -148,7 +150,7 @@ public class RobotContainer {
       new ShootBall(bigIron, driveSubSystem, LLSubsystem),
       new StationaryTurn(driveSubSystem, 14, false),
       new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem,3.2, 12,false,1),
+        new LinearDrive(driveSubSystem,3.24, 12,false,1),
         new getBall(bigIron,4)
       ),
       new getBall(bigIron,0.8),
@@ -156,6 +158,9 @@ public class RobotContainer {
       new StationaryTurn(driveSubSystem, 170, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
+    /** 4 ball from the starting position opposite the hangar, grabs all but the hangar ball and the human player's ball, 
+     * not functioning yet
+    */
     public final Command ivBallB = new SequentialCommandGroup(
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem, 1.25, 0, false, -1),
@@ -183,10 +188,12 @@ public class RobotContainer {
       new StationaryTurn(driveSubSystem, 50, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
+    /** waits 10 seconds and drives out of the tarmac */
     public final Command marRock = new SequentialCommandGroup(
       new Delay(10),
       new LinearDrive(driveSubSystem, 1.4, 0, false, 1)
     );
+    /** the robot drives forward, turns 180, drives back, then 180 again, used to test driving tuning */
     public final Command tuningTest = new ParallelCommandGroup(
       new SequentialCommandGroup(
         new LinearDrive(driveSubSystem, 2, 0, false,1),
@@ -196,6 +203,7 @@ public class RobotContainer {
       ),
       new BigIronIdle(bigIron)
     );
+    /** simply fires, change the values in the shootballman instruction to test settings */
     public final Command shootTest = new SequentialCommandGroup(
       new Delay(2),
       new getBall(bigIron,2),

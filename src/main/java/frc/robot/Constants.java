@@ -122,7 +122,7 @@ public final class Constants {
         public static final double kAutoDriveSmoothing = 0.06;
     }
 
-    /** the known values that the shooting code interpolates between 
+    /** the known values that the shooting code in the {@link frc.robot.subsystems.BigIronSubsystem} interpolates between 
      * @author Carl C.
     */
     public static final class ShooterData {
@@ -137,4 +137,3 @@ public final class Constants {
         public static final double[] hoodPositions = {0.005,0.006,0.022,0.03,0.1,0.2,0.15,0.17,0.25, 0.22, 0.3};
     }
 }
-

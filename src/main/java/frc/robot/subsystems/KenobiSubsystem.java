@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 //GAIN THE HIGH GROUND
 package frc.robot.subsystems;
 
@@ -13,6 +10,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.KenobiConstants.*;
 
+/**
+ * The climbing subsystem
+ * @author Max V.
+ */
 public class KenobiSubsystem extends SubsystemBase {
   // motors
   private final CANSparkMax elevatorLeader = new CANSparkMax(kElevatorLeaderID, MotorType.kBrushless);
@@ -32,7 +33,7 @@ public class KenobiSubsystem extends SubsystemBase {
     elevatorUpperLimitFlag = !elevatorUpperLimitSensor.get();
   }
 
-  /** Creates a new Kenobi. */
+  /** Creates a new Kenobi subsystem */
   public KenobiSubsystem() {
     elevatorFollower.follow(elevatorLeader);
     calibrated = false;
@@ -62,6 +63,10 @@ public class KenobiSubsystem extends SubsystemBase {
     } else elevatorLeader.set(-0.2);
   }
 
+  /**
+   * Reads from the elevator encoder 
+   * @return the encoder position
+   */
   public RelativeEncoder getEnc() {
     return elevatorLeader.getEncoder();
   }

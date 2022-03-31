@@ -49,17 +49,17 @@ public class StationaryTurn extends CommandBase {
     public void execute() {
         double v = _dss.getHeadingError(angle);
         dir = v/Math.abs(v);
-        double turn = MathUtil.clamp(pidt.calculate(v,0), -1*tC,tC) - (dir * 0.4);
+        double turn = MathUtil.clamp(pidt.calculate(v,0), -1*tC,tC) - (dir * 0.4); // uses 0.4 as minimum turn speed I think
         _dss.arcadeDrive(0.0, turn);
     }
 
     @Override
     public void end(boolean interuppted) {
-        _dss.arcadeDrive(0.0, 0.0);
+        _dss.arcadeDrive(0.0, 0.0); // stop the drives
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(_dss.getHeadingError(angle)) < 0.5 && _dss.getRotationSpeed() < 10;
+        return Math.abs(_dss.getHeadingError(angle)) < 0.5 && _dss.getRotationSpeed() < 10; // finishes when the angle is within 0.5 and the robot is not rotating too quickly
     }
 }
