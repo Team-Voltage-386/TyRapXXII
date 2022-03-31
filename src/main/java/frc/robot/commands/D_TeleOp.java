@@ -78,7 +78,7 @@ public class D_TeleOp extends CommandBase {
       //_controller.setRumble(RumbleType.kRightRumble, 0.5);
       if (Math.abs(_lls.tx) > 1.2) {
         hoopLocked = false;
-        rootTurn = MathUtil.clamp(pid.calculate(_lls.tx), -tC, tC);
+        rootTurn = MathUtil.clamp(pid.calculate(_lls.tx), -tC, tC); // maybe pids with clamps could be a functional interface?
       }
       else {
         pid.reset();
