@@ -21,7 +21,6 @@ public class D_TeleOp extends CommandBase {
   private final DriveSubsystem _dss;
   private final Joystick _controller;
   private final LimeLightSubsystem _lls;
-  private final PIDController pid = new PIDController(ltP, ltI, ltD);
   private double rootTurn;
   public Boolean ballFound = false;
   private boolean highGear = false;
@@ -48,7 +47,7 @@ public class D_TeleOp extends CommandBase {
   public void initialize() {
     rootDrive = 0;
     rootTurn = 0;
-    pid.setTolerance(1, 1);
+    ltPID.setTolerance(1, 1);
     _dss.setHighGear(false);
     //_lls.setPipeLine(0);
     //_lls.lights(true);
@@ -78,16 +77,16 @@ public class D_TeleOp extends CommandBase {
       //_controller.setRumble(RumbleType.kRightRumble, 0.5);
       if (Math.abs(_lls.tx) > 1.2) {
         hoopLocked = false;
-        rootTurn = MathUtil.clamp(pid.calculate(_lls.tx), -tC, tC); // maybe pids with clamps could be a functional interface?
+        rootTurn = ltALG.get(_lls.tx);
       }
       else {
-        pid.reset();
+        ltPID.reset();
         hoopLocked = true;
         rootTurn = 0;
       }
     } 
     else {
-      pid.reset();
+      ltPID.reset();
     }
 
     // set drive and distance flag

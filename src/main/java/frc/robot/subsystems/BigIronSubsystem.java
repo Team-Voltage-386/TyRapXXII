@@ -50,10 +50,6 @@ public class BigIronSubsystem extends SubsystemBase {
     private final static Value kGo = Value.kForward;
     private final static Value kVent = Value.kReverse;
 
-    // PID Controllers
-    private final PIDController pidH = new PIDController(HP, HI, HD);
-    public final PIDController pidD = new PIDController(DP, DI, DD);
-
     // Sensors
     private final DigitalInput breachSensor = new DigitalInput(kBreachSensorPin);
     private final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
@@ -94,8 +90,8 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /** Creates a BigIronSubsystem */
     public BigIronSubsystem() {
-        pidD.reset();
-        pidH.reset();
+        dPID.reset();
+        hPID.reset();
         hoodMotor.configNeutralDeadband(0);
         intakeOut = false;
 
@@ -138,8 +134,8 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /** blanket reset */
     public void reset() {
-        pidD.reset();
-        pidH.reset();
+        dPID.reset();
+        hPID.reset();
         beltTimer.stop();
         beltTimer.reset();
         ejectTimer.stop();
@@ -262,7 +258,7 @@ public class BigIronSubsystem extends SubsystemBase {
     /** calibrate and control hood position */
     private void runHood() {
         if (calibrated) {
-            double control = MathUtil.clamp(pidH.calculate(hoodCurrentPosition, hoodSet), -1, 1);
+            double control = MathUtil.clamp(hALG.get(hoodCurrentPosition, hoodSet), -1, 1);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
             else {
                 hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing

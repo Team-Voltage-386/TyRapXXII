@@ -43,6 +43,10 @@ public class Utils {
     }
 
     public static interface doubAlg {
-        double get(double d);
+        double get(double a);
+    }
+
+    public static interface doubAlgB {
+        double get(double a, double b);
     }
 }

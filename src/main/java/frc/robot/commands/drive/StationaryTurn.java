@@ -1,7 +1,5 @@
 package frc.robot.commands.drive;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
@@ -14,11 +12,8 @@ import static frc.robot.Constants.DriveConstants.*;
 public class StationaryTurn extends CommandBase {
 
     private final DriveSubsystem _dss;
-    private final PIDController pidt = new PIDController(tP,tI,tD);
-    private Pose2d startPose = new Pose2d();
     private double angle;
     private final Boolean relTurn;
-    private double dir = 0;
 
     /**
      * Creates a new StationaryTurn instruction
@@ -35,11 +30,10 @@ public class StationaryTurn extends CommandBase {
     }
 
     @Override
-    public void initialize() { // get start position and configure starting state
-        pidt.reset();
-        startPose = _dss.getPose();
+    public void initialize() { // configure starting state
+        tPID.reset();
         if (relTurn) { // calculate heading hold
-            angle += startPose.getRotation().getDegrees();
+            angle += _dss.getPose().getRotation().getDegrees();
             while (angle > 360) angle -= 360;
             while (angle < 0) angle += 360;
         }
@@ -47,10 +41,7 @@ public class StationaryTurn extends CommandBase {
 
     @Override
     public void execute() {
-        double v = _dss.getHeadingError(angle);
-        dir = v/Math.abs(v);
-        double turn = MathUtil.clamp(pidt.calculate(v,0), -1*tC,tC) - (dir * 0.4); // uses 0.4 as minimum turn speed I think
-        _dss.arcadeDrive(0.0, turn);
+        _dss.arcadeDrive(0.0, tsALG.get(_dss.getHeadingError(angle)));
     }
 
     @Override
