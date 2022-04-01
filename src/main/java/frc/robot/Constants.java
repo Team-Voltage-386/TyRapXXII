@@ -101,8 +101,8 @@ public final class Constants {
         public static final int kRearLeft = 4; // CAN (Spark)
         public static final int kRearRight = 5; // CAN (Spark)
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
-        public static final int shiftUp = 2;
-        public static final int shiftDown = 3;
+        public static final int kShiftUp = 2;
+        public static final int kShiftDown = 3;
         public static final double kSmoothingAccelFactor = 0.13;
         public static final double kSmoothingDecelFactor = 0.02;
         public static final double kMaxDownshiftPower = 0.35;
@@ -132,7 +132,7 @@ public final class Constants {
         Satan himself will reject you to be abandoned in the Endless Sea
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
-        public static final double[] distances = {1.1074,1.55,2,2.16,2.7,3,3.47,3.97, 4.39, 4.605,5.8};
+        public static final double[] distances = {1.1074, 1.55, 2, 2.16, 2.7, 3, 3.47,3.97, 4.39, 4.605, 5.8};
         public static final int[] drumSpeeds = {2450,2560,2700,2800,2900,3000,3100,3250, 3500, 3970, 4000};
         public static final double[] hoodPositions = {0.005,0.006,0.022,0.03,0.1,0.2,0.15,0.17,0.25, 0.22, 0.3};
     }

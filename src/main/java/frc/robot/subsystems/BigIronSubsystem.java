@@ -316,7 +316,6 @@ public class BigIronSubsystem extends SubsystemBase {
                 }
                 beltMotor.set(ControlMode.PercentOutput, 0);
             } else { // if a ball is on the way, run it up until the breach sensor is triggered
-                runIntake(true);
                 beltMotor.set(ControlMode.PercentOutput, kBeltPower);
                 if (breachSensorFlag || beltTimer.hasElapsed(5)) {
                     beltTimer.stop();
