@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import frc.robot.Utils;
 import frc.robot.Constants.ShooterData;
 import frc.robot.Utils.Flags;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
@@ -26,7 +25,6 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.util.Color;
-
 import static frc.robot.Constants.BigIronConstants.*;
 
 /**
