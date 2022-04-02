@@ -101,8 +101,8 @@ public final class Constants {
         public static final int kRearLeft = 4; // CAN (Spark)
         public static final int kRearRight = 5; // CAN (Spark)
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
-        public static final int kShiftUp = 2;
-        public static final int kShiftDown = 3;
+        public static final int kShiftUp = 1;
+        public static final int kShiftDown = 2;
         public static final double kSmoothingAccelFactor = 0.13;
         public static final double kSmoothingDecelFactor = 0.02;
         public static final double kMaxDownshiftPower = 0.35;
