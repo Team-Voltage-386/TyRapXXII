@@ -40,7 +40,7 @@ public class M_TeleOp extends CommandBase { // if M_TeleOp has a red line under 
     climbActive = false;
     _bss.drumIdle = false;
     sentUp = true; // I thought this was set false at init? idk why it works if this is true
-    //_bss.intakeUpdate(!_bss.intakeOut);
+    _bss.intakeUpdate(!_bss.intakeOut);
   }
 
   /** Called every time the scheduler runs while the command is scheduled. */
