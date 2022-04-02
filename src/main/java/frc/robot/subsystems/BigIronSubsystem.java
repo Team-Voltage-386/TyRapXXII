@@ -269,7 +269,7 @@ public class BigIronSubsystem extends SubsystemBase {
                 hoodEncoder.reset();
             }
             else {
-                hoodMotor.set(ControlMode.PercentOutput, -0.9);
+                hoodMotor.set(ControlMode.PercentOutput, -0.55);
             }
         }
         //hoodMotor.set(ControlMode.PercentOutput, 0);

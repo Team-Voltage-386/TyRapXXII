@@ -7,6 +7,7 @@ package frc.robot;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import static frc.robot.Utils.*;
@@ -82,7 +83,7 @@ public final class Constants {
 
         public static final PIDController hPID = new PIDController(50, 0.85, 0);
         public static final doubAlgB hALG = hPID::calculate;
-        public static final PIDController dPID = new PIDController(0.0002, 0.00068, 0.000022);
+        public static final PIDController dPID = new PIDController(0.0003, 0.001, 0.00001);
         public static final doubAlgB dALG = (double pv, double sp) -> {return -1 * dPID.calculate(pv, sp);};
     }
 
@@ -110,15 +111,16 @@ public final class Constants {
         public static final double kSmoothingDecelFactor = 0.02;
         public static final double kMaxDownshiftPower = 0.35;
         public static final double kMPR = 0.0207;// meters per revolution
+        public static final double kMPRH = 0.07;
         public static final int kGyro = 10;
 
         public static final double[] kDriveDistances = {0,1,2,3,4,30};
-        public static final double[] kDrivePowers = {0.0,0.12,0.65,0.9,1,1};
+        public static final double[] kDrivePowers = {0.0,0.12,0.9,1,1,1};
         public static final double kAutoDriveSmoothing = 0.06;
 
 
         // ahhh idek what im doing
-        public static final PIDController ltPID = new PIDController(0.018, 0.058, 0.0055);
+        public static final PIDController ltPID = new PIDController(0.02, 0.085, 0.0065);
         public static final doubAlg ltALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65,0.65);};
         public static final PIDController tPID = new PIDController(0.019, 0.0019, 0.0028);
         public static final doubAlg tALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65, 0.65);};
@@ -127,6 +129,8 @@ public final class Constants {
             return MathUtil.clamp(tPID.calculate(pv), -0.65, 0.65) - (dir*0.4);
         };
     }
+
+
 
     /** the known values that the shooting code in the {@link frc.robot.subsystems.BigIronSubsystem} interpolates between 
      * @author Carl C.

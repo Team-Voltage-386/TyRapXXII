@@ -23,14 +23,10 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 public class DriveSubsystem extends SubsystemBase {
 
         // initialize motors and drivetrain
-        public final CANSparkMax frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,
-                        MotorType.kBrushless);
-        public final CANSparkMax frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight,
-                        MotorType.kBrushless);
-        public final CANSparkMax rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft,
-                        MotorType.kBrushless);
-        public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
-                        MotorType.kBrushless);
+        public final CANSparkMax frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft, MotorType.kBrushless);
+        public final CANSparkMax frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight, MotorType.kBrushless);
+        public final CANSparkMax rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft, MotorType.kBrushless);
+        public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight, MotorType.kBrushless);
         public final DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
         private final DoubleSolenoid shifter = new DoubleSolenoid(2, solenoidType, kShiftUp, kShiftDown);
         // Sensor instantiations
@@ -105,8 +101,16 @@ public class DriveSubsystem extends SubsystemBase {
          * @param t true = high, false = low
          */
         public void setHighGear(Boolean t) {
-                if (!t) shifter.set(DoubleSolenoid.Value.kReverse);
-                else shifter.set(DoubleSolenoid.Value.kForward);
+                if (!t) {
+                        shifter.set(DoubleSolenoid.Value.kReverse);
+                        leftEncoder.setPositionConversionFactor(kMPR);
+                        rightEncoder.setPositionConversionFactor(kMPR);
+                }
+                else {
+                        shifter.set(DoubleSolenoid.Value.kForward);
+                        leftEncoder.setPositionConversionFactor(kMPRH);
+                        rightEncoder.setPositionConversionFactor(kMPRH);
+                }
         }
 
         /** get the position from the odometery position

@@ -78,10 +78,11 @@ public class D_TeleOp extends CommandBase {
         rootTurn = ltALG.get(_lls.tx);
       }
       else {
-        ltPID.reset();
+        
         hoopLocked = true;
         rootTurn = 0;
       }
+      if (Math.abs(_lls.tx) < 0.9) ltPID.reset();
     } 
     else {
       ltPID.reset();

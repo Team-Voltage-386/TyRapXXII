@@ -22,6 +22,7 @@ import frc.robot.commands.ShootBall;
 import frc.robot.commands.ShootBallMan;
 import frc.robot.commands.getBall;
 import frc.robot.commands.drive.LinearDrive;
+import frc.robot.commands.drive.LinearDriveHigh;
 import frc.robot.commands.drive.StationaryTurn;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -196,9 +197,9 @@ public class RobotContainer {
     /** the robot drives forward, turns 180, drives back, then 180 again, used to test driving tuning */
     public final Command tuningTest = new ParallelCommandGroup(
       new SequentialCommandGroup(
-        new LinearDrive(driveSubSystem, 2, 0, false,1),
+        new LinearDriveHigh(driveSubSystem, 2, 0, false,1),
         new StationaryTurn(driveSubSystem, 180, false),
-        new LinearDrive(driveSubSystem, 2, 180, false,1),
+        new LinearDrive(driveSubSystem, 3, 180, false,1),
         new StationaryTurn(driveSubSystem, 0, false)
       ),
       new BigIronIdle(bigIron)
