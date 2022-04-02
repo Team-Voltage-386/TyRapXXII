@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Utils;
@@ -10,6 +9,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 
 import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.BigIronConstants.*;
 
 /**
  * Shoots a ball at manually specified settings
@@ -20,7 +20,6 @@ public class ShootBallMan extends CommandBase {
     private final BigIronSubsystem _bss;
     private final DriveSubsystem _dss;
     private final LimeLightSubsystem _lls;
-    private final PIDController pidt = new PIDController(ltP,ltI,ltD);
     private int iBallCount = 0;
     private int ballShot = 0;
     boolean loaded = false;
@@ -53,7 +52,8 @@ public class ShootBallMan extends CommandBase {
         _lls.lights(true);
         loaded = false;
         ballShot = 0;
-        _bss.pidD.reset();
+        dPID.reset();
+        ltPID.reset();
     } 
 
     @Override
@@ -73,7 +73,7 @@ public class ShootBallMan extends CommandBase {
             loaded = false;
             ballShot++;
         }
-        _dss.arcadeDrive(0.0, pidt.calculate(_lls.tx)); // aim
+        _dss.arcadeDrive(0.0, ltALG.get(_lls.tx)); // aim
     }
 
     @Override

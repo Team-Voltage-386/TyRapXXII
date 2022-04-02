@@ -5,8 +5,11 @@
 package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import static frc.robot.Utils.*;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -48,19 +51,21 @@ public final class Constants {
         public static final double targetHeight = 2.6416;
         public static final double mountHeight = 0.95;
         public static final double mountAngle = 40;
+        /** the math for calculating the distance to the target */
+        public static final doubAlg distALG = (double ty) -> {return (targetHeight-mountHeight)/Math.tan(Math.PI*((mountAngle+ty)/180));};
     }
 
     /** shooting system constants */
     public static final class BigIronConstants {
         public static final int kDrumOneID = 11;
         public static final int kDrumTwoID = 12;
-        public static final int kDrumDirection = -1;
         public static final int kDrumIdleSpeed = 2200;
         public static final int kDrumSpeedTolerance = 35;
         public static final int kHoodDownLimitPin = 9;
         public static final int kBreachSensorPin = 0;
         public static final int kIntakeColorSensorThreshold = 140;
         public static final double kHoodPositionTolerance = 0.004;
+        public static final double kDrumEjectPower = -0.3;
         public static final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
         public static final int kIntakeID = 30;
         public static final int kHoodID = 31;
@@ -70,17 +75,15 @@ public final class Constants {
         public static final double kIntakeReversePower = 0.2;
         public static final double kBeltReversePower = 0.5;
         public static final double kBeltPower = -0.9;
-        public static final double HP = 50;
-        public static final double HI = 0.85;
-        public static final double HD = 0;
-        public static final double HC = 1;
-        public static final double DP = 0.0002;
-        public static final double DI = 0.00068;
-        public static final double DD = 0.000022;
         public static final int kChannelIntakeForwardGo = 7;
         public static final int kChannelIntakeForwardVent = 5;
         public static final int kChannelIntakeBackwardGo = 6;
         public static final int kChannelIntakeBackwardVent = 4;
+
+        public static final PIDController hPID = new PIDController(50, 0.85, 0);
+        public static final doubAlgB hALG = hPID::calculate;
+        public static final PIDController dPID = new PIDController(0.0002, 0.00068, 0.000022);
+        public static final doubAlgB dALG = (double pv, double sp) -> {return -1 * dPID.calculate(pv, sp);};
     }
 
     /** the climbing constants */
@@ -101,25 +104,28 @@ public final class Constants {
         public static final int kRearLeft = 4; // CAN (Spark)
         public static final int kRearRight = 5; // CAN (Spark)
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
-        public static final int kShiftUp = 1;
-        public static final int kShiftDown = 2;
+        public static final int shiftUp = 1;
+        public static final int shiftDown = 2;
         public static final double kSmoothingAccelFactor = 0.13;
         public static final double kSmoothingDecelFactor = 0.02;
         public static final double kMaxDownshiftPower = 0.35;
         public static final double kMPR = 0.0207;// meters per revolution
         public static final int kGyro = 10;
 
-        public static final double ltP = 0.018;
-        public static final double ltI = 0.058;
-        public static final double ltD = 0.0055;
-
-        public static final double tP = 0.019;// P
-        public static final double tI = 0.0019;// I
-        public static final double tD = 0.0028;// D
-        public static final double tC = 0.65;// Clamp //t and d are two different PID controllers
         public static final double[] kDriveDistances = {0,1,2,3,4,30};
         public static final double[] kDrivePowers = {0.0,0.12,0.65,0.9,1,1};
         public static final double kAutoDriveSmoothing = 0.06;
+
+
+        // ahhh idek what im doing
+        public static final PIDController ltPID = new PIDController(0.018, 0.058, 0.0055);
+        public static final doubAlg ltALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65,0.65);};
+        public static final PIDController tPID = new PIDController(0.019, 0.0019, 0.0028);
+        public static final doubAlg tALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65, 0.65);};
+        public static final doubAlg tsALG = pv -> {
+            double dir = pv/Math.abs(pv);
+            return MathUtil.clamp(tPID.calculate(pv), -0.65, 0.65) - (dir*0.4);
+        };
     }
 
     /** the known values that the shooting code in the {@link frc.robot.subsystems.BigIronSubsystem} interpolates between 

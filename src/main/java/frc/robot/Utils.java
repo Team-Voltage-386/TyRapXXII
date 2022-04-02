@@ -9,7 +9,7 @@ public class Utils {
         /** communicates whether or not the robot is lined up for the shot */
         public static boolean hoopLocked = false;
         /** communicates the distance to the target */
-        public static double targetDistance = 9999;
+        public static double targetDistance = 3;
         /** allows the driver to override the compliance in the manipulator's code */
         public static boolean complianceOverride = false;
         /** communicates whether or not the target is visible */
@@ -43,6 +43,10 @@ public class Utils {
     }
 
     public static interface doubAlg {
-        double get(double d);
+        double get(double a);
+    }
+
+    public static interface doubAlgB {
+        double get(double a, double b);
     }
 }

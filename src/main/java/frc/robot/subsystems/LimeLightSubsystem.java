@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LimeLightConstants;
+import static frc.robot.Constants.LimeLightConstants.*;
 
 /**2022 LimeLight Code
  * @author Carl C.
@@ -23,9 +24,6 @@ public class LimeLightSubsystem extends SubsystemBase {
   public float tx = 0;
   /** target up/down angle */
   public float ty = 0;
-  private final double _TH;
-  private final double _MA;
-  private final double _MH;
   private final  Timer timer = new Timer();
 
   /**Create A LimeLight Object
@@ -35,11 +33,8 @@ public class LimeLightSubsystem extends SubsystemBase {
    * @param mountHeight the height of the LimeLight off the ground
    * @param pl the default pipeline to be used
   */
-  public LimeLightSubsystem(String hostName, double targetHeight, double mountAngle, double mountHeight, int pl) {
+  public LimeLightSubsystem(String hostName, int pl) {
       _nt = NetworkTableInstance.getDefault().getTable(hostName);
-      _TH = targetHeight;
-      _MA = mountAngle;
-      _MH = mountHeight;
       setPipeLine(pl);
       driverMode(false);
       timer.start();
@@ -87,7 +82,7 @@ public class LimeLightSubsystem extends SubsystemBase {
 
   /**Returns the meters to the target given the target's height from the ground*/
   public double metersToTarget() {
-    return (_TH-_MH)/Math.tan(Math.PI*((_MA+ty)/180));
+    return distALG.get(ty);
   }
 
   /** turn  */

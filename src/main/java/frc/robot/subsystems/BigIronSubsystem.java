@@ -3,14 +3,12 @@ package frc.robot.subsystems;
 import frc.robot.Utils;
 import frc.robot.Constants.ShooterData;
 import frc.robot.Utils.Flags;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -27,7 +25,6 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.util.Color;
-
 import static frc.robot.Constants.BigIronConstants.*;
 
 /**
@@ -49,10 +46,6 @@ public class BigIronSubsystem extends SubsystemBase {
     private final DoubleSolenoid intakeBackward = new DoubleSolenoid(2, PneumaticsModuleType.CTREPCM, kChannelIntakeBackwardGo, kChannelIntakeBackwardVent);
     private final static Value kGo = Value.kForward;
     private final static Value kVent = Value.kReverse;
-
-    // PID Controllers
-    private final PIDController pidH = new PIDController(HP, HI, HD);
-    public final PIDController pidD = new PIDController(DP, DI, DD);
 
     // Sensors
     private final DigitalInput breachSensor = new DigitalInput(kBreachSensorPin);
@@ -94,8 +87,8 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /** Creates a BigIronSubsystem */
     public BigIronSubsystem() {
-        pidD.reset();
-        pidH.reset();
+        dPID.reset();
+        hPID.reset();
         hoodMotor.configNeutralDeadband(0);
         intakeOut = false;
 
@@ -138,8 +131,8 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /** blanket reset */
     public void reset() {
-        pidD.reset();
-        pidH.reset();
+        dPID.reset();
+        hPID.reset();
         beltTimer.stop();
         beltTimer.reset();
         ejectTimer.stop();
@@ -262,17 +255,17 @@ public class BigIronSubsystem extends SubsystemBase {
     /** calibrate and control hood position */
     private void runHood() {
         if (calibrated) {
-            double control = MathUtil.clamp(pidH.calculate(hoodCurrentPosition, hoodSet), -1, 1);
+            double control = hALG.get(hoodCurrentPosition, hoodSet);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
             else {
                 hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing
-                pidH.reset();
+                hPID.reset();
                 hoodEncoder.reset();
             }
         } else { // if not calibrated run hood down until limit is triggered
             if (hoodLowLimit) {
                 calibrated = true;
-                pidH.reset();
+                hPID.reset();
                 hoodEncoder.reset();
             }
             else {
@@ -284,14 +277,11 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /** Update and run drum speed pid loops */
     private void runDrum() {
-        if (fireTheBigIron || drumIdle) {
-            double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, drumSP);
-            drumOneMotor.set(control);
-        } else if (ejectBall || eff) { // eject uses a constant
-            drumOneMotor.set(kDrumDirection*0.3);
-        } else {
+        if (fireTheBigIron || drumIdle) drumOneMotor.set(dALG.get(drumCurrentSpeed, drumSP));
+        else if (ejectBall || eff) drumOneMotor.set(kDrumEjectPower);
+        else {
             drumOneMotor.set(0);
-            pidD.reset();
+            dPID.reset();
         }
     }
 

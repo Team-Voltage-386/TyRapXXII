@@ -21,7 +21,7 @@ public class KenobiSubsystem extends SubsystemBase {
 
   // sensors
   private final DigitalInput elevatorLowerLimitSensor = new DigitalInput(kElevatorLowerLimitDIOID);
-  private final DigitalInput elevatorUpperLimitSensor = new DigitalInput(kElevatorUpperLimitDIOID);
+  private final DigitalInput elevatorUpperLimitSensor = new DigitalInput(kElevatorUpperLimitDIOID); 
 
   // booleans, since DIOs are inverted when you get them
   private boolean calibrated = false;

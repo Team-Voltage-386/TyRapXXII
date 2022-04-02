@@ -1,7 +1,5 @@
 package frc.robot.commands.drive;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -18,7 +16,6 @@ import static frc.robot.Constants.DriveConstants.*;
 public class LinearDrive extends CommandBase {
 
     private final DriveSubsystem _dss;
-    private final PIDController pidt = new PIDController(tP,tI,tD);
     private Pose2d startPose = new Pose2d();
     private double headingHold = 0;
     private double distanceFromStart = 0;
@@ -49,7 +46,7 @@ public class LinearDrive extends CommandBase {
     @Override
     public void initialize() {
         _dss.setHighGear(false); // checks low gear and resets systems
-        pidt.reset();
+        tPID.reset();
         startPose = _dss.getPose();
         drive = 0;
         finTimer.stop();
@@ -71,7 +68,7 @@ public class LinearDrive extends CommandBase {
             drive = Utils.lerpA(drive, -1*getDrivePower(targetDistance-distanceFromStart), kAutoDriveSmoothing);
             finTimer.reset();
         }
-        _dss.arcadeDrive(drive*d, MathUtil.clamp(pidt.calculate(_dss.getHeadingError(headingHold),0), -1*tC,tC));
+        _dss.arcadeDrive(drive*d, tALG.get(_dss.getHeadingError(headingHold)));
     }
 
     @Override

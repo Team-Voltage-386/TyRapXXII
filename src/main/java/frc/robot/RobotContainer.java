@@ -45,7 +45,7 @@ public class RobotContainer {
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
   public final BigIronSubsystem bigIron = new BigIronSubsystem();
   private final KenobiSubsystem kenobi = new KenobiSubsystem();
-  public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight", Constants.LimeLightConstants.targetHeight, Constants.LimeLightConstants.mountAngle, Constants.LimeLightConstants.mountHeight, 0);
+  public final LimeLightSubsystem LLSubsystem = new LimeLightSubsystem("limelight", 0);
 
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
@@ -69,8 +69,8 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Basic 2 Ball", autos.basiciiBall);
     autoChooser.addOption("3 Ball A", autos.iiiBallA);
     autoChooser.addOption("4 Ball B", autos.ivBallB);
-    //autoChooser.addOption("TuningTest", autos.tuningTest);
-    //autoChooser.addOption("ShooterTest", autos.shootTest);
+    autoChooser.addOption("TuningTest", autos.tuningTest);
+    autoChooser.addOption("ShooterTest", autos.shootTest);
     autoChooser.addOption("MartianRock", autos.marRock);
     autoChooser.addOption("4 Ball A (HP)", autos.ivBallA);
     mainTab.add("AutoRoutine",autoChooser).withPosition(0,0).withSize(3,1);
@@ -111,8 +111,8 @@ public class RobotContainer {
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem, 1.5, 0, false,1),
         new SequentialCommandGroup(
-          new getBall(bigIron,3),
-          new getBall(bigIron,3))
+          new getBall(bigIron,3), 
+          new getBall(bigIron,3)) 
           ),
       new StationaryTurn(driveSubSystem, 180, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
