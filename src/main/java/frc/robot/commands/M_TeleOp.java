@@ -40,7 +40,7 @@ public class M_TeleOp extends CommandBase { // if M_TeleOp has a red line under 
     climbActive = false;
     _bss.drumIdle = false;
     sentUp = true; // I thought this was set false at init? idk why it works if this is true
-    _bss.intakeDo(!_bss.intakeOut);
+    //_bss.intakeUpdate(!_bss.intakeOut);
   }
 
   /** Called every time the scheduler runs while the command is scheduled. */
@@ -48,8 +48,7 @@ public class M_TeleOp extends CommandBase { // if M_TeleOp has a red line under 
   public void execute() {
     // Control Logic
     if(_controller.getRawButtonPressed(kA)) _bss.drumIdle = !_bss.drumIdle; // toggle drum idle
-    _bss.runIntake(_controller.getRawAxis(kRightTrigger) > 0.3); // turn intake on/off (Deprecated, does nothing)
-    _bss.intakeDo(_controller.getRawButtonPressed(kRightBumper)); // deploy/retract/release intake
+    _bss.intakeUpdate(_controller.getRawButtonPressed(kRightBumper)); // deploy/retract/release intake
     if (_controller.getRawButtonPressed(kLeftJoystickPressed)) _bss.ejectBall = !_bss.ejectBall; // toggle eject
     if (_controller.getRawButtonReleased(kLeftBumper)) { // when firing is finished
       _bss.ballCount = 1;
@@ -85,6 +84,6 @@ public class M_TeleOp extends CommandBase { // if M_TeleOp has a red line under 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    _bss.intakeDo(_bss.intakeOut);
+    _bss.intakeUpdate(_bss.intakeOut);
   }
 }

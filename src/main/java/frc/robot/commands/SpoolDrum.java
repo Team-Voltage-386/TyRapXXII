@@ -1,11 +1,7 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BigIronSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import static frc.robot.Constants.DriveConstants.*;
 
 public class SpoolDrum extends CommandBase {
 
@@ -25,7 +21,7 @@ public class SpoolDrum extends CommandBase {
 
     @Override
     public void initialize() {
-        _bss.intakeDo(_bss.intakeOut);
+        _bss.intakeUpdate(_bss.intakeOut);
         _bss.drumSP = target;
         _bss.fireTheBigIron = true;
         done = true;

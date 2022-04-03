@@ -1,48 +1,39 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 //GAIN THE HIGH GROUND
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.KenobiConstants.*;
 
+/**
+ * The climbing subsystem
+ * @author Max V.
+ */
 public class KenobiSubsystem extends SubsystemBase {
   // motors
   private final CANSparkMax elevatorLeader = new CANSparkMax(kElevatorLeaderID, MotorType.kBrushless);
   private final CANSparkMax elevatorFollower = new CANSparkMax(kElevatorFollowerID, MotorType.kBrushless);
 
   // sensors
-  private final DigitalInput pneumaticsLimitSensor = new DigitalInput(kPneumaticsDIOID);
   private final DigitalInput elevatorLowerLimitSensor = new DigitalInput(kElevatorLowerLimitDIOID);
-  private final DigitalInput elevatorUpperLimitSensor = new DigitalInput(kElevatorUpperLimitDIOID);
+  private final DigitalInput elevatorUpperLimitSensor = new DigitalInput(kElevatorUpperLimitDIOID); 
 
   // booleans, since DIOs are inverted when you get them
-  private boolean pneumaticsLimitBoolean = false;
   private boolean calibrated = false;
   public boolean elevatorLowLimitFlag = false;
   public boolean elevatorUpperLimitFlag = false;
 
   private void updateSensors() {
-    pneumaticsLimitBoolean = !pneumaticsLimitSensor.get();
     elevatorLowLimitFlag = !elevatorLowerLimitSensor.get();
     elevatorUpperLimitFlag = !elevatorUpperLimitSensor.get();
   }
 
-  /** Creates a new Kenobi. */
+  /** Creates a new Kenobi subsystem */
   public KenobiSubsystem() {
     elevatorFollower.follow(elevatorLeader);
     calibrated = false;
@@ -72,6 +63,10 @@ public class KenobiSubsystem extends SubsystemBase {
     } else elevatorLeader.set(-0.2);
   }
 
+  /**
+   * Reads from the elevator encoder 
+   * @return the encoder position
+   */
   public RelativeEncoder getEnc() {
     return elevatorLeader.getEncoder();
   }

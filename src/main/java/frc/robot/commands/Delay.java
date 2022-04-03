@@ -1,19 +1,17 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.BigIronSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import static frc.robot.Constants.DriveConstants.*;
 
+/** just waits
+ * @author Carl C.
+ */
 public class Delay extends CommandBase {
 
     private final Timer timer = new Timer();
     private final double time;
     
-    /**@param angle angle set
-     * @param rel if true, angle set is relative
+    /**@param t seconds to wait
     */
     public Delay(double t) {
         time = t;

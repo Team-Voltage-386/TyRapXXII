@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Utils;
@@ -11,17 +9,19 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 
 import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.BigIronConstants.*;
 
+/**
+ * Shoots a ball at manually specified settings
+ * @author Carl C.
+ */
 public class ShootBallMan extends CommandBase {
 
     private final BigIronSubsystem _bss;
     private final DriveSubsystem _dss;
     private final LimeLightSubsystem _lls;
-    private final PIDController pidt = new PIDController(ltP,ltI,ltD);
     private int iBallCount = 0;
     private int ballShot = 0;
-    private final Timer timer = new Timer();
-    private boolean done = false;
     boolean loaded = false;
     private final Timer tim = new Timer();
 
@@ -29,7 +29,8 @@ public class ShootBallMan extends CommandBase {
     private final double hoodPos;
 
     
-    /**@param angle angle set
+    /** Creates a new ShootBallMan instruction
+     * @param angle angle set
      * @param rel if true, angle set is relative
     */
     public ShootBallMan(BigIronSubsystem BSS,DriveSubsystem DSS, LimeLightSubsystem LLS,int ds, double hp) {
@@ -51,7 +52,8 @@ public class ShootBallMan extends CommandBase {
         _lls.lights(true);
         loaded = false;
         ballShot = 0;
-        _bss.pidD.reset();
+        dPID.reset();
+        ltPID.reset();
     } 
 
     @Override
@@ -59,29 +61,29 @@ public class ShootBallMan extends CommandBase {
         _bss.fireTheBigIron = true;
         Utils.Flags.targetDistance = _lls.metersToTarget();
 
-        _bss.drumSP = drumSpeed;
+        _bss.drumSP = drumSpeed; // not efficient but doesn't matter because it's just for testing. All it needs to do it make sure the state is proper
         _bss.hoodSet = hoodPos;
 
         Flags.hoopLocked = !(Math.abs(_lls.tx) > 2);
 
+        // logic for when to end
         if (!loaded && _bss.breachSensorFlag) {
             loaded = true;
         } else if (loaded && !_bss.breachSensorFlag) {
             loaded = false;
             ballShot++;
         }
-
-        _dss.arcadeDrive(0.0, pidt.calculate(_lls.tx));
+        _dss.arcadeDrive(0.0, ltALG.get(_lls.tx)); // aim
     }
 
     @Override
     public void end(boolean interuppted) {
-        _bss.fireTheBigIron = false;
+        _bss.fireTheBigIron = false; // clean up
         _bss.ballCount = 0;
     }
 
     @Override
     public boolean isFinished() {
-        return ballShot == iBallCount;
+        return ballShot == iBallCount; // shoot all the balls
     }
 }

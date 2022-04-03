@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Utils;
@@ -19,7 +18,6 @@ public class ShootBall extends CommandBase {
     private final BigIronSubsystem _bss;
     private final DriveSubsystem _dss;
     private final LimeLightSubsystem _lls;
-    private final PIDController pidt = new PIDController(ltP,ltI,ltD);
     private int iBallCount = 0;
     private int ballShot = 0;
     boolean loaded = false;
@@ -46,7 +44,6 @@ public class ShootBall extends CommandBase {
         iBallCount = _bss.ballCount;
         _bss.fireTheBigIron = true;
         loaded = false;
-        //_bss.pidD.reset();
     } 
 
     @Override
@@ -57,9 +54,9 @@ public class ShootBall extends CommandBase {
 
         // turn the robot towards the target
         if (_lls.targetFound) {
-            _dss.arcadeDrive(0.0, pidt.calculate(_lls.tx));
+            _dss.arcadeDrive(0.0, ltALG.get(_lls.tx));
             if (_lls.tx < 1.2) {
-                pidt.reset();
+                ltPID.reset();
                 Flags.hoopLocked = true;
             } else Flags.hoopLocked = false;
             _bss.setAimDistance(_lls.metersToTarget());

@@ -13,7 +13,7 @@ import static frc.robot.Constants.DriveConstants.*;
  * can be affected drastically.
  * @author Carl C.
 */
-public class LinearDrive extends CommandBase {
+public class LinearDriveHigh extends CommandBase {
 
     private final DriveSubsystem _dss;
     private Pose2d startPose = new Pose2d();
@@ -32,7 +32,7 @@ public class LinearDrive extends CommandBase {
      * @param rel if true, angle set is relative
      * @param dir a 1 or -1 for forwards or backwards (could be enum but I'm lazy)
     */
-    public LinearDrive(DriveSubsystem DSS,double distance,double angle,Boolean rel,double dir) {
+    public LinearDriveHigh(DriveSubsystem DSS,double distance,double angle,Boolean rel,double dir) {
         angRel = rel;
         headingHold = angle;
         targetDistance = distance;
@@ -45,7 +45,7 @@ public class LinearDrive extends CommandBase {
 
     @Override
     public void initialize() {
-        _dss.setHighGear(false); // checks low gear and resets systems
+        _dss.setHighGear(true); // checks low gear and resets systems
         tPID.reset();
         startPose = _dss.getPose();
         drive = 0;
@@ -78,7 +78,7 @@ public class LinearDrive extends CommandBase {
 
     @Override
     public boolean isFinished() { // timer ensures the robot stops properly (smoothing is applied)
-        return finTimer.hasElapsed(0.4);
+        return finTimer.hasElapsed(0.8);
     }
     /**
      * gets the drive error from the array of distances and powers, kinda like the shooter calibration

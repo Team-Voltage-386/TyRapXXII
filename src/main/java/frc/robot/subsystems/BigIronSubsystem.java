@@ -3,14 +3,12 @@ package frc.robot.subsystems;
 import frc.robot.Utils;
 import frc.robot.Constants.ShooterData;
 import frc.robot.Utils.Flags;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -27,7 +25,6 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.util.Color;
-
 import static frc.robot.Constants.BigIronConstants.*;
 
 /**
@@ -49,10 +46,6 @@ public class BigIronSubsystem extends SubsystemBase {
     private final DoubleSolenoid intakeBackward = new DoubleSolenoid(2, PneumaticsModuleType.CTREPCM, kChannelIntakeBackwardGo, kChannelIntakeBackwardVent);
     private final static Value kGo = Value.kForward;
     private final static Value kVent = Value.kReverse;
-
-    // PID Controllers
-    private final PIDController pidH = new PIDController(HP, HI, HD);
-    public final PIDController pidD = new PIDController(DP, DI, DD);
 
     // Sensors
     private final DigitalInput breachSensor = new DigitalInput(kBreachSensorPin);
@@ -94,8 +87,8 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /** Creates a BigIronSubsystem */
     public BigIronSubsystem() {
-        pidD.reset();
-        pidH.reset();
+        dPID.reset();
+        hPID.reset();
         hoodMotor.configNeutralDeadband(0);
         intakeOut = false;
 
@@ -138,8 +131,8 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /** blanket reset */
     public void reset() {
-        pidD.reset();
-        pidH.reset();
+        dPID.reset();
+        hPID.reset();
         beltTimer.stop();
         beltTimer.reset();
         ejectTimer.stop();
@@ -182,10 +175,9 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /**
      * Refresh the intake logic, sets intake in/out and controls compliance
-     * @param b a toggle for the intake retract and deploy, meant to be used with controller.getRawButtonPressed(k);
-     * @Usage bigIronSubSystem.intakeDo(controller.getRawButtonPressed(k));
+     * @param b a toggle for the intake retract and deploy, meant to be used with controller.getRawButtonPressed(k); inside the {@link frc.robot.commands.M_TeleOp} command
      */
-    public void intakeDo(boolean b) {
+    public void intakeUpdate(boolean b) {
         if (b) {
             if (!intakeOut) {
                 intakeOut = true;
@@ -212,7 +204,7 @@ public class BigIronSubsystem extends SubsystemBase {
         else intakeMotor.set(0);
     }
 
-    // prepares ball chute for next shot
+    /**prepares ball chute for next shot*/
     public void reLoad() {
         ball1Col = ball2Col;
         if (ballCount > 1) {
@@ -263,21 +255,21 @@ public class BigIronSubsystem extends SubsystemBase {
     /** calibrate and control hood position */
     private void runHood() {
         if (calibrated) {
-            double control = MathUtil.clamp(pidH.calculate(hoodCurrentPosition, hoodSet), -1, 1);
+            double control = hALG.get(hoodCurrentPosition, hoodSet);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);// set that hood thing
             else {
                 hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, 0, 1));// limit that hood thing
-                pidH.reset();
+                hPID.reset();
                 hoodEncoder.reset();
             }
         } else { // if not calibrated run hood down until limit is triggered
             if (hoodLowLimit) {
                 calibrated = true;
-                pidH.reset();
+                hPID.reset();
                 hoodEncoder.reset();
             }
             else {
-                hoodMotor.set(ControlMode.PercentOutput, -0.9);
+                hoodMotor.set(ControlMode.PercentOutput, -0.55);
             }
         }
         //hoodMotor.set(ControlMode.PercentOutput, 0);
@@ -285,14 +277,11 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /** Update and run drum speed pid loops */
     private void runDrum() {
-        if (fireTheBigIron || drumIdle) {
-            double control = kDrumDirection * pidD.calculate(drumCurrentSpeed, drumSP);
-            drumOneMotor.set(control);
-        } else if (ejectBall || eff) { // eject uses a constant
-            drumOneMotor.set(kDrumDirection*0.3);
-        } else {
+        if (fireTheBigIron || drumIdle) drumOneMotor.set(dALG.get(drumCurrentSpeed, drumSP));
+        else if (ejectBall || eff) drumOneMotor.set(kDrumEjectPower);
+        else {
             drumOneMotor.set(0);
-            pidD.reset();
+            dPID.reset();
         }
     }
 
@@ -301,7 +290,7 @@ public class BigIronSubsystem extends SubsystemBase {
     /** The most complex piece of code in the robot, is utterly absurd. Took forever to get working and 
      * is borderline black magic. This method controls how the feed belt is run and when. It also contains 
      * the logic that increases/decreases the ball count. Changing any part of this could completely 
-     * break the robot's ability to intake balls and shoot them. You've been warned.
+     * break the robot's ability to intake balls and shoot them.
      */
     private void runFeedBelt() {
         if (fireTheBigIron) { // if firing, run belt as long as the robot is ready to fire
@@ -317,7 +306,6 @@ public class BigIronSubsystem extends SubsystemBase {
                 }
                 beltMotor.set(ControlMode.PercentOutput, 0);
             } else { // if a ball is on the way, run it up until the breach sensor is triggered
-                runIntake(true);
                 beltMotor.set(ControlMode.PercentOutput, kBeltPower);
                 if (breachSensorFlag || beltTimer.hasElapsed(5)) {
                     beltTimer.stop();
@@ -389,13 +377,13 @@ public class BigIronSubsystem extends SubsystemBase {
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private final NetworkTableEntry mainDist = mainTab.add("dist",0).withPosition(5,0).withSize(1, 1).getEntry();
     private final NetworkTableEntry mainBC = mainTab.add("BallCount",0).withPosition(3,0).withSize(1,1).getEntry();
-    /** update the widgets */
+    /** update the widgets, by calling for the tab "Main" in each class everything ends up on the same shuffleboard tab*/
     private void updateWidgets() {
         mainDist.setDouble(Utils.Flags.targetDistance);
         mainBC.setDouble(ballCount);
     }
 
-    /** get the color of the ball; does not work with enough accuracy to be used; ball color isn't used anywhere
+    /** get the color of the ball; does not work with enough accuracy; ball color isn't used anywhere
      * @return a string for the color, "Blue" or "Red"
      */
     private String getColor() {
@@ -405,7 +393,7 @@ public class BigIronSubsystem extends SubsystemBase {
         return "Red";
     }
 
-    /** Sets the drum speed and hood position by interpolating between points in a database. 
+    /** Sets the drum speed and hood position by interpolating between points in the {@link ShooterData}. 
      * The key to TyRapXXII's shooter.
      * @param m the distance to the target in meters as reported by the limelight
      * @author Carl C.
@@ -446,7 +434,7 @@ public class BigIronSubsystem extends SubsystemBase {
     private Color col = null;
     boolean aniRunning = false;
     public boolean ledsOn = false;
-    /** it runs the animation for the leds, is kinda complicated and I don't feel like explaining it. In short 
+    /** it runs the animation for the leds. In short 
      * it simply steps through the color arrays, setting the color according to the animation progress. The 
      * animation progress is advanced every 0.3 seconds until it is finished. The color normally shows the number 
      * of balls in the robot, and does an alternating pattern when the climb is active. The Color changes according 
