@@ -108,7 +108,7 @@ public final class Constants {
         public static final int kShiftUp = 1;
         public static final int kShiftDown = 2;
         public static final double kSmoothingAccelFactor = 0.13;
-        public static final double kSmoothingDecelFactor = 0.02;
+        public static final double kSmoothingDecelFactor = 0.09;
         public static final double kMaxDownshiftPower = 0.35;
         public static final double kMPR = 0.0207;// meters per revolution
         public static final double kMPRH = 0.07;
