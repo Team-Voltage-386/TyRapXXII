@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import frc.robot.Logger;
+import frc.robot.Robot;
 import frc.robot.Utils;
 import frc.robot.Constants.ShooterData;
 import frc.robot.Utils.Flags;
@@ -175,7 +177,7 @@ public class BigIronSubsystem extends SubsystemBase {
 
     /**
      * Refresh the intake logic, sets intake in/out and controls compliance
-     * @param b a toggle for the intake retract and deploy, meant to be used with controller.getRawButtonPressed(k); inside the {@link frc.robot.commands.M_TeleOp} command
+     * @param b a toggle for the intake retract and deploy, meant to be used with controller.getRawButtonPressed(k); inside the {@link frc.robot.commands.M_Teleop} command
      */
     public void intakeUpdate(boolean b) {
         if (b) {
@@ -237,6 +239,17 @@ public class BigIronSubsystem extends SubsystemBase {
                 ef = true;
                 eff = false;
             }
+        }
+        
+        Logger.setInteger(7, ballCount);
+        Logger.setDouble(10, hoodCurrentPosition);
+        Logger.setInteger(11, (int)drumCurrentSpeed);
+        Logger.setDouble(0, DriverStation.getMatchTime());
+        if (DriverStation.isEnabled()) 
+        try {
+            Logger.writeLog();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

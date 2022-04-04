@@ -4,8 +4,12 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Utils.Flags.*;
+
+import frc.robot.Logger;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Utils;
 import frc.robot.Utils.Flags;
@@ -51,6 +55,8 @@ public class D_TeleOp extends CommandBase {
     //_lls.lights(true);
   }
 
+  double integralTurnAdjust = 0;
+
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
@@ -62,13 +68,16 @@ public class D_TeleOp extends CommandBase {
     double controllerIn = _controller.getRawAxis(kLeftVertical);
     if (Math.abs(controllerIn) > Math.abs(rootDrive)) rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingAccelFactor);
     else rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingDecelFactor);
-    rootTurn = -_controller.getRawAxis(kRightHorizontal);
+    double contTurn = -_controller.getRawAxis(kRightHorizontal);
+
+    integralTurnAdjust += contTurn - rootTurn;
+
+    rootTurn = integralTurnAdjust + contTurn;
 
     // Change gear on left bumper
-    if (_controller.getRawButtonPressed(kLeftBumper)) {
-      highGear = !highGear;
-      _dss.setHighGear(highGear);
-    }
+    if (_controller.getRawButtonPressed(kLeftBumper)) highGear = !highGear;
+    if (!hoopTargeted) _dss.setHighGear(highGear);
+    else _dss.setHighGear(false);
 
     // logic for the alignment of the robot
     if (_lls.targetFound && hoopTargeted) {
@@ -91,6 +100,19 @@ public class D_TeleOp extends CommandBase {
     // set drive and distance flag
     _dss.arcadeDrive(rootDrive, rootTurn);
     if (_lls.targetFound) targetDistance = _lls.metersToTarget();
+
+    integralTurnAdjust *= 1;
+
+    Logger.setBoolean(1, hoopTargeted);
+    Logger.setBoolean(2, hoopLocked);
+    Logger.setDouble(3, targetDistance);
+    Pose2d p = _dss.getPose();
+    Logger.setDouble(4, p.getRotation().getDegrees());
+    Logger.setDouble(5, p.getX());
+    Logger.setDouble(6, p.getY());
+    Logger.setDouble(8, _lls.tx);
+    Logger.setDouble(9, rootDrive);
+    Logger.setDouble(12, rootTurn);
   }
 
   // Called once the command ends or is interrupted.
@@ -98,4 +120,5 @@ public class D_TeleOp extends CommandBase {
   public void end(boolean interrupted) {
     //_lls.lights(false);
   } 
+  
 }
