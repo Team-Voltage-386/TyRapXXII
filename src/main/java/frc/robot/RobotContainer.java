@@ -15,12 +15,12 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
 import frc.robot.commands.D_TeleOp;
 import frc.robot.commands.Delay;
-import frc.robot.commands.M_TeleOp;
+import frc.robot.commands.TeleOp_M;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.commands.BigIronIdle;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.ShootBallMan;
-import frc.robot.commands.getBall;
+import frc.robot.commands.GetBall;
 import frc.robot.commands.drive.LinearDrive;
 import frc.robot.commands.drive.LinearDriveHigh;
 import frc.robot.commands.drive.StationaryTurn;
@@ -52,7 +52,7 @@ public class RobotContainer {
   public static ShuffleboardTab driverTab;
 
   private final D_TeleOp driveTeleOp = new D_TeleOp(driveSubSystem, LLSubsystem);
-  private final M_TeleOp manipTeleOp = new M_TeleOp(bigIron, kenobi);
+  private final TeleOp_M manipTeleOp = new TeleOp_M(bigIron, kenobi);
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final AutoRoutines autos = this.new AutoRoutines();
 
@@ -112,8 +112,8 @@ public class RobotContainer {
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem, 1.5, 0, false,1),
         new SequentialCommandGroup(
-          new getBall(bigIron,3), 
-          new getBall(bigIron,3)) 
+          new GetBall(bigIron,3), 
+          new GetBall(bigIron,3)) 
           ),
       new StationaryTurn(driveSubSystem, 180, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
@@ -123,8 +123,8 @@ public class RobotContainer {
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem,1.5,0,false,1),
         new SequentialCommandGroup(
-          new getBall(bigIron,3),
-          new getBall(bigIron,3)
+          new GetBall(bigIron,3),
+          new GetBall(bigIron,3)
         )
       ),
       new StationaryTurn(driveSubSystem, 160, false),
@@ -132,7 +132,7 @@ public class RobotContainer {
       new StationaryTurn(driveSubSystem, 14, false),
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem,3.24, 12,false,1),
-        new getBall(bigIron,4)
+        new GetBall(bigIron,4)
       ),
       new LinearDrive(driveSubSystem, 2, 8, false, -1),
       new StationaryTurn(driveSubSystem, 170, false),
@@ -143,8 +143,8 @@ public class RobotContainer {
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem,1.5,0,false,1),
         new SequentialCommandGroup(
-          new getBall(bigIron,3),
-          new getBall(bigIron,3)
+          new GetBall(bigIron,3),
+          new GetBall(bigIron,3)
         )
       ),
       new StationaryTurn(driveSubSystem, 160, false),
@@ -152,9 +152,9 @@ public class RobotContainer {
       new StationaryTurn(driveSubSystem, 14, false),
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem,3.24, 12,false,1),
-        new getBall(bigIron,4)
+        new GetBall(bigIron,4)
       ),
-      new getBall(bigIron,0.8),
+      new GetBall(bigIron,0.8),
       new LinearDrive(driveSubSystem, 1, 8, false, -1),
       new StationaryTurn(driveSubSystem, 170, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
@@ -165,25 +165,25 @@ public class RobotContainer {
     public final Command ivBallB = new SequentialCommandGroup(
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem, 1.25, 0, false, -1),
-        new getBall(bigIron,2)
+        new GetBall(bigIron,2)
       ),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem),
       new StationaryTurn(driveSubSystem, -100, false),
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem, 2, -105, false, 1),
-        new getBall(bigIron,2.5)
+        new GetBall(bigIron,2.5)
       ),
       new StationaryTurn(driveSubSystem, -45, false),
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem, 2.5, -40, false, 1),
-        new getBall(bigIron,3.5)
+        new GetBall(bigIron,3.5)
       ),
       new StationaryTurn(driveSubSystem, 50, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem),
       new StationaryTurn(driveSubSystem, -110, false),
       new ParallelCommandGroup(
         new LinearDrive(driveSubSystem,3,-124,false,1),
-        new getBall(bigIron,4)
+        new GetBall(bigIron,4)
       ),
       new LinearDrive(driveSubSystem,1,-130,false,-1),
       new StationaryTurn(driveSubSystem, 50, false),
@@ -207,7 +207,7 @@ public class RobotContainer {
     /** simply fires, change the values in the shootballman instruction to test settings */
     public final Command shootTest = new SequentialCommandGroup(
       new Delay(2),
-      new getBall(bigIron,2),
+      new GetBall(bigIron,2),
       new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 1500, 0.35)
     );
   }

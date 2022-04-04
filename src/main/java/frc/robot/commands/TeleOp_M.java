@@ -12,7 +12,7 @@ import static frc.robot.Constants.ControllerConstants.*;
 /** Driver TeleOp Command 
  * @author Carl C.
 */
-public class M_TeleOp extends CommandBase { // if M_TeleOp has a red line under it, check that the file is named M_TeleOp.java, the O keeps going undercase idk man it's strange
+public class TeleOp_M extends CommandBase { // if M_TeleOp has a red line under it, check that the file is named M_TeleOp.java, the O keeps going undercase idk man it's strange
   private final BigIronSubsystem _bss;
   private final KenobiSubsystem _kss;
   private final Joystick _controller;
@@ -24,7 +24,7 @@ public class M_TeleOp extends CommandBase { // if M_TeleOp has a red line under 
    * @param BSS the shooting system
    * @param kss the climbing system
    */
-  public M_TeleOp(BigIronSubsystem BSS, KenobiSubsystem kss) {
+  public TeleOp_M(BigIronSubsystem BSS, KenobiSubsystem kss) {
     _bss = BSS;
     _kss = kss;
     _controller = RobotContainer.manipulatorController;
