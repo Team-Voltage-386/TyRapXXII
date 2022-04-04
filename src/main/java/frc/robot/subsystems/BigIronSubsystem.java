@@ -245,12 +245,6 @@ public class BigIronSubsystem extends SubsystemBase {
         Logger.setDouble(10, hoodCurrentPosition);
         Logger.setInteger(11, (int)drumCurrentSpeed);
         Logger.setDouble(0, DriverStation.getMatchTime());
-        if (DriverStation.isEnabled()) 
-        try {
-            Logger.writeLog();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /** read the sensors and update their flags */
