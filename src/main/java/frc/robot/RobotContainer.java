@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.BigIronSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.KenobiSubsystem;
-import frc.robot.commands.D_TeleOp;
+import frc.robot.commands.TeleOp_D;
 import frc.robot.commands.Delay;
 import frc.robot.commands.TeleOp_M;
 import frc.robot.subsystems.LimeLightSubsystem;
@@ -51,7 +51,7 @@ public class RobotContainer {
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
 
-  private final D_TeleOp driveTeleOp = new D_TeleOp(driveSubSystem, LLSubsystem);
+  private final TeleOp_D driveTeleOp = new TeleOp_D(driveSubSystem, LLSubsystem);
   private final TeleOp_M manipTeleOp = new TeleOp_M(bigIron, kenobi);
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final AutoRoutines autos = this.new AutoRoutines();

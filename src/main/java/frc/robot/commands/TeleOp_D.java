@@ -9,7 +9,6 @@ import frc.robot.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Utils;
 import frc.robot.Utils.Flags;
@@ -19,7 +18,7 @@ import static frc.robot.Constants.ControllerConstants.*;
 /** Driver TeleOp Command 
  * @author Carl C.
 */
-public class D_TeleOp extends CommandBase {
+public class TeleOp_D extends CommandBase {
   private final DriveSubsystem _dss;
   private final Joystick _controller;
   private final LimeLightSubsystem _lls;
@@ -35,7 +34,7 @@ public class D_TeleOp extends CommandBase {
  * @param BSS the BigIron
  * @param LLS  the hoop LL subsystem used by this command.
  */
-  public D_TeleOp(DriveSubsystem DSS, LimeLightSubsystem LLS) {
+  public TeleOp_D(DriveSubsystem DSS, LimeLightSubsystem LLS) {
     _dss = DSS;
     _lls = LLS;
     _controller = RobotContainer.driverController;
