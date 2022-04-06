@@ -61,7 +61,7 @@ public final class Constants {
         public static final int kDrumOneID = 11;
         public static final int kDrumTwoID = 12;
         public static final int kDrumIdleSpeed = 2200;
-        public static final int kDrumSpeedTolerance = 35;
+        public static final int kDrumSpeedTolerance = 50;
         public static final int kHoodDownLimitPin = 9;
         public static final int kBreachSensorPin = 0;
         public static final int kIntakeColorSensorThreshold = 140;
@@ -83,7 +83,7 @@ public final class Constants {
 
         public static final PIDController hPID = new PIDController(50, 0.85, 0);
         public static final doubAlgB hALG = hPID::calculate;
-        public static final PIDController dPID = new PIDController(0.0003, 0.001, 0.00001);
+        public static final PIDController dPID = new PIDController(0.0003, 0.0006, 0.00001);
         public static final doubAlgB dALG = (double pv, double sp) -> {return -1 * dPID.calculate(pv, sp);};
     }
 
@@ -143,7 +143,7 @@ public final class Constants {
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
         public static final double[] distances = {1.1074, 1.55, 2, 2.16, 2.7, 3, 3.47,3.97, 4.39, 4.605, 5.8};
-        public static final int[] drumSpeeds = {2450,2560,2700,2870,2950,3050,3100,3350, 3700, 3970, 4000};
-        public static final double[] hoodPositions = {0.005,0.006,0.022,0.03,0.1,0.2,0.15,0.17,0.3,0.3,0.3};
+        public static final int[] drumSpeeds = {2500,2560,2760,2840,3000,3050,3230,3360, 3700, 3970, 4000};
+        public static final double[] hoodPositions = {0.005,0.006,0.021,0.03,0.25,0.23,0.21,0.25,0.16,0.3,0.3};
     }
 }

@@ -28,7 +28,7 @@ public class Logger {
 
     public static void init() {
         Path p = null;
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 500; i++) {
             Path chk = Path.of("/home/lvuser/logs/", (DriverStation.getEventName()+"_"+DriverStation.getMatchType()+"_"+DriverStation.getMatchNumber()+Integer.toString(i)+".csv"));
             if (!Files.exists(chk)) {
                 p = chk;
