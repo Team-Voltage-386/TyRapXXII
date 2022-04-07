@@ -288,7 +288,7 @@ public class BigIronSubsystem extends SubsystemBase {
         else if (ejectBall || eff) drumOneMotor.set(kDrumEjectPower);
         else {
             drumOneMotor.set(0);
-            dPID.reset();
+            //dPID.reset();
         }
     }
 
