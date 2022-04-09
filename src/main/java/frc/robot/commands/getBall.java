@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Utils.Flags;
 import frc.robot.subsystems.BigIronSubsystem;
 
 /**Runs the intake and ball system until a new ball is collected
@@ -33,6 +34,7 @@ public class GetBall extends CommandBase {
         timer.reset();
         timeOut.reset();
         timeOut.start();
+        Flags.complianceOverride = true;
     } 
 
     @Override
@@ -45,6 +47,7 @@ public class GetBall extends CommandBase {
     public void end(boolean interuppted) {
         timer.stop();
         timer.reset();
+        Flags.complianceOverride = false;
     }
 
     @Override

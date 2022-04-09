@@ -30,6 +30,7 @@ public class StationaryTurn extends CommandBase {
 
     @Override
     public void initialize() { // configure starting state
+        _dss.setHighGear(false);
         tPID.reset();
         if (relTurn) { // calculate heading hold
             angle += _dss.getPose().getRotation().getDegrees();

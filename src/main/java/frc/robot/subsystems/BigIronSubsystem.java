@@ -384,10 +384,12 @@ public class BigIronSubsystem extends SubsystemBase {
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private final NetworkTableEntry mainDist = mainTab.add("dist",0).withPosition(5,0).withSize(1, 1).getEntry();
     private final NetworkTableEntry mainBC = mainTab.add("BallCount",0).withPosition(3,0).withSize(1,1).getEntry();
+    private final NetworkTableEntry mainBre = mainTab.add("BreachSensor",false).getEntry();
     /** update the widgets, by calling for the tab "Main" in each class everything ends up on the same shuffleboard tab*/
     private void updateWidgets() {
         mainDist.setDouble(Utils.Flags.targetDistance);
         mainBC.setDouble(ballCount);
+        mainBre.setBoolean(breachSensorFlag);
     }
 
     /** get the color of the ball; does not work with enough accuracy; ball color isn't used anywhere

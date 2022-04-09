@@ -127,7 +127,7 @@ public class RobotContainer {
           new GetBall(bigIron,3)
         )
       ),
-      new StationaryTurn(driveSubSystem, 160, false),
+      new StationaryTurn(driveSubSystem, 170, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem),
       new StationaryTurn(driveSubSystem, 14, false),
       new ParallelCommandGroup(
@@ -147,7 +147,7 @@ public class RobotContainer {
           new GetBall(bigIron,3)
         )
       ),
-      new StationaryTurn(driveSubSystem, 160, false),
+      new StationaryTurn(driveSubSystem, 170, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem),
       new StationaryTurn(driveSubSystem, 14, false),
       new ParallelCommandGroup(

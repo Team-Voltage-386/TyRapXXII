@@ -55,10 +55,8 @@ public class ShootBall extends CommandBase {
         // turn the robot towards the target
         if (_lls.targetFound) {
             _dss.arcadeDrive(0.0, ltALG.get(_lls.tx));
-            if (_lls.tx < 1.2) {
-                ltPID.reset();
-                Flags.hoopLocked = true;
-            } else Flags.hoopLocked = false;
+            Flags.hoopLocked = _lls.tx < 1.2;
+            if (_lls.tx < 0.9) ltPID.reset();
             _bss.setAimDistance(_lls.metersToTarget());
         }
 

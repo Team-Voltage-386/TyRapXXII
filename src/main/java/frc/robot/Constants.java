@@ -65,7 +65,7 @@ public final class Constants {
         public static final int kHoodDownLimitPin = 9;
         public static final int kBreachSensorPin = 0;
         public static final int kIntakeColorSensorThreshold = 140;
-        public static final double kHoodPositionTolerance = 0.004;
+        public static final double kHoodPositionTolerance = 0.006;
         public static final double kDrumEjectPower = -0.3;
         public static final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
         public static final int kIntakeID = 30;
@@ -81,9 +81,9 @@ public final class Constants {
         public static final int kChannelIntakeBackwardGo = 6;
         public static final int kChannelIntakeBackwardVent = 4;
 
-        public static final PIDController hPID = new PIDController(18, 0.1, 0);
+        public static final PIDController hPID = new PIDController(20, 0.1, 0);
         public static final doubAlgB hALG = hPID::calculate;
-        public static final PIDController dPID = new PIDController(0.0003, 0.0009, 0.00001);
+        public static final PIDController dPID = new PIDController(0.0004, 0.0009, 0.00001);
         public static final doubAlgB dALG = (double pv, double sp) -> {return -1 * dPID.calculate(pv, sp);};
     }
 
@@ -120,7 +120,7 @@ public final class Constants {
 
 
         // ahhh idek what im doing
-        public static final PIDController ltPID = new PIDController(0.02, 0.085, 0.01);
+        public static final PIDController ltPID = new PIDController(0.025, 0.085, 0.007);
         public static final doubAlg ltALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65,0.65);};
         public static final PIDController tPID = new PIDController(0.019, 0.0019, 0.0028);
         public static final doubAlg tALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65, 0.65);};
@@ -143,7 +143,7 @@ public final class Constants {
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
         public static final double[] distances = {1.1074, 1.55, 2, 2.16, 2.7, 3, 3.55,3.97, 4.39};
-        public static final int[] drumSpeeds = {2500,2560,2760,2840,2960,3050,3230,3340, 3500};
+        public static final int[] drumSpeeds = {2500,2560,2760,2800,2960,3050,3230,3340, 3500};
         public static final double[] hoodPositions = {0.005,0.006,0.021,0.03,0.25,0.23,0.21,0.205,0.205};
     }
 }
