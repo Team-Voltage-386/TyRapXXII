@@ -41,6 +41,7 @@ public class ShootBall extends CommandBase {
     public void initialize() { // sets state
         tim.stop();
         tim.reset();
+        ballShot = 0;
         iBallCount = _bss.ballCount;
         _bss.fireTheBigIron = true;
         loaded = false;
@@ -56,7 +57,7 @@ public class ShootBall extends CommandBase {
         if (_lls.targetFound) {
             _dss.arcadeDrive(0.0, ltALG.get(_lls.tx));
             Flags.hoopLocked = _lls.tx < 1.2;
-            if (_lls.tx < 0.9) ltPID.reset();
+            if (Math.abs(_lls.tx) > 7 || Math.abs(_lls.tx) < 0.3) ltPID.reset();
             _bss.setAimDistance(_lls.metersToTarget());
         }
 

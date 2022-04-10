@@ -27,6 +27,7 @@ public class BigIronIdle extends CommandBase {
 
     @Override
     public void execute() {
+        _bss.intakeUpdate(_bss.intakeOut);
     }
 
     @Override

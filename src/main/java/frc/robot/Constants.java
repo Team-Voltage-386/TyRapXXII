@@ -51,7 +51,7 @@ public final class Constants {
         public static final double targetLostWaitTime = 0.15;
         public static final double targetHeight = 2.6416;
         public static final double mountHeight = 0.95;
-        public static final double mountAngle = 40;
+        public static final double mountAngle = 43; // 40-LL1 43-LL2
         /** the math for calculating the distance to the target */
         public static final doubAlg distALG = (double ty) -> {return (targetHeight-mountHeight)/Math.tan(Math.PI*((mountAngle+ty)/180));};
     }
@@ -120,9 +120,9 @@ public final class Constants {
 
 
         // ahhh idek what im doing
-        public static final PIDController ltPID = new PIDController(0.025, 0.085, 0.007);
+        public static final PIDController ltPID = new PIDController(0.03, 0.1, 0.002);
         public static final doubAlg ltALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65,0.65);};
-        public static final PIDController tPID = new PIDController(0.019, 0.0019, 0.0028);
+        public static final PIDController tPID = new PIDController(0.019, 0.0019, 0.0035);
         public static final doubAlg tALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65, 0.65);};
         public static final doubAlg tsALG = pv -> {
             double dir = pv/Math.abs(pv);

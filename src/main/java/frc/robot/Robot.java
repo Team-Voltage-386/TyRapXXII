@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Utils.Flags;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -76,6 +77,7 @@ public class Robot extends TimedRobot {
 
     // sanity check to make sure everything is in the proper state
     m_robotContainer.bigIron.reset();
+    m_robotContainer.bigIron.intakeUpdate(!m_robotContainer.bigIron.intakeOut);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.driveSubSystem.setHighGear(false);
     m_robotContainer.driveSubSystem.resetOdometry(new Pose2d());
@@ -95,7 +97,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    m_robotContainer.bigIron.intakeUpdate(!m_robotContainer.bigIron.intakeOut);
+    Flags.complianceOverride = true;
+  }
 
   @Override
   public void teleopInit() {

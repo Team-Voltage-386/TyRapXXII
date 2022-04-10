@@ -7,6 +7,7 @@ import frc.robot.subsystems.BigIronSubsystem;
 
 /**Runs the intake and ball system until a new ball is collected
  * @author Carl C.
+ * @deprecated redundant
  */
 public class GetBall extends CommandBase {
 
@@ -19,6 +20,7 @@ public class GetBall extends CommandBase {
     /**Creates a new getBall Instruction
      * @param BSS The BigIron
      * @param timeOut a timeout in case the ball isn't picked up
+     * @deprecated redundant
     */
     public GetBall(BigIronSubsystem BSS, double timeOut) {
         _bss = BSS;

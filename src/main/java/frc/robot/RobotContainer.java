@@ -68,12 +68,12 @@ public class RobotContainer {
     configureButtonBindings();
 
     autoChooser.setDefaultOption("Basic 2 Ball", autos.basiciiBall);
-    autoChooser.addOption("3 Ball A", autos.iiiBallA);
-    autoChooser.addOption("4 Ball B", autos.ivBallB);
+    autoChooser.addOption("High Auto", autos.highAuto);
+    autoChooser.addOption("V-Ball", autos.vBall);
     autoChooser.addOption("TuningTest", autos.tuningTest);
+    autoChooser.addOption("TuningTestSquare", autos.tuningTestII);
     autoChooser.addOption("ShooterTest", autos.shootTest);
     autoChooser.addOption("MartianRock", autos.marRock);
-    autoChooser.addOption("4 Ball A (HP)", autos.ivBallA);
     mainTab.add("AutoRoutine",autoChooser).withPosition(0,0).withSize(3,1);
     bigIron.setDefaultCommand(manipTeleOp);
     driveSubSystem.setDefaultCommand(driveTeleOp);
@@ -109,83 +109,37 @@ public class RobotContainer {
   private final class AutoRoutines {
     /** drives off the tarmac, grabs the ball directly in front, and fires both.<p> As long as the shooter is calibrated this is fantastically reliable */
     public final Command basiciiBall = new SequentialCommandGroup(
-      new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem, 1.5, 0, false,1),
-        new SequentialCommandGroup(
-          new GetBall(bigIron,3), 
-          new GetBall(bigIron,3)) 
-          ),
+      new LinearDrive(driveSubSystem, 1.5, 0, false,1),
       new StationaryTurn(driveSubSystem, 180, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
-    /** 3 ball auto from the primary starting position<p> does function assuming all else goes properly, cuts the time close */
-    public final Command iiiBallA =new SequentialCommandGroup(
-      new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem,1.5,0,false,1),
-        new SequentialCommandGroup(
-          new GetBall(bigIron,3),
-          new GetBall(bigIron,3)
-        )
-      ),
+    /** A 4 ball auto from the primary starting position <p> needs human player interaction<p> Works Great */
+    public final Command highAuto = new SequentialCommandGroup(
+      new LinearDrive(driveSubSystem,1.5,0,false,1),
       new StationaryTurn(driveSubSystem, 170, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem),
       new StationaryTurn(driveSubSystem, 14, false),
-      new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem,3.24, 12,false,1),
-        new GetBall(bigIron,4)
-      ),
+      new LinearDrive(driveSubSystem,3.24, 12,false,1),
       new LinearDrive(driveSubSystem, 2, 8, false, -1),
       new StationaryTurn(driveSubSystem, 170, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
-    /** A 4 ball auto from the primary starting position <p> needs human player interaction<p> will likely run out of time */
-    public final Command ivBallA = new SequentialCommandGroup(
-      new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem,1.5,0,false,1),
-        new SequentialCommandGroup(
-          new GetBall(bigIron,3),
-          new GetBall(bigIron,3)
-        )
-      ),
-      new StationaryTurn(driveSubSystem, 170, false),
-      new ShootBall(bigIron, driveSubSystem, LLSubsystem),
-      new StationaryTurn(driveSubSystem, 14, false),
-      new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem,3.24, 12,false,1),
-        new GetBall(bigIron,4)
-      ),
-      new GetBall(bigIron,0.8),
-      new LinearDrive(driveSubSystem, 1, 8, false, -1),
-      new StationaryTurn(driveSubSystem, 170, false),
-      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
-    );
+
     /** 4 ball from the starting position opposite the hangar, grabs all but the hangar ball and the human player's ball, 
      * not functioning yet
     */
-    public final Command ivBallB = new SequentialCommandGroup(
-      new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem, 1.25, 0, false, -1),
-        new GetBall(bigIron,2)
-      ),
+    public final Command vBall = new SequentialCommandGroup(
+      new LinearDrive(driveSubSystem, 1.25, 0, false, -1),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem),
-      new StationaryTurn(driveSubSystem, -100, false),
-      new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem, 2, -105, false, 1),
-        new GetBall(bigIron,2.5)
-      ),
+      new StationaryTurn(driveSubSystem, -90, false),
+      new LinearDrive(driveSubSystem, 2, -90, false, 0.8),
       new StationaryTurn(driveSubSystem, -45, false),
-      new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem, 2.5, -40, false, 1),
-        new GetBall(bigIron,3.5)
-      ),
+      new LinearDrive(driveSubSystem, 2.5, -40, false, 1),
       new StationaryTurn(driveSubSystem, 50, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem),
-      new StationaryTurn(driveSubSystem, -110, false),
-      new ParallelCommandGroup(
-        new LinearDrive(driveSubSystem,3,-124,false,1),
-        new GetBall(bigIron,4)
-      ),
-      new LinearDrive(driveSubSystem,1,-130,false,-1),
+      new StationaryTurn(driveSubSystem, -95, false),
+      new LinearDrive(driveSubSystem,3,-100,false,1),
+      new LinearDrive(driveSubSystem,1,-100,false,-1),
       new StationaryTurn(driveSubSystem, 50, false),
       new ShootBall(bigIron, driveSubSystem, LLSubsystem)
     );
@@ -197,9 +151,22 @@ public class RobotContainer {
     /** the robot drives forward, turns 180, drives back, then 180 again, used to test driving tuning */
     public final Command tuningTest = new ParallelCommandGroup(
       new SequentialCommandGroup(
-        new LinearDriveHigh(driveSubSystem, 2, 0, false,1),
+        new LinearDrive(driveSubSystem, 2, 0, false,1),
         new StationaryTurn(driveSubSystem, 180, false),
-        new LinearDrive(driveSubSystem, 3, 180, false,1),
+        new LinearDrive(driveSubSystem, 2, 180, false,1),
+        new StationaryTurn(driveSubSystem, 0, false)
+      ),
+      new BigIronIdle(bigIron)
+    );
+    public final Command tuningTestII = new ParallelCommandGroup(
+      new SequentialCommandGroup(
+        new LinearDrive(driveSubSystem, 1.5, 0, false, 1),
+        new StationaryTurn(driveSubSystem, 90, false),
+        new LinearDrive(driveSubSystem, 1.5, 90, false, 1),
+        new StationaryTurn(driveSubSystem, 180, false),
+        new LinearDrive(driveSubSystem, 1.5, 180, false, 1),
+        new StationaryTurn(driveSubSystem, -90, false),
+        new LinearDrive(driveSubSystem, 1.5, -90, false, 1),
         new StationaryTurn(driveSubSystem, 0, false)
       ),
       new BigIronIdle(bigIron)
