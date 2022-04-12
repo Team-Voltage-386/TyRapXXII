@@ -97,6 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
                 driveTrain.tankDrive(leftPower, rightPower);
         }
 
+        public boolean highGear = false;
         /** shifts the transmission into the specified gear
          * @param t true = high, false = low
          */
@@ -105,11 +106,13 @@ public class DriveSubsystem extends SubsystemBase {
                         shifter.set(DoubleSolenoid.Value.kReverse);
                         leftEncoder.setPositionConversionFactor(kMPR);
                         rightEncoder.setPositionConversionFactor(kMPR);
+                        highGear = false;
                 }
                 else {
                         shifter.set(DoubleSolenoid.Value.kForward);
                         leftEncoder.setPositionConversionFactor(kMPRH);
                         rightEncoder.setPositionConversionFactor(kMPRH);
+                        highGear = true;
                 }
         }
 

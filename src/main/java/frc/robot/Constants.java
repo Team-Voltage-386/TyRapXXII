@@ -107,13 +107,14 @@ public final class Constants {
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
         public static final int kShiftUp = 1;
         public static final int kShiftDown = 2;
-        public static final double kSmoothingAccelFactor = 0.13;
-        public static final double kSmoothingDecelFactor = 0.09;
+        public static final double kSmoothingAccelFactor = 0.25;
+        public static final double kSmoothingDecelFactor = 0.11;
         public static final double kMaxDownshiftPower = 0.35;
         public static final double kMPR = 0.0207;// meters per revolution
         public static final double kMPRH = 0.07;
         public static final int kGyro = 10;
-
+        public static final double highGearInputLimit = 0.75;
+        public static final double highGearTurnLimit = 0.7;
         public static final double[] kDriveDistances = {0,1,2,3,4,30};
         public static final double[] kDrivePowers = {0.0,0.12,0.9,1,1,1};
         public static final double kAutoDriveSmoothing = 0.06;

@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import frc.robot.Logger;
-import frc.robot.Robot;
 import frc.robot.Utils;
 import frc.robot.Constants.ShooterData;
 import frc.robot.Utils.Flags;
@@ -64,7 +63,7 @@ public class BigIronSubsystem extends SubsystemBase {
     public boolean drumIdle = false;
     public double drumCurrentSpeed = 0;
     public double drumSP = 2000;
-    public boolean ejectBall = false;
+    public boolean lowShot = false;
     public boolean runBeltMan = false;
     public boolean runHoodMan = false;
     public String ball1Col = "null";
@@ -75,7 +74,7 @@ public class BigIronSubsystem extends SubsystemBase {
     public String colorAnti;
 
     // Misc.
-    private final Timer ejectTimer = new Timer();
+    private final Timer lowShotTimer = new Timer();
     private final Timer ledTimer = new Timer();
 
     // Private process variables
@@ -111,6 +110,7 @@ public class BigIronSubsystem extends SubsystemBase {
      * if bc == 0, attempt to intake (trigger intake artifically);
      * if bc == 1, reset systems and set bc = 0;
      * if bc == 2, set bc = 1, and wind ball down (used to re-intake second ball)
+     * @deprecated hard to use
      */
     public void ballFailedDebug() {
         if (ballCount == 0) {
@@ -121,12 +121,34 @@ public class BigIronSubsystem extends SubsystemBase {
             ballCount = 0;
             ballOnTheWay = false;
             woundBack = false;
-            ejectBall = false;
-            ef = false;
-            eff = false;
+            lowShot = false;
+            lf = false;
+            lff = false;
             beltMotor.set(ControlMode.PercentOutput, 0);
         } else if (ballCount == 2) {
             ballCount = 1;
+            woundBack = false;
+        }
+    }
+
+    public void increaseBC() {
+        if (ballCount == 0) {
+            ballOnTheWay = true;
+            woundBack = false;
+            beltMotor.set(ControlMode.PercentOutput, 0);
+        } else if (ballCount == 1) ballCount++;
+    }
+
+    public void decreaseBC() {
+        if (ballCount == 1) {
+            ballCount = 0;
+            ballOnTheWay = false;
+            woundBack = false;
+            lowShot = false;
+            lf = false;
+            lff = false;
+        } else if (ballCount == 2) {
+            ballCount--;
             woundBack = false;
         }
     }
@@ -137,9 +159,9 @@ public class BigIronSubsystem extends SubsystemBase {
         hPID.reset();
         beltTimer.stop();
         beltTimer.reset();
-        ejectTimer.stop();
-        ejectTimer.reset();
-        ejectBall = false;
+        lowShotTimer.stop();
+        lowShotTimer.reset();
+        lowShot = false;
         calibrated = false;
         //drumIdle = false;
         ball1Col = "null";
@@ -149,8 +171,8 @@ public class BigIronSubsystem extends SubsystemBase {
         intakeSensorFlag = false;
         breachSensorFlag = false;
         fireTheBigIron = false;
-        ef = false;
-        eff = false;
+        lf = false;
+        lff = false;
         beltMotor.set(ControlMode.PercentOutput, 0);
         drumOneMotor.set(0);
         drumTwoMotor.set(0);
@@ -227,17 +249,17 @@ public class BigIronSubsystem extends SubsystemBase {
         setLED();
     }
 
-    boolean ef = false;
-    boolean eff = false;
+    boolean lf = false;
+    boolean lff = false;
 
     /** use for general state logic */
     private void logic() {
-        if (ejectBall) {
-            if (!ef) {
-                ejectTimer.reset();
-                ejectTimer.start();
-                ef = true;
-                eff = false;
+        if (lowShot) {
+            if (!lf) {
+                lowShotTimer.reset();
+                lowShotTimer.start();
+                lf = true;
+                lff = false;
             }
         }
         
@@ -285,7 +307,7 @@ public class BigIronSubsystem extends SubsystemBase {
     /** Update and run drum speed pid loops */
     private void runDrum() {
         if (fireTheBigIron || drumIdle) drumOneMotor.set(dALG.get(drumCurrentSpeed, drumSP));
-        else if (ejectBall || eff) drumOneMotor.set(kDrumEjectPower);
+        else if (lowShot || lff) drumOneMotor.set(kDrumEjectPower);
         else {
             drumOneMotor.set(0);
             //dPID.reset();
@@ -338,42 +360,42 @@ public class BigIronSubsystem extends SubsystemBase {
             } else { // if it is wound back: 
                 if (intakeSensorFlag) { //increase ball count if intake is triggered
                     ballCount++;
-                } else if (ejectBall) { // if it needs to eject, wind until either the breach sensor is triggered, or if 0.5 seconds has passed
+                } else if (lowShot) { // if it needs to eject, wind until either the breach sensor is triggered, or if 0.5 seconds has passed
                     if (breachSensorFlag) {
-                        if (ejectTimer.hasElapsed(0.5) && ef) {
+                        if (lowShotTimer.hasElapsed(0.5) && lf) {
                             beltMotor.set(ControlMode.PercentOutput, kBeltPower);
-                            eff = true;
-                            ejectBall = false;
+                            lff = true;
+                            lowShot = false;
                         }
                         else beltMotor.set(ControlMode.PercentOutput, 0);
                     } else beltMotor.set(ControlMode.PercentOutput, kBeltPower);
-                } else if (eff) { // this eff flag keeps the belt running once the 0.5 seconds has passed and is ready to eject
+                } else if (lff) { // this eff flag keeps the belt running once the 0.5 seconds has passed and is ready to eject
                     if (!breachSensorFlag) {
                         beltMotor.set(ControlMode.PercentOutput, 0);
                         reLoad();
-                        ef = false;
-                        eff = ef;
+                        lf = false;
+                        lff = lf;
                     }
                 } else beltMotor.set(ControlMode.PercentOutput, 0); 
             }
         } else if (ballCount == 2) {
             if (ball2Col.equals("null")) ball2Col = getColor();
-            else if (ejectBall) { // if ejecting, run similar code to the eject code for one ball
-                if (ejectTimer.hasElapsed(0.5) && ef) {
+            else if (lowShot) { // if ejecting, run similar code to the eject code for one ball
+                if (lowShotTimer.hasElapsed(0.5) && lf) {
                     beltMotor.set(ControlMode.PercentOutput, kBeltPower);
-                    ejectBall = false;
-                    eff = true;
+                    lowShot = false;
+                    lff = true;
                 } else beltMotor.set(ControlMode.PercentOutput, 0);
-            } else if (eff) { // is more complex as it needs to feed into the 1 ball eject
+            } else if (lff) { // is more complex as it needs to feed into the 1 ball eject
                 if (!breachSensorFlag) {
                     beltMotor.set(ControlMode.PercentOutput, 0);
                     ball1Col = ball2Col;
                     ball2Col = "null";
                     ballCount = 1;
-                    ef = false;
-                    eff = ef;
+                    lf = false;
+                    lff = lf;
                     fireTheBigIron = false;
-                    ejectBall = true;
+                    lowShot = true;
                     woundBack = true;
                 }
             } else beltMotor.set(ControlMode.PercentOutput, 0);  

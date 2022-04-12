@@ -49,14 +49,13 @@ public class TeleOp_M extends CommandBase { // if M_TeleOp has a red line under 
     // Control Logic
     if(_controller.getRawButtonPressed(kA)) _bss.drumIdle = !_bss.drumIdle; // toggle drum idle
     _bss.intakeUpdate(_controller.getRawButtonPressed(kRightBumper)); // deploy/retract/release intake
-    if (_controller.getRawButtonPressed(kLeftJoystickPressed)) _bss.ejectBall = !_bss.ejectBall; // toggle eject
-    if (_controller.getRawButtonReleased(kLeftBumper)) { // when firing is finished
+    if (triggerPressed(kLeftTrigger)) _bss.lowShot = !_bss.lowShot; // toggle eject
+    if (triggerReleased(kRightTrigger)) { // when firing is finished
       _bss.ballCount = 1;
-      _bss.ballFailedDebug();
+      _bss.decreaseBC();
       _bss.drumIdle = false;
     }
-    if (_controller.getRawButtonPressed(kY)) _bss.ballFailedDebug(); // in case the robot's state gets messed up, manipulator can use the bonk button
-    hoopTargeted = _controller.getRawButton(kLeftBumper); // begin targeting if lb is pressed
+    hoopTargeted = getTriggerController(kRightTrigger); // begin targeting if rt is pressed
     _bss.fireTheBigIron = hoopTargeted;
 
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
@@ -76,6 +75,9 @@ public class TeleOp_M extends CommandBase { // if M_TeleOp has a red line under 
       sentUp = false;
     }
 
+    if (_controller.getRawButtonPressed(kB)) _bss.decreaseBC();
+    if (_controller.getRawButtonPressed(kY)) _bss.increaseBC();
+
     if (_controller.getRawButtonPressed(kX)) climbActive = !climbActive;
     if (_controller.getRawButtonPressed(kRightJoystickPressed)) _bss.reset();
     _bss.climbing = climbActive;
@@ -85,5 +87,33 @@ public class TeleOp_M extends CommandBase { // if M_TeleOp has a red line under 
   @Override
   public void end(boolean interrupted) {
     _bss.intakeUpdate(_bss.intakeOut);
+  }
+
+  private boolean lastCycleTrigger = false;
+  private boolean triggerReleased(int button) {
+    boolean cont = getTriggerController(button);
+    boolean res = !cont;
+    res = res && lastCycleTrigger;
+    lastCycleTrigger = cont;
+    return res;
+  }
+
+  private boolean[] lastCont = {false,false};
+  private boolean getTriggerController(int button) {
+    boolean res = false;
+    if ((_controller.getRawAxis(button) > 0.6) && !lastCont[button-2]) res = true;
+    else if ((_controller.getRawAxis(button) < 0.4)&&lastCont[button-2]) res = false;
+    else res = lastCont[button-2];
+    lastCont[button-2] = res;
+    return res;
+  }
+
+  private boolean lastCycleTriggerPressed = false;
+  private boolean triggerPressed(int button) {
+    boolean cont = getTriggerController(button);
+    boolean res = cont;
+    res = res && !lastCycleTriggerPressed;
+    lastCycleTriggerPressed = cont;
+    return res;
   }
 }
