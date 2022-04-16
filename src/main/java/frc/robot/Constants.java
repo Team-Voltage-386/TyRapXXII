@@ -50,8 +50,8 @@ public final class Constants {
     public static final class LimeLightConstants {
         public static final double targetLostWaitTime = 0.15;
         public static final double targetHeight = 2.6416;
-        public static final double mountHeight = 0.95;
-        public static final double mountAngle = 43; // 40-LL1 43-LL2
+        public static final double mountHeight = 0.99; //95
+        public static final double mountAngle = 40; // 40-LL1 43-LL2
         /** the math for calculating the distance to the target */
         public static final doubAlg distALG = (double ty) -> {return (targetHeight-mountHeight)/Math.tan(Math.PI*((mountAngle+ty)/180));};
     }
@@ -65,7 +65,7 @@ public final class Constants {
         public static final int kHoodDownLimitPin = 9;
         public static final int kBreachSensorPin = 0;
         public static final int kIntakeColorSensorThreshold = 140;
-        public static final double kHoodPositionTolerance = 0.006;
+        public static final double kHoodPositionTolerance = 0.004;
         public static final double kDrumEjectPower = -0.3;
         public static final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
         public static final int kIntakeID = 30;
@@ -83,7 +83,7 @@ public final class Constants {
 
         public static final PIDController hPID = new PIDController(20, 0.1, 0);
         public static final doubAlgB hALG = hPID::calculate;
-        public static final PIDController dPID = new PIDController(0.0004, 0.0009, 0.00001);
+        public static final PIDController dPID = new PIDController(0.0004, 0.0009, 0.00003);
         public static final doubAlgB dALG = (double pv, double sp) -> {return -1 * dPID.calculate(pv, sp);};
     }
 
@@ -107,23 +107,21 @@ public final class Constants {
         public static final PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
         public static final int kShiftUp = 1;
         public static final int kShiftDown = 2;
-        public static final double kSmoothingAccelFactor = 0.25;
-        public static final double kSmoothingDecelFactor = 0.11;
-        public static final double kMaxDownshiftPower = 0.35;
+        public static final double kSmoothingAccelFactor = 0.2;
+        public static final double kSmoothingDecelFactor = 0.1;
         public static final double kMPR = 0.0207;// meters per revolution
         public static final double kMPRH = 0.07;
         public static final int kGyro = 10;
-        public static final double highGearInputLimit = 0.75;
+        public static final double highGearInputLimit = 0.8;
         public static final double highGearTurnLimit = 0.7;
         public static final double[] kDriveDistances = {0,1,2,3,4,30};
         public static final double[] kDrivePowers = {0.0,0.12,0.9,1,1,1};
         public static final double kAutoDriveSmoothing = 0.06;
 
-
         // ahhh idek what im doing
-        public static final PIDController ltPID = new PIDController(0.03, 0.1, 0.002);
+        public static final PIDController ltPID = new PIDController(0.03, 0.19, 0.004);
         public static final doubAlg ltALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65,0.65);};
-        public static final PIDController tPID = new PIDController(0.019, 0.0019, 0.0035);
+        public static final PIDController tPID = new PIDController(0.019, 0.0014, 0.003);
         public static final doubAlg tALG = pv -> {return MathUtil.clamp(ltPID.calculate(pv), -0.65, 0.65);};
         public static final doubAlg tsALG = pv -> {
             double dir = pv/Math.abs(pv);
@@ -145,6 +143,6 @@ public final class Constants {
         */
         public static final double[] distances = {1.1074, 1.55, 2, 2.16, 2.7, 3, 3.55,3.97, 4.39};
         public static final int[] drumSpeeds = {2500,2560,2760,2800,2960,3050,3230,3340, 3500};
-        public static final double[] hoodPositions = {0.005,0.006,0.021,0.03,0.25,0.23,0.21,0.205,0.205};
+        public static final double[] hoodPositions = {0.005,0.006,0.021,0.03,0.2,0.2,0.21,0.205,0.205};
     }
 }

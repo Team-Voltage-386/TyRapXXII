@@ -58,9 +58,6 @@ public class TeleOp_D extends CommandBase {
   double integralTurnAdjust = 0;
   double lastTurn = 0;
 
-  double integralDriveAdjust = 0;
-  double lastDrive = 0;
-
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
@@ -70,23 +67,19 @@ public class TeleOp_D extends CommandBase {
 
     //driving logic, uses lerpA to smooth the drive 
     double controllerIn = _controller.getRawAxis(kLeftVertical);
-    if (_dss.highGear) controllerIn *= highGearInputLimit;
 
-    //experimental acceleration boost
-    integralTurnAdjust += controllerIn - lastDrive;
-    lastDrive = controllerIn;
-    if (_dss.highGear) controllerIn *= highGearTurnLimit;
-    controllerIn += 2*integralTurnAdjust;
-
-    // normal drive behavior
-    if (_controller.getRawAxis(kLeftVertical) < -0.7) rootDrive -= highGearInputLimit*_controller.getRawAxis(kRightTrigger);
+    if (_dss.highGear) {
+      controllerIn *= highGearInputLimit;
+      controllerIn -= (1-highGearInputLimit)*_controller.getRawAxis(kRightTrigger);
+    }
     if (Math.abs(controllerIn) > Math.abs(rootDrive)) rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingAccelFactor);
     else rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingDecelFactor);
 
     //turn behavior, uses an integral of the stick derivitive to help prevent overshoot
     double contTurn = -_controller.getRawAxis(kRightHorizontal);
     integralTurnAdjust += contTurn - lastTurn;
-    rootTurn = (2*integralTurnAdjust) + contTurn;
+    rootTurn = contTurn;
+    if (_dss.highGear) rootTurn += (2*integralTurnAdjust);
     lastTurn = contTurn;
     if (_dss.highGear) rootTurn *= highGearTurnLimit;
 

@@ -56,10 +56,11 @@ public class ShootBall extends CommandBase {
         // turn the robot towards the target
         if (_lls.targetFound) {
             _dss.arcadeDrive(0.0, ltALG.get(_lls.tx));
-            Flags.hoopLocked = _lls.tx < 1.2;
+            Flags.hoopLocked = Math.abs(_lls.tx) < 1.2;
             if (Math.abs(_lls.tx) > 7 || Math.abs(_lls.tx) < 0.3) ltPID.reset();
             _bss.setAimDistance(_lls.metersToTarget());
         }
+        if (Flags.hoopLocked) _dss.arcadeDrive(0.0, 0.0);
 
         // logic for when to finish
         if (!loaded && _bss.breachSensorFlag) {
@@ -72,8 +73,7 @@ public class ShootBall extends CommandBase {
 
     @Override
     public void end(boolean interuppted) { // at end sets bc = 0 and cleans up
-        _bss.fireTheBigIron = false;
-        _bss.ballCount = 0;
+        _bss.afterFiring();
     }
 
     @Override

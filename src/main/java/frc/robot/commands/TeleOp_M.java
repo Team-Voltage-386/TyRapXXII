@@ -50,13 +50,9 @@ public class TeleOp_M extends CommandBase { // if M_TeleOp has a red line under 
     if(_controller.getRawButtonPressed(kA)) _bss.drumIdle = !_bss.drumIdle; // toggle drum idle
     _bss.intakeUpdate(_controller.getRawButtonPressed(kRightBumper)); // deploy/retract/release intake
     if (triggerPressed(kLeftTrigger)) _bss.lowShot = !_bss.lowShot; // toggle eject
-    if (triggerReleased(kRightTrigger)) { // when firing is finished
-      _bss.ballCount = 1;
-      _bss.decreaseBC();
-      _bss.drumIdle = false;
-    }
-    hoopTargeted = getTriggerController(kRightTrigger); // begin targeting if rt is pressed
-    _bss.fireTheBigIron = hoopTargeted;
+    if (triggerReleased(kRightTrigger)) _bss.afterFiring();
+    if (triggerPressed(kRightTrigger)) _bss.fireTheBigIron = true; // begin targeting if rt is pressed
+    hoopTargeted = _bss.fireTheBigIron;
 
     if (hoopTargeted) _bss.setAimDistance(targetDistance);
 
@@ -102,7 +98,7 @@ public class TeleOp_M extends CommandBase { // if M_TeleOp has a red line under 
   private boolean getTriggerController(int button) {
     boolean res = false;
     if ((_controller.getRawAxis(button) > 0.6) && !lastCont[button-2]) res = true;
-    else if ((_controller.getRawAxis(button) < 0.4)&&lastCont[button-2]) res = false;
+    else if ((_controller.getRawAxis(button) < 0.4)&& lastCont[button-2]) res = false;
     else res = lastCont[button-2];
     lastCont[button-2] = res;
     return res;

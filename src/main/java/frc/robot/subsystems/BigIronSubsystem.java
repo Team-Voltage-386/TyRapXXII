@@ -131,6 +131,11 @@ public class BigIronSubsystem extends SubsystemBase {
         }
     }
 
+    /**
+     * if the ball count is zero, it will trigger the intake artificially,
+     * can also be used to stop belt
+     * if bc == 1, it will wind both balls to the top
+     */
     public void increaseBC() {
         if (ballCount == 0) {
             ballOnTheWay = true;
@@ -139,6 +144,9 @@ public class BigIronSubsystem extends SubsystemBase {
         } else if (ballCount == 1) ballCount++;
     }
 
+    /**
+     * 
+     */
     public void decreaseBC() {
         if (ballCount == 1) {
             ballCount = 0;
@@ -151,6 +159,18 @@ public class BigIronSubsystem extends SubsystemBase {
             ballCount--;
             woundBack = false;
         }
+    }
+
+    public void afterFiring() {
+        ballCount = 0;
+        drumIdle = false;
+        ballOnTheWay = false;
+        woundBack = true;
+        lowShot = false;
+        lf = false;
+        lff = false;
+        fireTheBigIron = false;
+        dPID.reset();
     }
 
     /** blanket reset */
@@ -310,12 +330,12 @@ public class BigIronSubsystem extends SubsystemBase {
         else if (lowShot || lff) drumOneMotor.set(kDrumEjectPower);
         else {
             drumOneMotor.set(0);
-            //dPID.reset();
+            dPID.reset();
         }
     }
 
     private Timer beltTimer = new Timer();
-    private boolean woundBack = false;
+    private boolean woundBack = true;
     /** The most complex piece of code in the robot, is utterly absurd. Took forever to get working and 
      * is borderline black magic. This method controls how the feed belt is run and when. It also contains 
      * the logic that increases/decreases the ball count. Changing any part of this could completely 
@@ -328,15 +348,27 @@ public class BigIronSubsystem extends SubsystemBase {
             } else beltMotor.set(ControlMode.PercentOutput, 0);
         } else if (ballCount == 0) {
             if (!ballOnTheWay) { // if the ball count is zero, wait for the intake to trigger to set the ballontheway flag
-                if (!breachSensorFlag && intakeSensorFlag) {
-                    ballOnTheWay = true;
+                if (!woundBack) {
                     beltTimer.start();
-                    if (ball1Col.equals("null")) ball1Col = getColor();
+                    if (!beltTimer.hasElapsed(0.6)) {
+                        beltMotor.set(ControlMode.PercentOutput, -kBeltPower);
+                    } else {
+                        beltTimer.stop();
+                        beltTimer.reset();
+                        woundBack = true;
+                        beltMotor.set(ControlMode.PercentOutput, 0);
+                    }
+                } else {
+                    if (!breachSensorFlag && intakeSensorFlag) {
+                        ballOnTheWay = true;
+                        beltTimer.start();
+                        if (ball1Col.equals("null")) ball1Col = getColor();
+                    }
+                    beltMotor.set(ControlMode.PercentOutput, 0);
                 }
-                beltMotor.set(ControlMode.PercentOutput, 0);
             } else { // if a ball is on the way, run it up until the breach sensor is triggered
                 beltMotor.set(ControlMode.PercentOutput, kBeltPower);
-                if (breachSensorFlag || beltTimer.hasElapsed(5)) {
+                if (breachSensorFlag || beltTimer.hasElapsed(3)) {
                     beltTimer.stop();
                     beltTimer.reset();
                     ballOnTheWay = false;
@@ -396,7 +428,7 @@ public class BigIronSubsystem extends SubsystemBase {
                     lff = lf;
                     fireTheBigIron = false;
                     lowShot = true;
-                    woundBack = true;
+                    woundBack = false;
                 }
             } else beltMotor.set(ControlMode.PercentOutput, 0);  
             if (!breachSensorFlag) beltMotor.set(ControlMode.PercentOutput, kBeltPower); // make sure balls are wound up and in firing position
