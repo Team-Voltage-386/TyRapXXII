@@ -97,7 +97,7 @@ public class TeleOp_D extends CommandBase {
       else {
         hoopLocked = true;
       }
-      if (Math.abs(_lls.tx) > 7 || Math.abs(_lls.tx) < 0.3) ltPID.reset();
+      if (Math.abs(_lls.tx) > 5 || Math.abs(_lls.tx) < 0.4) ltPID.reset();
     } 
     else {
       ltPID.reset();

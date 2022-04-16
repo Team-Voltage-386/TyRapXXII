@@ -18,6 +18,7 @@ public class ShootBall extends CommandBase {
     private final BigIronSubsystem _bss;
     private final DriveSubsystem _dss;
     private final LimeLightSubsystem _lls;
+    private final double fD;
     private int iBallCount = 0;
     private int ballShot = 0;
     boolean loaded = false;
@@ -29,12 +30,13 @@ public class ShootBall extends CommandBase {
      * @param DSS the drivesubsystem
      * @param LLS the limelight used for targeting
     */
-    public ShootBall(BigIronSubsystem BSS,DriveSubsystem DSS, LimeLightSubsystem LLS) {
+    public ShootBall(BigIronSubsystem BSS,DriveSubsystem DSS, LimeLightSubsystem LLS, double fd) {
         _bss = BSS;
         _dss = DSS;
         _lls = LLS;
         addRequirements(_dss);
         addRequirements(_bss);
+        fD = fd;
     }
 
     @Override
@@ -52,15 +54,25 @@ public class ShootBall extends CommandBase {
         // set flags
         Utils.Flags.targetDistance = _lls.metersToTarget();
         _bss.fireTheBigIron = true;
+        double rootTurn = 0;
 
         // turn the robot towards the target
         if (_lls.targetFound) {
-            _dss.arcadeDrive(0.0, ltALG.get(_lls.tx));
-            Flags.hoopLocked = Math.abs(_lls.tx) < 1.2;
-            if (Math.abs(_lls.tx) > 7 || Math.abs(_lls.tx) < 0.3) ltPID.reset();
             _bss.setAimDistance(_lls.metersToTarget());
-        }
-        if (Flags.hoopLocked) _dss.arcadeDrive(0.0, 0.0);
+            if (Math.abs(_lls.tx) > 1.2) {
+              Flags.hoopLocked = false;
+              rootTurn = ltALG.get(_lls.tx);
+            }
+            else {
+              Flags.hoopLocked = true;
+            }
+            if (Math.abs(_lls.tx) > 7 || Math.abs(_lls.tx) < 0.4) ltPID.reset();
+          } 
+          else {
+            ltPID.reset();
+          }
+
+          _dss.arcadeDrive(0.0, rootTurn);
 
         // logic for when to finish
         if (!loaded && _bss.breachSensorFlag) {
@@ -74,6 +86,8 @@ public class ShootBall extends CommandBase {
     @Override
     public void end(boolean interuppted) { // at end sets bc = 0 and cleans up
         _bss.afterFiring();
+        Flags.targetDistance = fD;
+        _bss.setAimDistance(fD);
     }
 
     @Override

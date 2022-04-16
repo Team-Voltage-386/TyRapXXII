@@ -439,11 +439,17 @@ public class BigIronSubsystem extends SubsystemBase {
     private final NetworkTableEntry mainDist = mainTab.add("dist",0).withPosition(5,0).withSize(1, 1).getEntry();
     private final NetworkTableEntry mainBC = mainTab.add("BallCount",0).withPosition(3,0).withSize(1,1).getEntry();
     private final NetworkTableEntry mainBre = mainTab.add("BreachSensor",false).getEntry();
+    private final NetworkTableEntry mainhood = mainTab.add("HoodPosition",0).getEntry();
+    private final NetworkTableEntry mainDrum = mainTab.add("DrumSpeed",0).getEntry();
+    private final NetworkTableEntry mainrtf = mainTab.add("rtf",false).getEntry();
     /** update the widgets, by calling for the tab "Main" in each class everything ends up on the same shuffleboard tab*/
     private void updateWidgets() {
+        mainhood.setDouble(hoodCurrentPosition);
+        mainDrum.setDouble(drumCurrentSpeed);
         mainDist.setDouble(Utils.Flags.targetDistance);
         mainBC.setDouble(ballCount);
         mainBre.setBoolean(breachSensorFlag);
+        mainrtf.setBoolean(readyToFire());
     }
 
     /** get the color of the ball; does not work with enough accuracy; ball color isn't used anywhere
@@ -474,10 +480,10 @@ public class BigIronSubsystem extends SubsystemBase {
         double lerpFactor = (m-lower)/Math.abs(upper-lower);
         upper = ShooterData.drumSpeeds[i];
         lower = ShooterData.drumSpeeds[i-1];
-        drumSP = (int)Utils.lerpB(lower, upper, lerpFactor);
+        drumSP = (int)Utils.lerpA(lower, upper, lerpFactor);
         upper = ShooterData.hoodPositions[i];
         lower = ShooterData.hoodPositions[i-1];
-        hoodSet = Utils.lerpB(lower, upper, lerpFactor);
+        hoodSet = Utils.lerpA(lower, upper, lerpFactor);
     }
 
 

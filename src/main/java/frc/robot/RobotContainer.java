@@ -111,18 +111,18 @@ public class RobotContainer {
     public final Command basiciiBall = new SequentialCommandGroup(
       new LinearDrive(driveSubSystem, 1.5, 0, false,1),
       new StationaryTurn(driveSubSystem, 180, false),
-      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem, 2)
     );
     /** A 4 ball auto from the primary starting position <p> needs human player interaction<p> Works Great */
     public final Command highAuto = new SequentialCommandGroup(
       new LinearDrive(driveSubSystem,1.5,0,false,1),
       new StationaryTurn(driveSubSystem, 170, false),
-      new ShootBall(bigIron, driveSubSystem, LLSubsystem),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem, 2.6),
       new StationaryTurn(driveSubSystem, 14, false),
       new LinearDrive(driveSubSystem,3.24, 12,false,1),
       new LinearDrive(driveSubSystem, 2, 8, false, -1),
       new StationaryTurn(driveSubSystem, 170, false),
-      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem, 2.6)
     );
 
     /** 4 ball from the starting position opposite the hangar, grabs all but the hangar ball and the human player's ball, 
@@ -130,18 +130,18 @@ public class RobotContainer {
     */
     public final Command vBall = new SequentialCommandGroup(
       new LinearDrive(driveSubSystem, 1.25, 0, false, -1),
-      new ShootBall(bigIron, driveSubSystem, LLSubsystem),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem, 2),
       new StationaryTurn(driveSubSystem, -90, false),
       new LinearDrive(driveSubSystem, 2, -90, false, 0.8),
       new StationaryTurn(driveSubSystem, -45, false),
       new LinearDrive(driveSubSystem, 2.5, -40, false, 1),
       new StationaryTurn(driveSubSystem, 50, false),
-      new ShootBall(bigIron, driveSubSystem, LLSubsystem),
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem,2.6),
       new StationaryTurn(driveSubSystem, -95, false),
       new LinearDrive(driveSubSystem,3,-100,false,1),
       new LinearDrive(driveSubSystem,1,-100,false,-1),
       new StationaryTurn(driveSubSystem, 50, false),
-      new ShootBall(bigIron, driveSubSystem, LLSubsystem)
+      new ShootBall(bigIron, driveSubSystem, LLSubsystem, 2.6)
     );
     /** waits 10 seconds and drives out of the tarmac */
     public final Command marRock = new SequentialCommandGroup(

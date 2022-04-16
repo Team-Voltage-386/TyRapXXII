@@ -62,6 +62,11 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
   }
 
+  @Override
+  public void disabledExit() {
+    Logger.init();
+  }
+
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
@@ -117,8 +122,6 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.bigIron.ledsOn = true;
-
-    Logger.init();
   }
 
   /** This function is called periodically during operator control. */
