@@ -428,7 +428,7 @@ public class BigIronSubsystem extends SubsystemBase {
                     lff = lf;
                     fireTheBigIron = false;
                     lowShot = true;
-                    woundBack = false;
+                    woundBack = true;
                 }
             } else beltMotor.set(ControlMode.PercentOutput, 0);  
             if (!breachSensorFlag) beltMotor.set(ControlMode.PercentOutput, kBeltPower); // make sure balls are wound up and in firing position

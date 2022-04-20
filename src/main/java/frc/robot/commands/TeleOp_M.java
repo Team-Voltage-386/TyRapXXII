@@ -49,7 +49,7 @@ public class TeleOp_M extends CommandBase { // if M_TeleOp has a red line under 
     // Control Logic
     if(_controller.getRawButtonPressed(kA)) _bss.drumIdle = !_bss.drumIdle; // toggle drum idle
     _bss.intakeUpdate(_controller.getRawButtonPressed(kRightBumper)); // deploy/retract/release intake
-    if (triggerPressed(kLeftTrigger)) _bss.lowShot = !_bss.lowShot; // toggle eject
+    if (_controller.getRawButtonPressed(kLeftBumper)) _bss.lowShot = !_bss.lowShot;
     if (triggerReleased(kRightTrigger)) _bss.afterFiring();
     if (triggerPressed(kRightTrigger)) _bss.fireTheBigIron = true; // begin targeting if rt is pressed
     hoopTargeted = _bss.fireTheBigIron;
