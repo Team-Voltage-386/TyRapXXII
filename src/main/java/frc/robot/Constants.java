@@ -142,7 +142,7 @@ public final class Constants {
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
         public static final double[] distances = {1.1074, 1.55, 2, 2.16, 2.7, 3, 3.55,3.97, 4.39};
-        public static final int[] drumSpeeds = {2500,2560,2760,2800,2960,3050,3230,3340, 3700};
-        public static final double[] hoodPositions = {0.005,0.006,0.021,0.03,0.2,0.2,0.21,0.205,0.19};
+        public static final int[] drumSpeeds = {2500,2560,2760,2800,2960,3050,3270,3370, 3700};
+        public static final double[] hoodPositions = {0.005,0.006,0.021,0.03,0.2,0.2,0.2,0.205,0.19};
     }
 }
