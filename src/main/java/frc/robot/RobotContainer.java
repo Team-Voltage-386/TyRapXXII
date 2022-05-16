@@ -20,6 +20,7 @@ import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.commands.BigIronIdle;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.ShootBallMan;
+import frc.robot.commands.SitAndAim;
 import frc.robot.commands.GetBall;
 import frc.robot.commands.drive.LinearDrive;
 import frc.robot.commands.drive.LinearDriveHigh;
@@ -74,6 +75,7 @@ public class RobotContainer {
     autoChooser.addOption("TuningTestSquare", autos.tuningTestII);
     autoChooser.addOption("ShooterTest", autos.shootTest);
     autoChooser.addOption("MartianRock", autos.marRock);
+    autoChooser.addOption("AimTest", autos.aimTest);
     mainTab.add("AutoRoutine",autoChooser).withPosition(0,0).withSize(3,1);
     bigIron.setDefaultCommand(manipTeleOp);
     driveSubSystem.setDefaultCommand(driveTeleOp);
@@ -177,5 +179,7 @@ public class RobotContainer {
       new GetBall(bigIron,2),
       new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 1500, 0.35)
     );
+
+    public final Command aimTest = new SitAndAim(bigIron, driveSubSystem, LLSubsystem, 0);
   }
 }

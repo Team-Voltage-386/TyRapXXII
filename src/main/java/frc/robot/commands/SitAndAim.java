@@ -13,7 +13,7 @@ import static frc.robot.Constants.DriveConstants.*;
 /**Shoots all the balls in the robot
  * @author Carl C.
  */
-public class ShootBall extends CommandBase {
+public class SitAndAim extends CommandBase {
 
     private final BigIronSubsystem _bss;
     private final DriveSubsystem _dss;
@@ -30,7 +30,7 @@ public class ShootBall extends CommandBase {
      * @param DSS the drivesubsystem
      * @param LLS the limelight used for targeting
     */
-    public ShootBall(BigIronSubsystem BSS,DriveSubsystem DSS, LimeLightSubsystem LLS, double fd) {
+    public SitAndAim(BigIronSubsystem BSS,DriveSubsystem DSS, LimeLightSubsystem LLS, double fd) {
         _bss = BSS;
         _dss = DSS;
         _lls = LLS;
@@ -43,17 +43,15 @@ public class ShootBall extends CommandBase {
     public void initialize() { // sets state
         tim.stop();
         tim.reset();
-        ballShot = 0;
-        iBallCount = _bss.ballCount;
-        _bss.fireTheBigIron = true;
-        loaded = false;
+        _bss.intakeUpdate(_bss.intakeOut);
+        _bss.drumIdle = false;
     } 
 
     @Override
     public void execute() { 
         // set flags
-        Utils.Flags.targetDistance = _lls.metersToTarget();
-        _bss.fireTheBigIron = true;
+        //Utils.Flags.targetDistance = _lls.metersToTarget();
+        _bss.fireTheBigIron = false;
 
         // turn the robot towards the target
         if (_lls.targetFound) {
@@ -63,27 +61,17 @@ public class ShootBall extends CommandBase {
                 ltPID.reset();
                 _dss.arcadeDrive(0.0, 0.0);
             }
-            _bss.setAimDistance(_lls.metersToTarget());
-        }
-
-        // logic for when to finish
-        if (!loaded && _bss.breachSensorFlag) {
-            loaded = true;
-        } else if (loaded && !_bss.breachSensorFlag) {
-            loaded = false;
-            ballShot++;
+            //_bss.setAimDistance(_lls.metersToTarget());
         }
     }
 
     @Override
     public void end(boolean interuppted) { // at end sets bc = 0 and cleans up
-        _bss.afterFiring();
-        Flags.targetDistance = fD;
-        _bss.setAimDistance(fD);
+        
     }
 
     @Override
     public boolean isFinished() {
-        return ballShot == iBallCount; // finishes when all balls are shot
+        return false; // finishes when all balls are shot
     }
 }

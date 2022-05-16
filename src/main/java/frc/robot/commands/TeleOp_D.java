@@ -90,14 +90,12 @@ public class TeleOp_D extends CommandBase {
 
     // logic for the alignment of the robot
     if (_lls.targetFound && hoopTargeted) {
-      if (Math.abs(_lls.tx) > 1.2) {
-        hoopLocked = false;
-        rootTurn = ltALG.get(_lls.tx);
-      }
-      else {
-        hoopLocked = true;
-      }
-      if (Math.abs(_lls.tx) > 5 || Math.abs(_lls.tx) < 0.4) ltPID.reset();
+      //_controller.setRumble(RumbleType.kRightRumble, 0.5);
+      hoopLocked = Math.abs(_lls.tx) < 1.2;
+      if (Math.abs(_lls.tx) < 0.9) {
+        ltPID.reset();
+        rootTurn = 0;
+      } else rootTurn = ltALG.get(_lls.tx);
     } 
     else {
       ltPID.reset();
