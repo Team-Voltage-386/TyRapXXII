@@ -9,7 +9,7 @@ import frc.robot.subsystems.BigIronSubsystem;
  * @author Carl C.
  * @deprecated redundant
  */
-public class GetBall extends CommandBase {
+public class getBall extends CommandBase {
 
     private final BigIronSubsystem _bss;
     private int iBallCount = 0;
@@ -22,7 +22,7 @@ public class GetBall extends CommandBase {
      * @param timeOut a timeout in case the ball isn't picked up
      * @deprecated redundant
     */
-    public GetBall(BigIronSubsystem BSS, double timeOut) {
+    public getBall(BigIronSubsystem BSS, double timeOut) {
         _bss = BSS;
         addRequirements(_bss);
         to = timeOut;

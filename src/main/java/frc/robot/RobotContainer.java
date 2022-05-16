@@ -21,7 +21,7 @@ import frc.robot.commands.BigIronIdle;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.ShootBallMan;
 import frc.robot.commands.SitAndAim;
-import frc.robot.commands.GetBall;
+import frc.robot.commands.getBall;
 import frc.robot.commands.drive.LinearDrive;
 import frc.robot.commands.drive.LinearDriveHigh;
 import frc.robot.commands.drive.StationaryTurn;
@@ -176,7 +176,6 @@ public class RobotContainer {
     /** simply fires, change the values in the shootballman instruction to test settings */
     public final Command shootTest = new SequentialCommandGroup(
       new Delay(2),
-      new GetBall(bigIron,2),
       new ShootBallMan(bigIron, driveSubSystem, LLSubsystem, 1500, 0.35)
     );
 
