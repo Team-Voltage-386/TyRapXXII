@@ -115,7 +115,7 @@ public final class Constants {
         public static final double highGearInputLimit = 0.8;
         public static final double highGearTurnLimit = 0.7;
         public static final double[] kDriveDistances = {0,1,2,3,4,30};
-        public static final double[] kDrivePowers = {0.0,0.12,0.9,1,1,1};
+        public static final double[] kDrivePowers = {0.0,0.18,0.9,1,1,1};
         public static final double kAutoDriveSmoothing = 0.065;
 
         // ahhh idek what im doing
