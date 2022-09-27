@@ -44,7 +44,7 @@ public class LimeLightSubsystem extends SubsystemBase {
   /**During periodic this subsystem updates the basic public LL variables*/
   @Override
   public void periodic() {
-    if(_nt.getEntry("tv").getDouble(-1) == 0) {
+    if(_nt.getEntry("tv").getDouble(-1) == 0) { // that '-1' saved our season, a random choice to change the default to anything other than zero
       if(targetLostWait) targetFound = !timer.hasElapsed(LimeLightConstants.targetLostWaitTime); // if it should wait for target re-acquire, then wait the tlwt, else declare it lost
       else targetFound = false;
     } else {

@@ -75,7 +75,7 @@ public class TeleOp_D extends CommandBase {
     if (Math.abs(controllerIn) > Math.abs(rootDrive)) rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingAccelFactor);
     else rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingDecelFactor);
 
-    //turn behavior, uses an integral of the stick derivitive to help prevent overshoot
+    //turn behavior, uses an integral of the stick derivitive to help prevent overshoot (FeedForward)
     double contTurn = -_controller.getRawAxis(kRightHorizontal);
     integralTurnAdjust += contTurn - lastTurn;
     rootTurn = contTurn;
@@ -96,7 +96,7 @@ public class TeleOp_D extends CommandBase {
         ltPID.reset();
         rootTurn = 0;
       } else rootTurn = ltALG.get(_lls.tx);
-    } 
+    }
     else {
       ltPID.reset();
     }
