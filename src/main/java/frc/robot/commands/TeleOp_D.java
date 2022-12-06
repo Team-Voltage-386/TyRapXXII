@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.subsystems.PhotonVisionSubsystem;
+
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Utils.Flags.*;
 
@@ -22,7 +24,7 @@ import static frc.robot.Constants.ControllerConstants.*;
 public class TeleOp_D extends CommandBase {
   private final DriveSubsystem _dss;
   private final Joystick _controller;
-  private final LimeLightSubsystem _lls;
+  private final PhotonVisionSubsystem _lls;
   private double rootTurn;
   public Boolean ballFound = false;
   private boolean highGear = false;
@@ -35,7 +37,7 @@ public class TeleOp_D extends CommandBase {
  * @param BSS the BigIron
  * @param LLS  the hoop LL subsystem used by this command.
  */
-  public TeleOp_D(DriveSubsystem DSS, LimeLightSubsystem LLS) {
+  public TeleOp_D(DriveSubsystem DSS, PhotonVisionSubsystem LLS) {
     _dss = DSS;
     _lls = LLS;
     _controller = RobotContainer.driverController;
@@ -84,7 +86,7 @@ public class TeleOp_D extends CommandBase {
     if (_dss.highGear) rootTurn *= highGearTurnLimit;
 
     // Change gear on left bumper
-    if (_controller.getRawButtonPressed(kLeftBumper)) highGear = !highGear;
+    // if (_controller.getRawButtonPressed(kLeftBumper)) highGear = !highGear; //i turn high gear off
     if (!hoopTargeted) _dss.setHighGear(highGear);
     else _dss.setHighGear(false);
 
