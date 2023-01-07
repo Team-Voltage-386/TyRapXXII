@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -436,12 +437,12 @@ public class BigIronSubsystem extends SubsystemBase {
 }
 
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-    private final NetworkTableEntry mainDist = mainTab.add("dist",0).withPosition(5,0).withSize(1, 1).getEntry();
-    private final NetworkTableEntry mainBC = mainTab.add("BallCount",0).withPosition(3,0).withSize(1,1).getEntry();
-    private final NetworkTableEntry mainBre = mainTab.add("BreachSensor",false).getEntry();
-    private final NetworkTableEntry mainhood = mainTab.add("HoodPosition",0).getEntry();
-    private final NetworkTableEntry mainDrum = mainTab.add("DrumSpeed",0).getEntry();
-    private final NetworkTableEntry mainrtf = mainTab.add("rtf",false).getEntry();
+    private final GenericPublisher mainDist = mainTab.add("dist",0).withPosition(5,0).withSize(1, 1).getEntry();
+    private final GenericPublisher mainBC = mainTab.add("BallCount",0).withPosition(3,0).withSize(1,1).getEntry();
+    private final GenericPublisher mainBre = mainTab.add("BreachSensor",false).getEntry();
+    private final GenericPublisher mainhood = mainTab.add("HoodPosition",0).getEntry();
+    private final GenericPublisher mainDrum = mainTab.add("DrumSpeed",0).getEntry();
+    private final GenericPublisher mainrtf = mainTab.add("rtf",false).getEntry();
     /** update the widgets, by calling for the tab "Main" in each class everything ends up on the same shuffleboard tab*/
     private void updateWidgets() {
         mainhood.setDouble(hoodCurrentPosition);

@@ -1,4 +1,5 @@
 package frc.robot.subsystems;
+import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -93,8 +94,8 @@ public class LimeLightSubsystem extends SubsystemBase {
 
   // not required 
   private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-  private final NetworkTableEntry mainX = mainTab.add("LL-X",0).withPosition(6,0).withSize(1, 1).getEntry();
-  private final NetworkTableEntry mainFound = mainTab.add("TargetFound",false).withPosition(4, 0).withSize(1, 1).getEntry();
+  private final GenericPublisher mainX = mainTab.add("LL-X",0).withPosition(6,0).withSize(1, 1).getEntry();
+  private final GenericPublisher mainFound = mainTab.add("TargetFound",false).withPosition(4, 0).withSize(1, 1).getEntry();
   /** update widgets, not required, if reusing this code change it to your liking */
   private void updateWidgets() {
     mainFound.setBoolean(targetFound);

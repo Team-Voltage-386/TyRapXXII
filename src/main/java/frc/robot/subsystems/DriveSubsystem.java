@@ -15,7 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.*;
 
 /** TyRapXXII's drive subsystem
  * @author Max V.
@@ -54,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
                 rearRightMotor.follow(frontRightMotor);
                 leftEncoder.setPositionConversionFactor(kMPR);
                 rightEncoder.setPositionConversionFactor(kMPR);
-                odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getRawHeading()));
+                odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getRawHeading()),0,0);
                 _pigeon = new PigeonIMU(kGyro);
         }
 
@@ -75,9 +75,11 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-        private final NetworkTableEntry mainHeading = mainTab.add("heading",0).withPosition(3, 3).withSize(1, 1).getEntry();
-        private final NetworkTableEntry mainX = mainTab.add("x",0).withPosition(3, 1).withSize(1,1).getEntry();
-        private final NetworkTableEntry mainY = mainTab.add("y",0).withPosition(3, 2).withSize(1,1).getEntry();
+        // private final NetworkTableEntry mainHeading = mainTab.add("heading",0).withPosition(3, 3).withSize(1, 1).getEntry();
+        // private final DoublePublisher mainHeading = mainTab.getDoubleTopic("heading").publish();
+        private final GenericPublisher mainHeading = mainTab.add("heading",0).withPosition(3, 3).withSize(1, 1).getEntry();
+        private final GenericPublisher mainX = mainTab.add("x",0).withPosition(3, 1).withSize(1,1).getEntry();
+        private final GenericPublisher mainY = mainTab.add("y",0).withPosition(3, 2).withSize(1,1).getEntry();
 
         /** resets the encoder positions */
         public void resetEncoders() {
@@ -127,7 +129,7 @@ public class DriveSubsystem extends SubsystemBase {
         /** resets the odometry system, called in {@link frc.robot.Robot} during autonomousInit() */
         public void resetOdometry(Pose2d pose) {
                 resetEncoders();
-                odometry.resetPosition(pose, Rotation2d.fromDegrees(getRawHeading()));
+                odometry.resetPosition(Rotation2d.fromDegrees(getRawHeading()),0,0,pose);
         }
 
         /** get the heading from the pidgeon IMU
