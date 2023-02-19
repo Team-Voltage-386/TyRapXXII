@@ -16,9 +16,11 @@ import frc.robot.Utils.Flags;
 
 import static frc.robot.Constants.ControllerConstants.*;
 
-/** Driver TeleOp Command 
+/**
+ * Driver TeleOp Command
+ * 
  * @author Carl C.
-*/
+ */
 public class TeleOp_D extends CommandBase {
   private final DriveSubsystem _dss;
   private final Joystick _controller;
@@ -28,13 +30,13 @@ public class TeleOp_D extends CommandBase {
   private boolean highGear = false;
   private double rootDrive = 0;
 
-/**
- * Creates a Driver TeleOp command
- * 
- * @param DSS  The drive subsystem used by this command.
- * @param BSS the BigIron
- * @param LLS  the hoop LL subsystem used by this command.
- */
+  /**
+   * Creates a Driver TeleOp command
+   * 
+   * @param DSS The drive subsystem used by this command.
+   * @param BSS the BigIron
+   * @param LLS the hoop LL subsystem used by this command.
+   */
   public TeleOp_D(DriveSubsystem DSS, LimeLightSubsystem LLS) {
     _dss = DSS;
     _lls = LLS;
@@ -51,8 +53,8 @@ public class TeleOp_D extends CommandBase {
     rootTurn = 0;
     ltPID.setTolerance(1, 1);
     _dss.setHighGear(false);
-    //_lls.setPipeLine(0);
-    //_lls.lights(true);
+    // _lls.setPipeLine(0);
+    // _lls.lights(true);
   }
 
   double integralTurnAdjust = 0;
@@ -61,48 +63,57 @@ public class TeleOp_D extends CommandBase {
   /** Called every time the scheduler runs while the command is scheduled. */
   @Override
   public void execute() {
-    //set flags
+    // set flags
     Flags.hoopVisible = _lls.targetFound;
     Flags.complianceOverride = _controller.getRawButton(kRightBumper);
 
-    //driving logic, uses lerpA to smooth the drive 
+    // driving logic, uses lerpA to smooth the drive
     double controllerIn = _controller.getRawAxis(kLeftVertical);
 
     if (_dss.highGear) {
       controllerIn *= highGearInputLimit;
-      controllerIn -= (1-highGearInputLimit)*_controller.getRawAxis(kRightTrigger);
+      controllerIn -= (1 - highGearInputLimit) * _controller.getRawAxis(kRightTrigger);
     }
-    if (Math.abs(controllerIn) > Math.abs(rootDrive)) rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingAccelFactor);
-    else rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingDecelFactor);
+    if (Math.abs(controllerIn) > Math.abs(rootDrive))
+      rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingAccelFactor);
+    else
+      rootDrive = Utils.lerpA(rootDrive, controllerIn, kSmoothingDecelFactor);
 
-    //turn behavior, uses an integral of the stick derivitive to help prevent overshoot
-    double contTurn = -_controller.getRawAxis(kRightHorizontal);
+    // turn behavior, uses an integral of the stick derivitive to help prevent
+    // overshoot
+    double contTurn = _controller.getRawAxis(kRightHorizontal); // might need to make negative - Gabe
     integralTurnAdjust += contTurn - lastTurn;
     rootTurn = contTurn;
-    if (_dss.highGear) rootTurn += (2*integralTurnAdjust);
+    if (_dss.highGear)
+      rootTurn += (2 * integralTurnAdjust);
     lastTurn = contTurn;
-    if (_dss.highGear) rootTurn *= highGearTurnLimit;
+    if (_dss.highGear)
+      rootTurn *= highGearTurnLimit;
 
     // Change gear on left bumper
-    if (_controller.getRawButtonPressed(kLeftBumper)) highGear = !highGear;
-    if (!hoopTargeted) _dss.setHighGear(highGear);
-    else _dss.setHighGear(false);
+    if (_controller.getRawButtonPressed(kLeftBumper))
+      highGear = !highGear;
+    if (!hoopTargeted)
+      _dss.setHighGear(highGear);
+    else
+      _dss.setHighGear(false);
 
     // logic for the alignment of the robot
     if (_lls.targetFound && hoopTargeted) {
-      //_controller.setRumble(RumbleType.kRightRumble, 0.5);
+      // _controller.setRumble(RumbleType.kRightRumble, 0.5);
       hoopLocked = Math.abs(_lls.tx) < 1.2;
       if (Math.abs(_lls.tx) < 0.9) {
         ltPID.reset();
         rootTurn = 0;
-      } else rootTurn = ltALG.get(_lls.tx);
-    } 
-    else {
+      } else
+        rootTurn = ltALG.get(_lls.tx);
+    } else {
       ltPID.reset();
     }
     // set drive and distance flag
     _dss.arcadeDrive(rootDrive, rootTurn);
-    if (_lls.targetFound) targetDistance = _lls.metersToTarget();
+    if (_lls.targetFound)
+      targetDistance = _lls.metersToTarget();
 
     integralTurnAdjust *= 0.9;
 
@@ -121,7 +132,7 @@ public class TeleOp_D extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //_lls.lights(false);
-  } 
-  
+    // _lls.lights(false);
+  }
+
 }
